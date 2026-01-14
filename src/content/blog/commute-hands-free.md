@@ -33,8 +33,8 @@ If your eyes are busy steering or scanning train stops, you can still grow your 
 
 ## Keep the momentum
 
-- Pair this routine with a <a href="/blog/custom-vocabulary-workflow/">custom vocabulary workflow</a> so every commute list is relevant.
-- When you’re back home or offline, switch to the <a href="/blog/offline-practice-guide/">offline language learning guide</a>.
-- If you want a daily system, use the <a href="/blog/habit-playbook-bitlingo/">habit playbook</a> to lock in 10-minute “learn vocabulary during commute” loops.
+- Pair this routine with a <a href="/blog/en/custom-vocabulary-workflow/">custom vocabulary workflow</a> so every commute list is relevant.
+- When you’re back home or offline, switch to the <a href="/blog/en/offline-practice-guide/">offline language learning guide</a>.
+- If you want a daily system, use the <a href="/blog/en/habit-playbook-bitlingo/">habit playbook</a> to lock in 10-minute “learn vocabulary during commute” loops.
 
 Make your commute pay you back. Ten focused minutes per ride is over **80 minutes** of vocabulary practice each workweek. That's real progress without carving new time out of your day.

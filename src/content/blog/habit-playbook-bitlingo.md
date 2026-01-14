@@ -39,6 +39,6 @@ Language learning rewards consistency. Ten minutes a day is enough to keep vocab
 
 ## Pair this with other routines
 
-- Turn this into a “learn languages on the go” loop with <a href="/blog/commute-hands-free/">commute sessions</a>.
-- If you prefer cardio or lifting time, use <a href="/blog/workout-language-sessions/">learn languages while you work out</a>.
-- Going offline? Keep practicing with the <a href="/blog/offline-practice-guide/">offline language learning guide</a>.
+- Turn this into a “learn languages on the go” loop with <a href="/blog/en/commute-hands-free/">commute sessions</a>.
+- If you prefer cardio or lifting time, use <a href="/blog/en/workout-language-sessions/">learn languages while you work out</a>.
+- Going offline? Keep practicing with the <a href="/blog/en/offline-practice-guide/">offline language learning guide</a>.

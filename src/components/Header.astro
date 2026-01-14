@@ -1,15 +1,15 @@
 ---
-import { SITE_TITLE } from '../consts';
+import { DEFAULT_LANG, SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 ---
 
 <header>
 	<nav>
-		<h2><a href="/blog">{SITE_TITLE}</a></h2>
+		<h2><a href={`/blog/${DEFAULT_LANG}`}>{SITE_TITLE}</a></h2>
 		<div class="internal-links">
-			<HeaderLink href="/blog">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
-			<HeaderLink href="/blog/about">About</HeaderLink>
+			<HeaderLink href={`/blog/${DEFAULT_LANG}`}>Home</HeaderLink>
+			<HeaderLink href={`/blog/${DEFAULT_LANG}`}>Blog</HeaderLink>
+			<HeaderLink href="/about">About</HeaderLink>
 		</div>
 	</nav>
 </header>

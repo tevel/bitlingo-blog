@@ -35,6 +35,6 @@ Consistent weekly training already builds discipline. Attach micro language gain
 
 ## Keep learning on every routine
 
-- Plan your lists with the <a href="/blog/custom-vocabulary-workflow/">custom vocabulary workflow</a>.
-- For travel days or no-signal gyms, use the <a href="/blog/offline-practice-guide/">offline language learning guide</a>.
-- Anchor this to a daily streak with the <a href="/blog/habit-playbook-bitlingo/">10-minute habit playbook</a>.
+- Plan your lists with the <a href="/blog/en/custom-vocabulary-workflow/">custom vocabulary workflow</a>.
+- For travel days or no-signal gyms, use the <a href="/blog/en/offline-practice-guide/">offline language learning guide</a>.
+- Anchor this to a daily streak with the <a href="/blog/en/habit-playbook-bitlingo/">10-minute habit playbook</a>.

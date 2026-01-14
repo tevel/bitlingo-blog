@@ -40,8 +40,8 @@ Limiting scope to 20–40 words keeps sessions short and repeatable.
 
 ## Next steps
 
-- Use this deck on a <a href="/blog/commute-hands-free/">learn vocabulary during commute</a> routine for truly hands-free language learning.
-- Heading to the gym? Pair it with <a href="/blog/workout-language-sessions/">learn languages while working out</a>.
-- Want consistency? The <a href="/blog/habit-playbook-bitlingo/">habit playbook</a> keeps these custom lists in rotation.
+- Use this deck on a <a href="/blog/en/commute-hands-free/">learn vocabulary during commute</a> routine for truly hands-free language learning.
+- Heading to the gym? Pair it with <a href="/blog/en/workout-language-sessions/">learn languages while working out</a>.
+- Want consistency? The <a href="/blog/en/habit-playbook-bitlingo/">habit playbook</a> keeps these custom lists in rotation.
 
 Build a deck today, practice tonight, and adjust tomorrow. That’s the loop that keeps vocabulary growth compounding.

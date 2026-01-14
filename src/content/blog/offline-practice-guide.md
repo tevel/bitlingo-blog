@@ -33,6 +33,6 @@ Learning shouldn’t depend on signal strength. With offline-ready lists, every 
 
 ## Related workflows
 
-- Build your lists quickly with the <a href="/blog/custom-vocabulary-workflow/">custom vocabulary workflow</a>.
-- For “learn vocabulary during commute” time, pair this with <a href="/blog/commute-hands-free/">hands-free commute sessions</a>.
-- Keep momentum every day with the <a href="/blog/habit-playbook-bitlingo/">habit playbook</a>.
+- Build your lists quickly with the <a href="/blog/en/custom-vocabulary-workflow/">custom vocabulary workflow</a>.
+- For “learn vocabulary during commute” time, pair this with <a href="/blog/en/commute-hands-free/">hands-free commute sessions</a>.
+- Keep momentum every day with the <a href="/blog/en/habit-playbook-bitlingo/">habit playbook</a>.

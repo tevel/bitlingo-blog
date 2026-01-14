@@ -1,20 +1,26 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
+import { getCollection } from 'astro:content';
+import { DEFAULT_LANG } from '../../consts';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
 	return posts.map((post) => ({
 		params: { slug: post.id },
-		props: post,
+		props: { slug: post.id },
 	}));
 }
-type Props = CollectionEntry<'blog'>;
 
-const post = Astro.props;
-const { Content } = await render(post);
+const { slug } = Astro.props;
+const target = `/blog/${DEFAULT_LANG}/${slug}/`;
 ---
 
-<BlogPost {...post.data}>
-	<Content />
-</BlogPost>
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta http-equiv="refresh" content={`0; url=${target}`} />
+		<link rel="canonical" href={target} />
+	</head>
+	<body>
+		<p>Redirecting to <a href={target}>{target}</a>...</p>
+	</body>
+</html>
