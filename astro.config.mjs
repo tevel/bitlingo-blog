@@ -6,6 +6,6 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://blog.bitlingo.app',
+	site: 'https://bitlingo.app/blog',
 	integrations: [mdx(), sitemap()],
 });
