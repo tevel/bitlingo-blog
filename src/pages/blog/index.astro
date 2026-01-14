@@ -16,6 +16,24 @@ const posts = (await getCollection('blog')).sort(
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<script type="application/ld+json">
+			{JSON.stringify({
+				'@context': 'https://schema.org',
+				'@type': 'Blog',
+				name: 'BitLingo Blog',
+				description: SITE_DESCRIPTION,
+				url: new URL('/blog', Astro.site),
+				blogPost: posts.map((post) => ({
+					'@type': 'BlogPosting',
+					headline: post.data.title,
+					description: post.data.description,
+					url: new URL(`/blog/${post.id}/`, Astro.site),
+					datePublished: post.data.pubDate.toISOString(),
+					dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
+					image: post.data.heroImage ? new URL(post.data.heroImage.src, Astro.site) : undefined,
+				})),
+			})}
+		</script>
 		<style>
 			main {
 				width: 960px;

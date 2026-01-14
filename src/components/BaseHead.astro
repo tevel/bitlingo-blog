@@ -9,7 +9,7 @@ import { SITE_TITLE } from '../consts';
 interface Props {
 	title: string;
 	description: string;
-	image?: ImageMetadata;
+	image?: ImageMetadata | string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -20,9 +20,14 @@ const defaultDescription =
 const keywords =
 	'language learning app, vocabulary builder, audio learning, learn languages on commute, hands-free language learning, flashcard app, spaced repetition, language pairs, TTS pronunciation, offline learning';
 
+const fallbackOg = '/og-bitlingo.svg';
+
 const { title, description, image = FallbackImage } = Astro.props;
 const resolvedTitle = title || defaultTitle;
 const resolvedDescription = description || defaultDescription;
+const imageSrc = typeof image === 'string' ? image : image.src;
+const resolvedImageSrc = imageSrc || fallbackOg;
+const resolvedImageUrl = new URL(resolvedImageSrc, Astro.url);
 ---
 
 <!-- Global Metadata -->
@@ -56,7 +61,8 @@ const resolvedDescription = description || defaultDescription;
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={resolvedTitle} />
 <meta property="og:description" content={resolvedDescription} />
-<meta property="og:image" content={new URL(image.src, Astro.url)} />
+<meta property="og:image" content={resolvedImageUrl} />
+<meta property="og:image:alt" content={resolvedTitle} />
 <meta property="og:site_name" content="BitLingo" />
 
 <!-- Twitter -->
@@ -64,4 +70,4 @@ const resolvedDescription = description || defaultDescription;
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={resolvedTitle} />
 <meta property="twitter:description" content={resolvedDescription} />
-<meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+<meta property="twitter:image" content={resolvedImageUrl} />
