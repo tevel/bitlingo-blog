@@ -14,7 +14,15 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
+const defaultTitle = 'BitLingo - Learn Languages On The Go | Audio Vocabulary App';
+const defaultDescription =
+	'Learn languages the smart way with BitLingo. Audio-first vocabulary app that plays word pairs in any language while you commute, walk, or exercise. Build vocabulary hands-free without screen time. Free, works offline.';
+const keywords =
+	'language learning app, vocabulary builder, audio learning, learn languages on commute, hands-free language learning, flashcard app, spaced repetition, language pairs, TTS pronunciation, offline learning';
+
 const { title, description, image = FallbackImage } = Astro.props;
+const resolvedTitle = title || defaultTitle;
+const resolvedDescription = description || defaultDescription;
 ---
 
 <!-- Global Metadata -->
@@ -38,20 +46,22 @@ const { title, description, image = FallbackImage } = Astro.props;
 <link rel="canonical" href={canonicalURL} />
 
 <!-- Primary Meta Tags -->
-<title>{title}</title>
-<meta name="title" content={title} />
-<meta name="description" content={description} />
+<title>{resolvedTitle}</title>
+<meta name="title" content={resolvedTitle} />
+<meta name="description" content={resolvedDescription} />
+<meta name="keywords" content={keywords} />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
+<meta property="og:title" content={resolvedTitle} />
+<meta property="og:description" content={resolvedDescription} />
 <meta property="og:image" content={new URL(image.src, Astro.url)} />
+<meta property="og:site_name" content="BitLingo" />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
+<meta property="twitter:title" content={resolvedTitle} />
+<meta property="twitter:description" content={resolvedDescription} />
 <meta property="twitter:image" content={new URL(image.src, Astro.url)} />

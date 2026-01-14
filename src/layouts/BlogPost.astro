@@ -9,11 +9,39 @@ import Header from '../components/Header.astro';
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const heroAlt = `${title} hero image`;
+const pageUrl = new URL(Astro.url, Astro.site);
+const imageUrl = heroImage ? new URL(heroImage.src, Astro.url) : null;
+const datePublished = pubDate.toISOString();
+const dateModified = (updatedDate ?? pubDate).toISOString();
 ---
 
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
+		{imageUrl && (
+			<script type="application/ld+json">
+				{JSON.stringify({
+					'@context': 'https://schema.org',
+					'@type': 'Article',
+					headline: title,
+					description,
+					datePublished,
+					dateModified,
+					author: { '@type': 'Organization', name: 'BitLingo' },
+					publisher: {
+						'@type': 'Organization',
+						name: 'BitLingo',
+						logo: {
+							'@type': 'ImageObject',
+							url: new URL('/favicon.svg', Astro.site),
+						},
+					},
+					image: imageUrl,
+					mainEntityOfPage: pageUrl,
+				})}
+			</script>
+		)}
 		<style>
 			main {
 				width: calc(100% - 2em);
@@ -60,7 +88,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+					{heroImage && <Image width={1020} height={510} src={heroImage} alt={heroAlt} />}
 				</div>
 				<div class="prose">
 					<div class="title">
