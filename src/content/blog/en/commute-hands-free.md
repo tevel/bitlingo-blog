@@ -2,7 +2,9 @@
 title: "Hands-free language practice on your commute"
 description: "Turn drive time or train rides into safe, audio-only vocabulary reps with BitLingo's listen-and-repeat loops."
 pubDate: "2026-01-14"
-heroImage: "../../assets/blog-placeholder-1.jpg"
+heroImage: "../../../assets/blog-placeholder-1.jpg"
+lang: "en"
+slug: "commute-hands-free"
 ---
 
 If your eyes are busy steering or scanning train stops, you can still grow your vocabulary. BitLingo is built to be audio-first, so you never need to look down at a screen. It’s a **hands-free language learning app** purpose-built for commutes.

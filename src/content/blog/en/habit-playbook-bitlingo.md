@@ -2,7 +2,9 @@
 title: "Habit playbook: make BitLingo stick in 10 minutes a day"
 description: "A repeatable micro-routine that fits commutes, walks, and chores—without screens or subscriptions."
 pubDate: "2026-01-14"
-heroImage: "../../assets/blog-placeholder-5.jpg"
+heroImage: "../../../assets/blog-placeholder-5.jpg"
+lang: "en"
+slug: "habit-playbook-bitlingo"
 ---
 
 Busy schedules kill most language goals. BitLingo’s audio-first approach keeps the bar low so you can build a streak that lasts with a hands-free language learning app.

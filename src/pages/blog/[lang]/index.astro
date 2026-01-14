@@ -16,9 +16,9 @@ if (!SUPPORTED_LANGS.includes(lang)) {
 	return Astro.redirect(`/blog/${DEFAULT_LANG}/`, 308);
 }
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = (await getCollection('blog'))
+	.filter((post) => post.data.lang === lang)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <!doctype html>
@@ -36,7 +36,7 @@ const posts = (await getCollection('blog')).sort(
 					'@type': 'BlogPosting',
 					headline: post.data.title,
 					description: post.data.description,
-					url: new URL(`/blog/${lang}/${post.id}/`, Astro.site),
+					url: new URL(`/blog/${lang}/${post.data.slug ?? post.slug}/`, Astro.site),
 					datePublished: post.data.pubDate.toISOString(),
 					dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
 					image: post.data.heroImage ? new URL(post.data.heroImage.src, Astro.site) : undefined,
@@ -121,7 +121,7 @@ const posts = (await getCollection('blog')).sort(
 					{
 						posts.map((post) => (
 							<li>
-								<a href={`/blog/${lang}/${post.id}/`}>
+								<a href={`/blog/${lang}/${post.data.slug ?? post.slug}/`}>
 									{post.data.heroImage && (
 										<Image width={720} height={360} src={post.data.heroImage} alt="" />
 									)}

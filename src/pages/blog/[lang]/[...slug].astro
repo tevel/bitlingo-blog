@@ -1,23 +1,38 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BlogPost from '../../../layouts/BlogPost.astro';
 import { DEFAULT_LANG, SUPPORTED_LANGS } from '../../../consts';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
 	return SUPPORTED_LANGS.flatMap((lang) =>
-		posts.map((post) => ({
-			params: { lang, slug: post.id },
-			props: { post, lang },
-		})),
+		posts
+			.filter((post) => post.data.lang === lang)
+			.map((post) => ({
+				params: { lang, slug: post.data.slug ?? post.slug },
+				props: { postId: post.id },
+			})),
 	);
 }
 
-type Props = { post: CollectionEntry<'blog'>; lang: string };
-const { post, lang } = Astro.props as Props;
-
+const { lang, slug } = Astro.params;
 if (!SUPPORTED_LANGS.includes(lang)) {
-	return Astro.redirect(`/blog/${DEFAULT_LANG}/${post.id}/`, 308);
+	return Astro.redirect(`/blog/${DEFAULT_LANG}/${slug}/`, 308);
+}
+
+const posts = await getCollection('blog');
+let post = posts.find(
+	(p) => p.data.lang === lang && (p.data.slug ?? p.slug) === slug,
+);
+
+if (!post) {
+	post = posts.find(
+		(p) => p.data.lang === DEFAULT_LANG && (p.data.slug ?? p.slug) === slug,
+	);
+}
+
+if (!post) {
+	return new Response(null, { status: 404 });
 }
 
 const { Content } = await render(post);

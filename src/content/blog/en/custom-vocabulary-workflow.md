@@ -2,7 +2,9 @@
 title: "Build a custom vocabulary deck in minutes"
 description: "Skip generic word lists. Load only the phrases you care about, then practice them hands-free with BitLingo."
 pubDate: "2026-01-14"
-heroImage: "../../assets/blog-placeholder-2.jpg"
+heroImage: "../../../assets/blog-placeholder-2.jpg"
+lang: "en"
+slug: "custom-vocabulary-workflow"
 ---
 
 BitLingo is built around **your** vocabulary—not ours. Here’s a fast workflow to go from idea to a practice-ready deck using audio flashcards for language learning.

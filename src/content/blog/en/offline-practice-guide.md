@@ -2,7 +2,9 @@
 title: "Offline vocabulary practice for flights and dead zones"
 description: "Install BitLingo as a PWA and keep learning when the signal drops—on flights, subways, or rural commutes."
 pubDate: "2026-01-14"
-heroImage: "../../assets/blog-placeholder-4.jpg"
+heroImage: "../../../assets/blog-placeholder-4.jpg"
+lang: "en"
+slug: "offline-practice-guide"
 ---
 
 No connection? No problem. BitLingo stores your decks locally and works offline so you can keep practicing anywhere. It doubles as an offline language learning companion when you still want audio-first vocabulary drills.

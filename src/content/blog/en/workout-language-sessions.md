@@ -2,7 +2,9 @@
 title: "Learn languages while you work out"
 description: "Pair strength or cardio sessions with audio-only vocabulary loops. Stay hands-free, stay safe, and keep the reps consistent."
 pubDate: "2026-01-14"
-heroImage: "../../assets/blog-placeholder-3.jpg"
+heroImage: "../../../assets/blog-placeholder-3.jpg"
+lang: "en"
+slug: "workout-language-sessions"
 ---
 
 Your workout time is already blocked on your calendar. Use it to reinforce vocabulary without breaking form or focus with a hands-free language learning app.
