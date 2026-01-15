@@ -9,6 +9,7 @@ import MemoryGame from '../components/interactive/MemoryGame.astro';
 import SpeedRound from '../components/interactive/SpeedRound.astro';
 import DailyWord from '../components/interactive/DailyWord.astro';
 import LanguagePoll from '../components/interactive/LanguagePoll.astro';
+import ShareButtons from '../components/ShareButtons.astro';
 import { LANGUAGE_DATA } from '../data/vocabulary';
 import { SITE_TITLE } from '../consts';
 
@@ -56,6 +57,14 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
                 </option>
               ))}
             </select>
+          </div>
+          
+          <div class="hero-share">
+            <ShareButtons 
+              title="Practice languages with fun interactive games on BitLingo!" 
+              description="Quiz yourself, flip flashcards, and challenge your memory in 16+ languages."
+              showLabel={true}
+            />
           </div>
         </div>
       </section>
@@ -247,6 +256,12 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
   .lang-select option {
     background: #1a365d;
     color: white;
+  }
+  
+  .hero-share {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
   }
 
   /* Games Grid */
