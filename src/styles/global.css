@@ -1,45 +1,47 @@
 /*
-  BitLingo Blog - Game Style Theme
-  A dark, modern design inspired by language learning apps and gaming aesthetics
+  BitLingo Blog - Official Theme
+  Dark blue background with orange/golden accents matching bitLingo.app
 */
 
 :root {
-	/* Core dark palette */
-	--bg-deep: #0a0f1a;
-	--bg-primary: #0d1b2a;
-	--bg-secondary: #1a1a2e;
-	--bg-card: #16213e;
-	--bg-elevated: #1f2937;
+	/* Core BitLingo palette */
+	--bg-deep: #0f1f35;
+	--bg-primary: #1a365d;
+	--bg-secondary: #234270;
+	--bg-card: #1e4175;
+	--bg-elevated: #2d5a8a;
 	
-	/* Accent gradients */
-	--accent-blue: #4361ee;
-	--accent-cyan: #4cc9f0;
-	--accent-purple: #7209b7;
-	--accent-pink: #f72585;
-	--accent-violet: #5a189a;
+	/* Accent colors - BitLingo orange/gold */
+	--accent-primary: #f5a623;
+	--accent-light: #ffb940;
+	--accent-dark: #e8930c;
+	--accent-glow: rgba(245, 166, 35, 0.4);
+	
+	/* Secondary accents */
+	--accent-teal: #4ecdc4;
+	--accent-green: #7cb342;
 	
 	/* Text colors */
-	--text-primary: #f8fafc;
-	--text-secondary: #94a3b8;
-	--text-muted: #64748b;
+	--text-primary: #ffffff;
+	--text-secondary: #b8c9e0;
+	--text-muted: #7a95b5;
 	
 	/* Gradients */
-	--gradient-primary: linear-gradient(135deg, #4361ee 0%, #7209b7 100%);
-	--gradient-accent: linear-gradient(135deg, #f72585 0%, #7209b7 100%);
-	--gradient-cool: linear-gradient(135deg, #4cc9f0 0%, #4361ee 100%);
-	--gradient-bg: linear-gradient(180deg, #0d1b2a 0%, #1a1a2e 50%, #10002b 100%);
+	--gradient-primary: linear-gradient(135deg, #f5a623 0%, #e8930c 100%);
+	--gradient-bg: linear-gradient(180deg, #0f1f35 0%, #1a365d 50%, #0f1f35 100%);
 	--gradient-card: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+	--gradient-header: linear-gradient(135deg, #f5a623, #ffb940);
 	
 	/* Effects */
-	--glow-blue: 0 0 20px rgba(67, 97, 238, 0.4);
-	--glow-purple: 0 0 20px rgba(114, 9, 183, 0.4);
-	--glow-pink: 0 0 20px rgba(247, 37, 133, 0.4);
-	--shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(67, 97, 238, 0.1);
+	--glow-orange: 0 0 20px rgba(245, 166, 35, 0.4);
+	--glow-strong: 0 0 30px rgba(245, 166, 35, 0.6);
+	--shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(245, 166, 35, 0.08);
 	--shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.4);
 	
 	/* Borders */
 	--border-subtle: rgba(255, 255, 255, 0.08);
-	--border-accent: rgba(67, 97, 238, 0.3);
+	--border-accent: rgba(245, 166, 35, 0.3);
+	--border-gold: rgba(245, 166, 35, 0.5);
 	
 	/* Spacing */
 	--radius-sm: 8px;
@@ -97,9 +99,9 @@ body::before {
 	right: 0;
 	bottom: 0;
 	background-image: 
-		radial-gradient(circle at 20% 20%, rgba(67, 97, 238, 0.08) 0%, transparent 50%),
-		radial-gradient(circle at 80% 80%, rgba(114, 9, 183, 0.08) 0%, transparent 50%),
-		radial-gradient(circle at 40% 60%, rgba(247, 37, 133, 0.05) 0%, transparent 40%);
+		radial-gradient(circle at 20% 20%, rgba(245, 166, 35, 0.06) 0%, transparent 50%),
+		radial-gradient(circle at 80% 80%, rgba(245, 166, 35, 0.04) 0%, transparent 50%),
+		radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 30%);
 	pointer-events: none;
 	z-index: -1;
 }
@@ -151,14 +153,14 @@ strong, b {
 
 /* Links */
 a {
-	color: var(--accent-cyan);
+	color: var(--accent-primary);
 	text-decoration: none;
 	transition: all 0.3s ease;
 }
 
 a:hover {
-	color: var(--accent-pink);
-	text-shadow: var(--glow-pink);
+	color: var(--accent-light);
+	text-shadow: var(--glow-orange);
 }
 
 p {
@@ -181,16 +183,16 @@ li {
 }
 
 li::marker {
-	color: var(--accent-blue);
+	color: var(--accent-primary);
 }
 
 /* Code */
 code {
 	padding: 0.2em 0.5em;
-	background: rgba(67, 97, 238, 0.15);
+	background: rgba(245, 166, 35, 0.12);
 	border: 1px solid var(--border-accent);
 	border-radius: var(--radius-sm);
-	color: var(--accent-cyan);
+	color: var(--accent-light);
 	font-size: 0.9em;
 }
 
@@ -212,7 +214,7 @@ blockquote {
 	margin: 2em 0;
 	padding: 1.5em 2em;
 	background: var(--gradient-card), var(--bg-card);
-	border-left: 4px solid var(--accent-purple);
+	border-left: 4px solid var(--accent-primary);
 	border-radius: 0 var(--radius-md) var(--radius-md) 0;
 	font-size: 1.1em;
 	color: var(--text-primary);
@@ -274,8 +276,8 @@ input, textarea {
 
 input:focus, textarea:focus {
 	outline: none;
-	border-color: var(--accent-blue);
-	box-shadow: var(--glow-blue);
+	border-color: var(--accent-primary);
+	box-shadow: var(--glow-orange);
 }
 
 /* Buttons */
@@ -288,9 +290,9 @@ button, .btn {
 	background: var(--gradient-primary);
 	border: none;
 	border-radius: var(--radius-lg);
-	color: white;
+	color: #1a365d;
 	font-size: 1rem;
-	font-weight: 600;
+	font-weight: 700;
 	font-family: inherit;
 	cursor: pointer;
 	transition: all 0.3s ease;
@@ -298,7 +300,7 @@ button, .btn {
 
 button:hover, .btn:hover {
 	transform: translateY(-2px);
-	box-shadow: var(--shadow-elevated), var(--glow-blue);
+	box-shadow: var(--shadow-elevated), var(--glow-orange);
 }
 
 /* Card component */
@@ -324,10 +326,10 @@ button:hover, .btn:hover {
 	background: var(--gradient-primary);
 	border-radius: 50px;
 	font-size: 0.75rem;
-	font-weight: 600;
+	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
-	color: white;
+	color: #1a365d;
 }
 
 .badge--secondary {
@@ -361,7 +363,7 @@ button:hover, .btn:hover {
 	left: 0;
 	width: 0;
 	height: 2px;
-	background: var(--gradient-accent);
+	background: var(--gradient-primary);
 	transition: width 0.3s ease;
 }
 
@@ -390,8 +392,8 @@ button:hover, .btn:hover {
 }
 
 @keyframes pulse-glow {
-	0%, 100% { box-shadow: 0 0 20px rgba(67, 97, 238, 0.4); }
-	50% { box-shadow: 0 0 40px rgba(67, 97, 238, 0.6); }
+	0%, 100% { box-shadow: 0 0 20px rgba(245, 166, 35, 0.4); }
+	50% { box-shadow: 0 0 40px rgba(245, 166, 35, 0.6); }
 }
 
 @keyframes gradient-shift {
@@ -421,7 +423,7 @@ button:hover, .btn:hover {
 
 /* Selection styling */
 ::selection {
-	background: rgba(67, 97, 238, 0.4);
+	background: rgba(245, 166, 35, 0.4);
 	color: white;
 }
 
@@ -442,5 +444,5 @@ button:hover, .btn:hover {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--accent-blue);
+	background: var(--accent-primary);
 }

@@ -218,8 +218,8 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 		align-items: center;
 		gap: 0.5rem;
 		padding: 0.5rem 1rem;
-		background: rgba(67, 97, 238, 0.1);
-		border: 1px solid rgba(67, 97, 238, 0.2);
+		background: rgba(245, 166, 35, 0.1);
+		border: 1px solid rgba(245, 166, 35, 0.2);
 		border-radius: 50px;
 		color: var(--text-secondary);
 		font-size: 0.85rem;
@@ -230,8 +230,8 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 	}
 
 	.back-link:hover {
-		background: rgba(67, 97, 238, 0.2);
-		color: var(--accent-cyan);
+		background: rgba(245, 166, 35, 0.2);
+		color: var(--accent-primary);
 	}
 
 	.back-link svg {
@@ -268,14 +268,14 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 	}
 
 	.meta-item.updated {
-		color: var(--accent-cyan);
+		color: var(--accent-primary);
 	}
 
 	.article-header h1 {
 		font-size: clamp(2rem, 5vw, 3rem);
 		line-height: 1.2;
 		margin: 0 0 1rem;
-		background: linear-gradient(135deg, var(--text-primary), var(--accent-cyan));
+		background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
@@ -300,7 +300,7 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 		width: 100%;
 		height: auto;
 		border-radius: 20px;
-		box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 40px rgba(67, 97, 238, 0.1);
+		box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 40px rgba(245, 166, 35, 0.1);
 	}
 
 	/* Article Content */
@@ -331,14 +331,14 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 	}
 
 	.article-content :global(a) {
-		color: var(--accent-cyan);
+		color: var(--accent-primary);
 		text-decoration: underline;
 		text-underline-offset: 3px;
 		transition: color 0.3s ease;
 	}
 
 	.article-content :global(a:hover) {
-		color: var(--accent-pink);
+		color: var(--accent-light);
 	}
 
 	.article-content :global(ul),
@@ -361,8 +361,8 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 	.article-content :global(blockquote) {
 		margin: 2rem 0;
 		padding: 1.5rem 2rem;
-		background: linear-gradient(145deg, rgba(67, 97, 238, 0.1), rgba(114, 9, 183, 0.1));
-		border-left: 4px solid var(--accent-purple);
+		background: linear-gradient(145deg, rgba(245, 166, 35, 0.1), rgba(232, 147, 12, 0.05));
+		border-left: 4px solid var(--accent-primary);
 		border-radius: 0 16px 16px 0;
 	}
 
@@ -373,12 +373,12 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 	}
 
 	.article-content :global(code) {
-		background: rgba(67, 97, 238, 0.15);
-		border: 1px solid rgba(67, 97, 238, 0.2);
+		background: rgba(245, 166, 35, 0.12);
+		border: 1px solid rgba(245, 166, 35, 0.2);
 		padding: 0.2em 0.5em;
 		border-radius: 6px;
 		font-size: 0.9em;
-		color: var(--accent-cyan);
+		color: var(--accent-light);
 	}
 
 	.article-content :global(pre) {
@@ -441,9 +441,9 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 	}
 
 	.share-btn:hover {
-		background: rgba(67, 97, 238, 0.2);
-		border-color: rgba(67, 97, 238, 0.3);
-		color: var(--accent-cyan);
+		background: rgba(245, 166, 35, 0.2);
+		border-color: rgba(245, 166, 35, 0.3);
+		color: var(--accent-primary);
 		transform: translateY(-2px);
 	}
 
@@ -460,19 +460,19 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 		align-items: center;
 		gap: 0.5rem;
 		padding: 0.75rem 1.5rem;
-		background: linear-gradient(135deg, #4361ee, #7209b7);
+		background: linear-gradient(135deg, #f5a623, #e8930c);
 		border-radius: 50px;
-		color: white;
-		font-weight: 600;
+		color: #1a365d;
+		font-weight: 700;
 		text-decoration: none;
 		transition: all 0.3s ease;
-		box-shadow: 0 4px 20px rgba(67, 97, 238, 0.3);
+		box-shadow: 0 4px 20px rgba(245, 166, 35, 0.3);
 	}
 
 	.back-to-blog:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 8px 30px rgba(67, 97, 238, 0.5);
-		color: white;
+		box-shadow: 0 8px 30px rgba(245, 166, 35, 0.5);
+		color: #1a365d;
 	}
 
 	.back-to-blog svg {
