@@ -12,7 +12,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "yarn build && wrangler pages deploy dist --project-name=bitlingo-blog"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
@@ -20,5 +21,8 @@
     "@astrojs/sitemap": "^3.6.1",
     "astro": "^5.16.9",
     "sharp": "^0.34.3"
+  },
+  "devDependencies": {
+    "wrangler": "^4.59.2"
   }
 }
