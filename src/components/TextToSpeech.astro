@@ -1,0 +1,389 @@
+---
+/**
+ * TextToSpeech Component
+ * Listen to articles hands-free using Web Speech API
+ */
+interface Props {
+  lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
+
+// Map language codes to speech synthesis language codes
+const speechLangMap: Record<string, string> = {
+  en: 'en-US',
+  es: 'es-ES',
+  fr: 'fr-FR',
+  de: 'de-DE',
+  it: 'it-IT',
+  pt: 'pt-BR',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
+  zh: 'zh-CN',
+  ar: 'ar-SA',
+  ru: 'ru-RU',
+  hi: 'hi-IN',
+  tr: 'tr-TR',
+  pl: 'pl-PL',
+  uk: 'uk-UA',
+  he: 'he-IL',
+};
+
+const speechLang = speechLangMap[lang] || 'en-US';
+---
+
+<div class="tts-widget" id="tts-widget" data-lang={speechLang}>
+  <button class="tts-btn" id="tts-btn" aria-label="Listen to article">
+    <svg class="play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="5 3 19 12 5 21 5 3"/>
+    </svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" hidden>
+      <rect x="6" y="4" width="4" height="16"/>
+      <rect x="14" y="4" width="4" height="16"/>
+    </svg>
+    <span class="tts-text">Listen</span>
+  </button>
+  
+  <div class="tts-controls" id="tts-controls" hidden>
+    <button class="control-btn" id="tts-prev" aria-label="Previous paragraph">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="19 20 9 12 19 4 19 20"/>
+        <line x1="5" y1="19" x2="5" y2="5"/>
+      </svg>
+    </button>
+    <button class="control-btn" id="tts-stop" aria-label="Stop">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="6" y="6" width="12" height="12"/>
+      </svg>
+    </button>
+    <button class="control-btn" id="tts-next" aria-label="Next paragraph">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5 4 15 12 5 20 5 4"/>
+        <line x1="19" y1="5" x2="19" y2="19"/>
+      </svg>
+    </button>
+    <div class="speed-control">
+      <label for="tts-speed">Speed:</label>
+      <select id="tts-speed">
+        <option value="0.75">0.75x</option>
+        <option value="1" selected>1x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2">2x</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="tts-progress" id="tts-progress" hidden>
+    <div class="progress-bar">
+      <div class="progress-fill" id="tts-progress-fill"></div>
+    </div>
+    <span class="progress-text" id="tts-progress-text">0 / 0</span>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const widget = document.getElementById('tts-widget');
+    const btn = document.getElementById('tts-btn');
+    const controls = document.getElementById('tts-controls');
+    const progress = document.getElementById('tts-progress');
+    const progressFill = document.getElementById('tts-progress-fill');
+    const progressText = document.getElementById('tts-progress-text');
+    const playIcon = btn?.querySelector('.play-icon');
+    const pauseIcon = btn?.querySelector('.pause-icon');
+    const btnText = btn?.querySelector('.tts-text');
+    const prevBtn = document.getElementById('tts-prev');
+    const stopBtn = document.getElementById('tts-stop');
+    const nextBtn = document.getElementById('tts-next');
+    const speedSelect = document.getElementById('tts-speed') as HTMLSelectElement;
+
+    if (!widget || !btn || !('speechSynthesis' in window)) {
+      widget?.remove();
+      return;
+    }
+
+    const lang = widget.getAttribute('data-lang') || 'en-US';
+    let paragraphs: string[] = [];
+    let currentIndex = 0;
+    let isPlaying = false;
+    let utterance: SpeechSynthesisUtterance | null = null;
+
+    // Get article content
+    function getArticleContent(): string[] {
+      const article = document.querySelector('.article-content, article, .prose');
+      if (!article) return [];
+
+      const elements = article.querySelectorAll('p, h2, h3, h4, li');
+      return Array.from(elements)
+        .map(el => el.textContent?.trim() || '')
+        .filter(text => text.length > 0);
+    }
+
+    function updateUI() {
+      if (playIcon && pauseIcon && btnText) {
+        playIcon.hidden = isPlaying;
+        pauseIcon.hidden = !isPlaying;
+        btnText.textContent = isPlaying ? 'Pause' : 'Listen';
+      }
+
+      if (controls) {
+        controls.hidden = !isPlaying && currentIndex === 0;
+      }
+
+      if (progress && progressFill && progressText) {
+        progress.hidden = paragraphs.length === 0;
+        const percent = paragraphs.length > 0 ? ((currentIndex + 1) / paragraphs.length) * 100 : 0;
+        progressFill.style.width = `${percent}%`;
+        progressText.textContent = `${currentIndex + 1} / ${paragraphs.length}`;
+      }
+    }
+
+    function speak(text: string) {
+      utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+      utterance.rate = parseFloat(speedSelect?.value || '1');
+
+      utterance.onend = () => {
+        if (currentIndex < paragraphs.length - 1) {
+          currentIndex++;
+          speak(paragraphs[currentIndex]);
+        } else {
+          stop();
+        }
+        updateUI();
+      };
+
+      utterance.onerror = () => {
+        stop();
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    function play() {
+      if (paragraphs.length === 0) {
+        paragraphs = getArticleContent();
+        if (paragraphs.length === 0) return;
+      }
+
+      isPlaying = true;
+      speak(paragraphs[currentIndex]);
+      updateUI();
+    }
+
+    function pause() {
+      isPlaying = false;
+      speechSynthesis.pause();
+      updateUI();
+    }
+
+    function resume() {
+      isPlaying = true;
+      speechSynthesis.resume();
+      updateUI();
+    }
+
+    function stop() {
+      isPlaying = false;
+      currentIndex = 0;
+      speechSynthesis.cancel();
+      updateUI();
+    }
+
+    function prev() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        speechSynthesis.cancel();
+        if (isPlaying) {
+          speak(paragraphs[currentIndex]);
+        }
+        updateUI();
+      }
+    }
+
+    function next() {
+      if (currentIndex < paragraphs.length - 1) {
+        currentIndex++;
+        speechSynthesis.cancel();
+        if (isPlaying) {
+          speak(paragraphs[currentIndex]);
+        }
+        updateUI();
+      }
+    }
+
+    btn.addEventListener('click', () => {
+      if (!isPlaying) {
+        if (speechSynthesis.paused) {
+          resume();
+        } else {
+          play();
+        }
+      } else {
+        pause();
+      }
+    });
+
+    prevBtn?.addEventListener('click', prev);
+    stopBtn?.addEventListener('click', stop);
+    nextBtn?.addEventListener('click', next);
+
+    speedSelect?.addEventListener('change', () => {
+      if (isPlaying && utterance) {
+        const wasPlaying = isPlaying;
+        speechSynthesis.cancel();
+        if (wasPlaying) {
+          speak(paragraphs[currentIndex]);
+        }
+      }
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      speechSynthesis.cancel();
+    });
+  });
+</script>
+
+<style>
+  .tts-widget {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(145deg, rgba(78, 205, 196, 0.1), rgba(78, 205, 196, 0.05));
+    border: 1px solid rgba(78, 205, 196, 0.2);
+    border-radius: 16px;
+    margin: 1.5rem 0;
+  }
+
+  .tts-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    background: linear-gradient(135deg, #4ecdc4, #3db8b0);
+    border: none;
+    border-radius: 50px;
+    color: #1a365d;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .tts-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+  }
+
+  .tts-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: #1a365d;
+    fill: none;
+  }
+
+  .tts-btn .play-icon polygon {
+    fill: #1a365d;
+  }
+
+  .tts-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .control-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-subtle);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .control-btn:hover {
+    background: rgba(78, 205, 196, 0.2);
+    border-color: var(--accent-teal);
+  }
+
+  .control-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--text-secondary);
+  }
+
+  .control-btn:hover svg {
+    stroke: var(--accent-teal);
+  }
+
+  .speed-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .speed-control select {
+    padding: 0.35rem 0.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .tts-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent-teal);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 600px) {
+    .tts-widget {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .tts-controls {
+      justify-content: center;
+    }
+
+    .tts-progress {
+      width: 100%;
+    }
+  }
+</style>

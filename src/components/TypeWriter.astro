@@ -1,0 +1,128 @@
+---
+/**
+ * TypeWriter Component
+ * Animated typing effect for text
+ */
+interface Props {
+  texts: string[];
+  speed?: number;
+  deleteSpeed?: number;
+  pauseDuration?: number;
+  loop?: boolean;
+  class?: string;
+}
+
+const { 
+  texts, 
+  speed = 100, 
+  deleteSpeed = 50,
+  pauseDuration = 2000,
+  loop = true,
+  class: className = ''
+} = Astro.props;
+---
+
+<span 
+  class={`typewriter ${className}`}
+  data-texts={JSON.stringify(texts)}
+  data-speed={speed}
+  data-delete-speed={deleteSpeed}
+  data-pause-duration={pauseDuration}
+  data-loop={loop}
+>
+  <span class="typewriter-text"></span>
+  <span class="typewriter-cursor">|</span>
+</span>
+
+<style>
+  .typewriter {
+    display: inline-flex;
+    align-items: baseline;
+  }
+
+  .typewriter-text {
+    display: inline;
+  }
+
+  .typewriter-cursor {
+    display: inline-block;
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+    color: var(--accent-primary);
+    font-weight: 300;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .typewriter-cursor {
+      animation: none;
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const typewriters = document.querySelectorAll('.typewriter');
+    
+    typewriters.forEach((tw) => {
+      const textEl = tw.querySelector('.typewriter-text') as HTMLElement;
+      if (!textEl) return;
+
+      const texts: string[] = JSON.parse(tw.getAttribute('data-texts') || '[]');
+      const speed = parseInt(tw.getAttribute('data-speed') || '100');
+      const deleteSpeed = parseInt(tw.getAttribute('data-delete-speed') || '50');
+      const pauseDuration = parseInt(tw.getAttribute('data-pause-duration') || '2000');
+      const loop = tw.getAttribute('data-loop') === 'true';
+
+      if (texts.length === 0) return;
+
+      let textIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+
+      function type() {
+        const currentText = texts[textIndex];
+        
+        if (isDeleting) {
+          textEl.textContent = currentText.substring(0, charIndex - 1);
+          charIndex--;
+        } else {
+          textEl.textContent = currentText.substring(0, charIndex + 1);
+          charIndex++;
+        }
+
+        let timeout = isDeleting ? deleteSpeed : speed;
+
+        if (!isDeleting && charIndex === currentText.length) {
+          // Finished typing
+          timeout = pauseDuration;
+          isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+          // Finished deleting
+          isDeleting = false;
+          textIndex++;
+          
+          if (textIndex >= texts.length) {
+            if (loop) {
+              textIndex = 0;
+            } else {
+              return; // Stop if not looping
+            }
+          }
+          timeout = 500; // Pause before typing next word
+        }
+
+        setTimeout(type, timeout);
+      }
+
+      // Start typing
+      setTimeout(type, 500);
+    });
+  });
+</script>

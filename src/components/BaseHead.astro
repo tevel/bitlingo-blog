@@ -101,3 +101,19 @@ const resolvedImageAlt = ogImageAlt || resolvedTitle;
 <meta property="twitter:description" content={resolvedDescription} />
 <meta property="twitter:image" content={resolvedImageUrl} />
 <meta property="twitter:image:alt" content={resolvedImageAlt} />
+
+<!-- PWA Support -->
+<meta name="theme-color" content="#1a365d" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="apple-touch-icon" href="/favicon.svg" />
+<link rel="manifest" href="/manifest.json" />
+
+<!-- Service Worker Registration -->
+<script is:inline>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
+</script>

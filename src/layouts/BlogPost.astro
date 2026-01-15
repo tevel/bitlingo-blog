@@ -12,6 +12,12 @@ import RelatedPosts from '../components/RelatedPosts.astro';
 import ReactionButtons from '../components/ReactionButtons.astro';
 import VocabQuiz from '../components/interactive/VocabQuiz.astro';
 import DailyWord from '../components/interactive/DailyWord.astro';
+import TextToSpeech from '../components/TextToSpeech.astro';
+import BookmarkButton from '../components/BookmarkButton.astro';
+import Comments from '../components/Comments.astro';
+import Newsletter from '../components/Newsletter.astro';
+import MobileNav from '../components/MobileNav.astro';
+import PWAInstallPrompt from '../components/PWAInstallPrompt.astro';
 import { DEFAULT_LANG } from '../consts';
 
 type Props = CollectionEntry<'blog'>['data'] & { 
@@ -128,6 +134,9 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 					</div>
 					<h1>{title}</h1>
 					<p class="article-description">{description}</p>
+					<div class="article-actions">
+						<BookmarkButton slug={currentSlug} title={title} lang={lang} />
+					</div>
 				</header>
 
 				<!-- Hero Image -->
@@ -145,6 +154,9 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 						</aside>
 					)}
 					<div class="article-content prose">
+						<!-- Text-to-Speech Widget -->
+						<TextToSpeech lang={lang} />
+						
 						<slot />
 					</div>
 				</div>
@@ -176,6 +188,16 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 				<!-- Related Posts -->
 				<div class="related-posts-wrapper">
 					<RelatedPosts currentSlug={currentSlug} lang={lang} keywords={keywords} limit={3} />
+				</div>
+
+				<!-- Comments Section -->
+				<div class="comments-wrapper">
+					<Comments lang={lang} />
+				</div>
+
+				<!-- Newsletter Signup -->
+				<div class="newsletter-wrapper">
+					<Newsletter />
 				</div>
 
 				<!-- Article Footer -->
@@ -228,6 +250,8 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 			</article>
 		</main>
 		<Footer />
+		<MobileNav lang={lang} />
+		<PWAInstallPrompt />
 		
 		<!-- Confetti Script for Game Celebrations -->
 		<script is:inline>
@@ -679,6 +703,25 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 		max-width: 800px;
 		margin: 0 auto;
 		padding: 0 1.5rem;
+	}
+
+	.comments-wrapper {
+		max-width: 900px;
+		margin: 0 auto;
+		padding: 0 1.5rem;
+	}
+
+	.newsletter-wrapper {
+		max-width: 700px;
+		margin: 3rem auto;
+		padding: 0 1.5rem;
+	}
+
+	.article-actions {
+		display: flex;
+		justify-content: center;
+		gap: 1rem;
+		margin-top: 1.5rem;
 	}
 
 	/* Responsive */

@@ -1,0 +1,208 @@
+---
+/**
+ * Bookmarks Component
+ * Shows saved articles list
+ */
+interface Props {
+  lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
+---
+
+<div class="bookmarks-widget" id="bookmarks-widget" hidden>
+  <h3 class="bookmarks-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    </svg>
+    Saved Articles
+  </h3>
+  <ul class="bookmarks-list" id="bookmarks-list"></ul>
+  <p class="empty-message" id="bookmarks-empty" hidden>
+    No saved articles yet. Click the bookmark icon on any article to save it for later.
+  </p>
+</div>
+
+<script define:vars={{ lang }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('bookmarks-widget');
+    const list = document.getElementById('bookmarks-list');
+    const emptyMsg = document.getElementById('bookmarks-empty');
+    if (!container || !list || !emptyMsg) return;
+
+    function renderBookmarks() {
+      const storageKey = `bookmarks_${lang}`;
+      const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+      if (bookmarks.length === 0) {
+        container.hidden = false;
+        list.hidden = true;
+        emptyMsg.hidden = false;
+        return;
+      }
+
+      container.hidden = false;
+      list.hidden = false;
+      emptyMsg.hidden = true;
+
+      list.innerHTML = bookmarks.map((bookmark: any) => `
+        <li class="bookmark-item">
+          <a href="/blog/${lang}/${bookmark.slug}/" class="bookmark-link">
+            <span class="bookmark-title">${bookmark.title}</span>
+            <span class="bookmark-date">${formatDate(bookmark.savedAt)}</span>
+          </a>
+          <button class="remove-btn" data-slug="${bookmark.slug}" aria-label="Remove bookmark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </li>
+      `).join('');
+
+      // Add remove handlers
+      list.querySelectorAll('.remove-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const slug = btn.getAttribute('data-slug');
+          if (!slug) return;
+
+          const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          const filtered = bookmarks.filter((b: any) => b.slug !== slug);
+          localStorage.setItem(storageKey, JSON.stringify(filtered));
+          
+          renderBookmarks();
+          
+          // Update any bookmark buttons on the page
+          const bookmarkBtn = document.querySelector(`.bookmark-btn[data-slug="${slug}"]`);
+          if (bookmarkBtn) {
+            bookmarkBtn.classList.remove('bookmarked');
+            const textEl = bookmarkBtn.querySelector('.bookmark-text');
+            if (textEl) textEl.textContent = 'Save';
+          }
+        });
+      });
+    }
+
+    function formatDate(timestamp: number): string {
+      const date = new Date(timestamp);
+      return date.toLocaleDateString(lang, { month: 'short', day: 'numeric' });
+    }
+
+    renderBookmarks();
+
+    // Listen for bookmark changes
+    window.addEventListener('bookmark:added', renderBookmarks);
+    window.addEventListener('bookmark:removed', renderBookmarks);
+  });
+</script>
+
+<style>
+  .bookmarks-widget {
+    padding: 1.5rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+  }
+
+  .bookmarks-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    margin: 0 0 1rem;
+    color: var(--text-primary);
+  }
+
+  .bookmarks-title svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--accent-primary);
+    fill: var(--accent-primary);
+  }
+
+  .bookmarks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .bookmark-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .bookmark-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .bookmark-link {
+    flex: 1;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .bookmark-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s ease;
+  }
+
+  .bookmark-link:hover .bookmark-title {
+    color: var(--accent-primary);
+  }
+
+  .bookmark-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .remove-btn {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+
+  .remove-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+  }
+
+  .remove-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--text-muted);
+    transition: stroke 0.2s ease;
+  }
+
+  .remove-btn:hover svg {
+    stroke: #ef4444;
+  }
+
+  .empty-message {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 1rem 0;
+    margin: 0;
+  }
+</style>

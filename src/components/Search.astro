@@ -1,0 +1,318 @@
+---
+/**
+ * Search Component
+ * Full-text search across all blog posts
+ */
+import { getCollection } from 'astro:content';
+
+interface Props {
+  lang?: string;
+  placeholder?: string;
+}
+
+const { lang = 'en', placeholder = 'Search articles...' } = Astro.props;
+
+// Get all posts for the search index
+const allPosts = await getCollection('blog');
+const posts = allPosts.filter(post => post.data.lang === lang);
+
+// Create search index
+const searchIndex = posts.map(post => ({
+  title: post.data.title,
+  description: post.data.description,
+  slug: post.data.path || post.data.slug || post.slug || post.id,
+  keywords: post.data.keywords || [],
+  pubDate: post.data.pubDate,
+}));
+---
+
+<div class="search-container">
+  <div class="search-input-wrapper">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input 
+      type="text" 
+      class="search-input" 
+      placeholder={placeholder}
+      aria-label="Search articles"
+      data-lang={lang}
+    />
+    <button class="search-clear" aria-label="Clear search" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="search-results" hidden>
+    <div class="search-results-header">
+      <span class="results-count">0 results</span>
+    </div>
+    <ul class="results-list"></ul>
+    <div class="no-results" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M16 16s-1.5-2-4-2-4 2-4 2"/>
+        <line x1="9" y1="9" x2="9.01" y2="9"/>
+        <line x1="15" y1="9" x2="15.01" y2="9"/>
+      </svg>
+      <p>No articles found. Try different keywords.</p>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ searchIndex, lang }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.search-container');
+    if (!container) return;
+
+    const input = container.querySelector('.search-input') as HTMLInputElement;
+    const clearBtn = container.querySelector('.search-clear') as HTMLButtonElement;
+    const resultsContainer = container.querySelector('.search-results') as HTMLElement;
+    const resultsList = container.querySelector('.results-list') as HTMLUListElement;
+    const resultsCount = container.querySelector('.results-count') as HTMLElement;
+    const noResults = container.querySelector('.no-results') as HTMLElement;
+
+    function search(query: string) {
+      if (!query.trim()) {
+        resultsContainer.hidden = true;
+        clearBtn.hidden = true;
+        return;
+      }
+
+      clearBtn.hidden = false;
+      const normalizedQuery = query.toLowerCase().trim();
+      const words = normalizedQuery.split(/\s+/);
+
+      const results = searchIndex.filter((post: any) => {
+        const titleMatch = post.title.toLowerCase().includes(normalizedQuery);
+        const descMatch = post.description.toLowerCase().includes(normalizedQuery);
+        const keywordMatch = post.keywords.some((k: string) => 
+          k.toLowerCase().includes(normalizedQuery)
+        );
+        const wordMatch = words.every((word: string) => 
+          post.title.toLowerCase().includes(word) ||
+          post.description.toLowerCase().includes(word) ||
+          post.keywords.some((k: string) => k.toLowerCase().includes(word))
+        );
+        return titleMatch || descMatch || keywordMatch || wordMatch;
+      });
+
+      resultsContainer.hidden = false;
+      resultsCount.textContent = `${results.length} result${results.length !== 1 ? 's' : ''}`;
+
+      if (results.length === 0) {
+        resultsList.innerHTML = '';
+        noResults.hidden = false;
+      } else {
+        noResults.hidden = true;
+        resultsList.innerHTML = results.map((post: any) => `
+          <li class="result-item">
+            <a href="/blog/${lang}/${post.slug}/">
+              <h4>${highlightMatch(post.title, normalizedQuery)}</h4>
+              <p>${highlightMatch(truncate(post.description, 120), normalizedQuery)}</p>
+            </a>
+          </li>
+        `).join('');
+      }
+    }
+
+    function highlightMatch(text: string, query: string): string {
+      if (!query) return text;
+      const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      return text.replace(regex, '<mark>$1</mark>');
+    }
+
+    function truncate(text: string, length: number): string {
+      if (text.length <= length) return text;
+      return text.substring(0, length).trim() + '...';
+    }
+
+    let debounceTimer: number;
+    input.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(() => {
+        search(input.value);
+      }, 200);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      resultsContainer.hidden = true;
+      clearBtn.hidden = true;
+      input.focus();
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+      if (!container.contains(e.target as Node)) {
+        resultsContainer.hidden = true;
+      }
+    });
+
+    // Keyboard navigation
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        resultsContainer.hidden = true;
+        input.blur();
+      }
+    });
+  });
+</script>
+
+<style>
+  .search-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    width: 20px;
+    height: 20px;
+    stroke: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 0.875rem 3rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 50px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.15);
+  }
+
+  .search-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .search-clear {
+    position: absolute;
+    right: 0.75rem;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+  }
+
+  .search-clear:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .search-clear svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--text-muted);
+  }
+
+  .search-results {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    box-shadow: var(--shadow-elevated);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  .search-results-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .results-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .result-item {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .result-item:last-child {
+    border-bottom: none;
+  }
+
+  .result-item a {
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .result-item a:hover {
+    background: rgba(245, 166, 35, 0.08);
+  }
+
+  .result-item h4 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    color: var(--text-primary);
+  }
+
+  .result-item p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .result-item :global(mark) {
+    background: rgba(245, 166, 35, 0.3);
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+
+  .no-results {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  .no-results svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+    stroke: var(--text-muted);
+  }
+
+  .no-results p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+</style>

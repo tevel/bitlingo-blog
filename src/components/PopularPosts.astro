@@ -1,0 +1,136 @@
+---
+/**
+ * PopularPosts Component
+ * Shows trending/popular articles
+ */
+import { getCollection } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+  lang?: string;
+  limit?: number;
+}
+
+const { lang = 'en', limit = 5 } = Astro.props;
+
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .filter(post => post.data.lang === lang)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, limit);
+
+const getPathSlug = (post: (typeof posts)[number]) => {
+  if (post.data.path) return post.data.path;
+  if (post.data.slug?.startsWith(`${post.data.lang}-`)) {
+    return post.data.slug.slice(post.data.lang.length + 1);
+  }
+  return post.data.slug ?? post.slug ?? post.id;
+};
+---
+
+<div class="popular-posts">
+  <h3 class="popular-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
+    Popular Articles
+  </h3>
+  <ul class="posts-list">
+    {posts.map((post, index) => (
+      <li class="post-item">
+        <span class="post-rank">{index + 1}</span>
+        <a href={`/blog/${lang}/${getPathSlug(post)}/`} class="post-link">
+          <h4>{post.data.title}</h4>
+          <span class="post-date">
+            <FormattedDate date={post.data.pubDate} />
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .popular-posts {
+    padding: 1.5rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+  }
+
+  .popular-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    margin: 0 0 1rem;
+    color: var(--text-primary);
+  }
+
+  .popular-title svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--accent-primary);
+  }
+
+  .posts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .post-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .post-rank {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    background: linear-gradient(135deg, rgba(245, 166, 35, 0.2), rgba(245, 166, 35, 0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--accent-primary);
+  }
+
+  .post-item:first-child .post-rank {
+    background: linear-gradient(135deg, #f5a623, #e8930c);
+    color: #1a365d;
+  }
+
+  .post-link {
+    text-decoration: none;
+    flex: 1;
+  }
+
+  .post-link h4 {
+    margin: 0 0 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+    transition: color 0.2s ease;
+  }
+
+  .post-link:hover h4 {
+    color: var(--accent-primary);
+  }
+
+  .post-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+</style>

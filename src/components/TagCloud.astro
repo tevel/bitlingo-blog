@@ -1,0 +1,148 @@
+---
+/**
+ * TagCloud Component
+ * Displays all tags/keywords with counts
+ */
+import { getCollection } from 'astro:content';
+
+interface Props {
+  lang?: string;
+  limit?: number;
+  showCount?: boolean;
+}
+
+const { lang = 'en', limit = 20, showCount = true } = Astro.props;
+
+const allPosts = await getCollection('blog');
+const posts = allPosts.filter(post => post.data.lang === lang);
+
+// Count keywords
+const keywordCounts = new Map<string, number>();
+posts.forEach(post => {
+  (post.data.keywords || []).forEach((keyword: string) => {
+    const normalized = keyword.toLowerCase().trim();
+    keywordCounts.set(normalized, (keywordCounts.get(normalized) || 0) + 1);
+  });
+});
+
+// Sort by count and limit
+const sortedKeywords = Array.from(keywordCounts.entries())
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, limit);
+
+// Calculate size based on count
+const maxCount = Math.max(...sortedKeywords.map(([, count]) => count));
+const minCount = Math.min(...sortedKeywords.map(([, count]) => count));
+
+function getSize(count: number): 'sm' | 'md' | 'lg' | 'xl' {
+  const range = maxCount - minCount || 1;
+  const normalized = (count - minCount) / range;
+  if (normalized > 0.75) return 'xl';
+  if (normalized > 0.5) return 'lg';
+  if (normalized > 0.25) return 'md';
+  return 'sm';
+}
+---
+
+<div class="tag-cloud">
+  <h3 class="tag-cloud-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+      <line x1="7" y1="7" x2="7.01" y2="7"/>
+    </svg>
+    Popular Topics
+  </h3>
+  <div class="tags">
+    {sortedKeywords.map(([keyword, count]) => (
+      <a 
+        href={`/blog/${lang}/?tag=${encodeURIComponent(keyword)}`} 
+        class={`tag tag-${getSize(count)}`}
+        data-count={count}
+      >
+        {keyword}
+        {showCount && <span class="tag-count">{count}</span>}
+      </a>
+    ))}
+  </div>
+</div>
+
+<style>
+  .tag-cloud {
+    padding: 1.5rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+  }
+
+  .tag-cloud-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    margin: 0 0 1rem;
+    color: var(--text-primary);
+  }
+
+  .tag-cloud-title svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--accent-primary);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.85rem;
+    background: rgba(245, 166, 35, 0.1);
+    border: 1px solid rgba(245, 166, 35, 0.2);
+    border-radius: 50px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .tag:hover {
+    background: rgba(245, 166, 35, 0.2);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+    transform: translateY(-2px);
+  }
+
+  .tag-sm {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .tag-md {
+    font-size: 0.875rem;
+  }
+
+  .tag-lg {
+    font-size: 0.95rem;
+    padding: 0.45rem 0.95rem;
+  }
+
+  .tag-xl {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(245, 166, 35, 0.15);
+    border-color: rgba(245, 166, 35, 0.3);
+    color: var(--accent-primary);
+  }
+
+  .tag-count {
+    font-size: 0.75em;
+    padding: 0.15rem 0.4rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    color: var(--text-muted);
+  }
+</style>

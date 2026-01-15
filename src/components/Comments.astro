@@ -1,0 +1,204 @@
+---
+/**
+ * Comments Component
+ * GitHub Discussions powered comments using Giscus
+ * 
+ * To enable comments:
+ * 1. Go to https://giscus.app
+ * 2. Configure for your GitHub repo
+ * 3. Update the data attributes below
+ */
+interface Props {
+  lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
+
+// Map language codes to Giscus supported languages
+const giscusLangMap: Record<string, string> = {
+  en: 'en',
+  es: 'es',
+  fr: 'fr',
+  de: 'de',
+  it: 'it',
+  pt: 'pt',
+  ja: 'ja',
+  ko: 'ko',
+  zh: 'zh-CN',
+  ar: 'ar',
+  ru: 'ru',
+  hi: 'en', // Hindi not supported, fallback to English
+  tr: 'tr',
+  pl: 'pl',
+  uk: 'uk',
+  he: 'he',
+};
+
+const giscusLang = giscusLangMap[lang] || 'en';
+---
+
+<section class="comments-section">
+  <h2 class="comments-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    Discussion
+  </h2>
+  
+  <div class="giscus-container">
+    <div class="giscus-placeholder" id="giscus-placeholder">
+      <button class="load-comments-btn" id="load-comments-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Load Comments
+      </button>
+      <p class="placeholder-text">Click to load comments powered by GitHub Discussions</p>
+    </div>
+    <div class="giscus" id="giscus-widget" hidden></div>
+  </div>
+</section>
+
+<script define:vars={{ giscusLang }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const loadBtn = document.getElementById('load-comments-btn');
+    const placeholder = document.getElementById('giscus-placeholder');
+    const widget = document.getElementById('giscus-widget');
+
+    function loadGiscus() {
+      if (!placeholder || !widget) return;
+      
+      placeholder.hidden = true;
+      widget.hidden = false;
+
+      const script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.setAttribute('data-repo', 'bitlingo/bitlingo-blog'); // Update with your repo
+      script.setAttribute('data-repo-id', ''); // Get from giscus.app
+      script.setAttribute('data-category', 'Announcements');
+      script.setAttribute('data-category-id', ''); // Get from giscus.app
+      script.setAttribute('data-mapping', 'pathname');
+      script.setAttribute('data-strict', '0');
+      script.setAttribute('data-reactions-enabled', '1');
+      script.setAttribute('data-emit-metadata', '0');
+      script.setAttribute('data-input-position', 'bottom');
+      script.setAttribute('data-theme', 'transparent_dark');
+      script.setAttribute('data-lang', giscusLang);
+      script.setAttribute('data-loading', 'lazy');
+      script.crossOrigin = 'anonymous';
+      script.async = true;
+
+      widget.appendChild(script);
+    }
+
+    loadBtn?.addEventListener('click', loadGiscus);
+
+    // Auto-load if user scrolls near comments
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+          loadGiscus();
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    if (placeholder) {
+      observer.observe(placeholder);
+    }
+  });
+</script>
+
+<style>
+  .comments-section {
+    max-width: 800px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+    border: 1px solid var(--border-subtle);
+    border-radius: 24px;
+  }
+
+  .comments-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    margin: 0 0 1.5rem;
+    color: var(--text-primary);
+  }
+
+  .comments-title svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--accent-primary);
+  }
+
+  .giscus-container {
+    min-height: 200px;
+  }
+
+  .giscus-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed var(--border-subtle);
+    border-radius: 16px;
+    text-align: center;
+  }
+
+  .load-comments-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #f5a623, #e8930c);
+    border: none;
+    border-radius: 50px;
+    color: #1a365d;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .load-comments-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 166, 35, 0.4);
+  }
+
+  .load-comments-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: #1a365d;
+  }
+
+  .placeholder-text {
+    margin: 1rem 0 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .giscus {
+    width: 100%;
+  }
+
+  /* Style the giscus iframe */
+  .giscus :global(iframe) {
+    width: 100% !important;
+  }
+
+  @media (max-width: 600px) {
+    .comments-section {
+      padding: 1.5rem;
+      margin: 3rem auto;
+    }
+
+    .giscus-placeholder {
+      padding: 2rem 1rem;
+    }
+  }
+</style>

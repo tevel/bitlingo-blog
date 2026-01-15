@@ -1,0 +1,283 @@
+---
+/**
+ * ReadingHistory Component
+ * Shows recently read articles with "Continue reading" functionality
+ */
+import { getCollection } from 'astro:content';
+
+interface Props {
+  lang?: string;
+  limit?: number;
+}
+
+const { lang = 'en', limit = 3 } = Astro.props;
+
+const allPosts = await getCollection('blog');
+const posts = allPosts.filter(post => post.data.lang === lang);
+
+// Create a map for quick lookup
+const postsMap = new Map(posts.map(post => {
+  const slug = post.data.path || post.data.slug || post.slug || post.id;
+  return [slug, post];
+}));
+---
+
+<div class="reading-history" id="reading-history" hidden>
+  <h3 class="history-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </svg>
+    Continue Reading
+  </h3>
+  <ul class="history-list" id="history-list"></ul>
+</div>
+
+<script define:vars={{ lang, limit }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('reading-history');
+    const list = document.getElementById('history-list');
+    if (!container || !list) return;
+
+    // Get reading history from localStorage
+    const historyKey = `reading_history_${lang}`;
+    const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+
+    if (history.length === 0) {
+      return; // Don't show if no history
+    }
+
+    // Show the container
+    container.hidden = false;
+
+    // Render history items (most recent first, limited)
+    const recentHistory = history.slice(0, limit);
+    
+    list.innerHTML = recentHistory.map((item: any) => {
+      const progressPercent = Math.round((item.scrollPosition || 0) * 100);
+      const isComplete = progressPercent >= 90;
+      
+      return `
+        <li class="history-item ${isComplete ? 'completed' : ''}">
+          <a href="/blog/${lang}/${item.slug}/" class="history-link">
+            <div class="history-content">
+              <h4>${item.title}</h4>
+              <div class="history-meta">
+                <span class="read-date">${formatDate(item.lastRead)}</span>
+                ${!isComplete ? `
+                  <span class="progress-indicator">
+                    <span class="progress-bar">
+                      <span class="progress-fill" style="width: ${progressPercent}%"></span>
+                    </span>
+                    <span class="progress-text">${progressPercent}%</span>
+                  </span>
+                ` : `
+                  <span class="completed-badge">✓ Completed</span>
+                `}
+              </div>
+            </div>
+            <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </li>
+      `;
+    }).join('');
+
+    function formatDate(timestamp: number): string {
+      const date = new Date(timestamp);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 0) return 'Today';
+      if (diffDays === 1) return 'Yesterday';
+      if (diffDays < 7) return `${diffDays} days ago`;
+      
+      return date.toLocaleDateString(lang, { month: 'short', day: 'numeric' });
+    }
+  });
+
+  // Track reading progress on article pages
+  if (window.location.pathname.match(/\/blog\/[a-z]{2}\/[^/]+\/?$/)) {
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const currentLang = pathParts[1];
+    const currentSlug = pathParts[2];
+    
+    // Get article title from page
+    const titleEl = document.querySelector('article h1, .article-title, h1');
+    const title = titleEl?.textContent || document.title;
+
+    // Update history
+    const historyKey = `reading_history_${currentLang}`;
+    let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+    
+    // Remove existing entry for this article
+    history = history.filter((item: any) => item.slug !== currentSlug);
+    
+    // Add/update entry
+    const entry = {
+      slug: currentSlug,
+      title: title,
+      lastRead: Date.now(),
+      scrollPosition: 0
+    };
+    
+    history.unshift(entry);
+    
+    // Keep only last 20 items
+    history = history.slice(0, 20);
+    
+    localStorage.setItem(historyKey, JSON.stringify(history));
+
+    // Track scroll position
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+          
+          // Update the entry's scroll position
+          const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+          const entryIndex = history.findIndex((item: any) => item.slug === currentSlug);
+          
+          if (entryIndex !== -1 && scrollPercent > (history[entryIndex].scrollPosition || 0)) {
+            history[entryIndex].scrollPosition = scrollPercent;
+            localStorage.setItem(historyKey, JSON.stringify(history));
+          }
+          
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+</script>
+
+<style>
+  .reading-history {
+    padding: 1.5rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+  }
+
+  .history-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    margin: 0 0 1rem;
+    color: var(--text-primary);
+  }
+
+  .history-title svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--accent-primary);
+  }
+
+  .history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .history-item {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .history-item:last-child {
+    border-bottom: none;
+  }
+
+  .history-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.875rem 0;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .history-link:hover {
+    padding-left: 0.5rem;
+  }
+
+  .history-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .history-content h4 {
+    margin: 0 0 0.35rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s ease;
+  }
+
+  .history-link:hover h4 {
+    color: var(--accent-primary);
+  }
+
+  .history-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .read-date {
+    color: var(--text-muted);
+  }
+
+  .progress-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .progress-bar {
+    width: 60px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent-primary);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-text {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+
+  .completed-badge {
+    color: var(--accent-teal);
+    font-weight: 600;
+  }
+
+  .arrow-icon {
+    width: 18px;
+    height: 18px;
+    stroke: var(--text-muted);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .history-link:hover .arrow-icon {
+    stroke: var(--accent-primary);
+    transform: translateX(3px);
+  }
+</style>

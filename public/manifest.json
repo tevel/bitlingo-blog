@@ -1,0 +1,21 @@
+{
+  "name": "BitLingo Blog",
+  "short_name": "BitLingo",
+  "description": "Learn languages the smart way with audio-first vocabulary learning",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1f35",
+  "theme_color": "#1a365d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "language"],
+  "lang": "en",
+  "dir": "ltr"
+}

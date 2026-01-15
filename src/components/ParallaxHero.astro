@@ -1,0 +1,98 @@
+---
+/**
+ * ParallaxHero Component
+ * Creates a parallax scrolling effect for hero sections
+ */
+interface Props {
+  speed?: number;
+  class?: string;
+}
+
+const { speed = 0.5, class: className = '' } = Astro.props;
+---
+
+<div class={`parallax-hero ${className}`} data-speed={speed}>
+  <div class="parallax-bg">
+    <slot name="background" />
+  </div>
+  <div class="parallax-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .parallax-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .parallax-bg {
+    position: absolute;
+    top: -20%;
+    left: 0;
+    right: 0;
+    bottom: -20%;
+    z-index: 0;
+    will-change: transform;
+    pointer-events: none;
+  }
+
+  .parallax-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .parallax-bg {
+      transform: none !important;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const parallaxElements = document.querySelectorAll('.parallax-hero');
+    
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    let ticking = false;
+
+    function updateParallax() {
+      const scrollY = window.scrollY;
+
+      parallaxElements.forEach((el) => {
+        const bg = el.querySelector('.parallax-bg') as HTMLElement;
+        if (!bg) return;
+
+        const speed = parseFloat(el.getAttribute('data-speed') || '0.5');
+        const rect = el.getBoundingClientRect();
+        
+        // Only apply parallax when element is in view
+        if (rect.bottom > 0 && rect.top < window.innerHeight) {
+          const yPos = (scrollY - el.offsetTop) * speed;
+          bg.style.transform = `translate3d(0, ${yPos}px, 0)`;
+        }
+      });
+
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateParallax(); // Initial call
+  });
+</script>

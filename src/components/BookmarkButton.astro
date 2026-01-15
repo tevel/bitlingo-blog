@@ -1,0 +1,152 @@
+---
+/**
+ * BookmarkButton Component
+ * Allows users to save articles for later reading
+ */
+interface Props {
+  slug: string;
+  title: string;
+  lang?: string;
+}
+
+const { slug, title, lang = 'en' } = Astro.props;
+---
+
+<button 
+  class="bookmark-btn" 
+  data-slug={slug}
+  data-title={title}
+  data-lang={lang}
+  aria-label="Bookmark this article"
+  title="Save for later"
+>
+  <svg class="bookmark-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+  </svg>
+  <span class="bookmark-text">Save</span>
+</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const bookmarkBtns = document.querySelectorAll('.bookmark-btn');
+    
+    bookmarkBtns.forEach((btn) => {
+      const slug = btn.getAttribute('data-slug');
+      const title = btn.getAttribute('data-title');
+      const lang = btn.getAttribute('data-lang') || 'en';
+      
+      if (!slug) return;
+
+      const storageKey = `bookmarks_${lang}`;
+      
+      // Check if already bookmarked
+      const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      const isBookmarked = bookmarks.some((b: any) => b.slug === slug);
+      
+      if (isBookmarked) {
+        btn.classList.add('bookmarked');
+        const textEl = btn.querySelector('.bookmark-text');
+        if (textEl) textEl.textContent = 'Saved';
+      }
+
+      btn.addEventListener('click', () => {
+        const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        const existingIndex = bookmarks.findIndex((b: any) => b.slug === slug);
+        
+        if (existingIndex !== -1) {
+          // Remove bookmark
+          bookmarks.splice(existingIndex, 1);
+          btn.classList.remove('bookmarked');
+          const textEl = btn.querySelector('.bookmark-text');
+          if (textEl) textEl.textContent = 'Save';
+          
+          // Dispatch event
+          window.dispatchEvent(new CustomEvent('bookmark:removed', { detail: { slug, title } }));
+        } else {
+          // Add bookmark
+          bookmarks.unshift({
+            slug,
+            title,
+            savedAt: Date.now()
+          });
+          btn.classList.add('bookmarked');
+          const textEl = btn.querySelector('.bookmark-text');
+          if (textEl) textEl.textContent = 'Saved';
+          
+          // Animate
+          btn.classList.add('animate');
+          setTimeout(() => btn.classList.remove('animate'), 600);
+          
+          // Dispatch event
+          window.dispatchEvent(new CustomEvent('bookmark:added', { detail: { slug, title } }));
+        }
+        
+        localStorage.setItem(storageKey, JSON.stringify(bookmarks));
+      });
+    });
+  });
+</script>
+
+<style>
+  .bookmark-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    border-radius: 50px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .bookmark-btn:hover {
+    background: rgba(245, 166, 35, 0.1);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+  }
+
+  .bookmark-btn.bookmarked {
+    background: rgba(245, 166, 35, 0.15);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+  }
+
+  .bookmark-btn.bookmarked .bookmark-icon {
+    fill: var(--accent-primary);
+  }
+
+  .bookmark-btn.animate {
+    animation: bookmark-pop 0.6s ease;
+  }
+
+  @keyframes bookmark-pop {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.2); }
+    60% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+  }
+
+  .bookmark-icon {
+    width: 18px;
+    height: 18px;
+    transition: all 0.3s ease;
+  }
+
+  .bookmark-text {
+    transition: opacity 0.2s ease;
+  }
+
+  @media (max-width: 480px) {
+    .bookmark-text {
+      display: none;
+    }
+
+    .bookmark-btn {
+      padding: 0.6rem;
+    }
+  }
+</style>

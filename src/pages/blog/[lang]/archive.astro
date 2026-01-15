@@ -1,0 +1,296 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import Footer from '../../../components/Footer.astro';
+import Header from '../../../components/Header.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import ScrollReveal from '../../../components/ScrollReveal.astro';
+import { SITE_TITLE, SUPPORTED_LANGS } from '../../../consts';
+
+export async function getStaticPaths() {
+  return SUPPORTED_LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .filter(post => post.data.lang === lang)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Group posts by year and month
+const postsByYear = new Map<number, Map<number, typeof posts>>();
+
+posts.forEach(post => {
+  const year = post.data.pubDate.getFullYear();
+  const month = post.data.pubDate.getMonth();
+  
+  if (!postsByYear.has(year)) {
+    postsByYear.set(year, new Map());
+  }
+  const yearMap = postsByYear.get(year)!;
+  
+  if (!yearMap.has(month)) {
+    yearMap.set(month, []);
+  }
+  yearMap.get(month)!.push(post);
+});
+
+const getPathSlug = (post: (typeof posts)[number]) => {
+  if (post.data.path) return post.data.path;
+  if (post.data.slug?.startsWith(`${post.data.lang}-`)) {
+    return post.data.slug.slice(post.data.lang.length + 1);
+  }
+  return post.data.slug ?? post.slug ?? post.id;
+};
+
+const monthNames = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+const pageTitle = `Archive | ${SITE_TITLE}`;
+const pageDescription = `Browse all ${posts.length} articles in the BitLingo blog archive.`;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <BaseHead title={pageTitle} description={pageDescription} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <section class="archive-header">
+        <ScrollReveal animation="fade-up">
+          <h1>📚 Blog Archive</h1>
+          <p class="archive-description">
+            Browse all {posts.length} articles organized by date
+          </p>
+        </ScrollReveal>
+      </section>
+
+      <section class="archive-content">
+        {Array.from(postsByYear.entries())
+          .sort(([a], [b]) => b - a)
+          .map(([year, monthsMap]) => (
+            <ScrollReveal animation="fade-up">
+              <div class="year-section">
+                <h2 class="year-title">{year}</h2>
+                <div class="months">
+                  {Array.from(monthsMap.entries())
+                    .sort(([a], [b]) => b - a)
+                    .map(([month, monthPosts]) => (
+                      <div class="month-section">
+                        <h3 class="month-title">
+                          <span class="month-name">{monthNames[month]}</span>
+                          <span class="post-count">{monthPosts.length} article{monthPosts.length !== 1 ? 's' : ''}</span>
+                        </h3>
+                        <ul class="posts-list">
+                          {monthPosts.map(post => (
+                            <li class="post-item">
+                              <span class="post-day">
+                                {post.data.pubDate.getDate().toString().padStart(2, '0')}
+                              </span>
+                              <a href={`/blog/${lang}/${getPathSlug(post)}/`} class="post-link">
+                                <span class="post-title">{post.data.title}</span>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </ScrollReveal>
+          ))}
+      </section>
+
+      <section class="archive-footer">
+        <a href={`/blog/${lang}/`} class="back-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Back to Blog
+        </a>
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .archive-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .archive-header h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .archive-description {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .archive-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .year-section {
+    position: relative;
+  }
+
+  .year-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent-primary);
+    margin: 0 0 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-accent);
+  }
+
+  .months {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--border-subtle);
+  }
+
+  .month-section {
+    position: relative;
+  }
+
+  .month-section::before {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    top: 0.5rem;
+    width: 10px;
+    height: 10px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    transform: translateX(-50%);
+  }
+
+  .month-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    margin: 0 0 1rem;
+    color: var(--text-primary);
+  }
+
+  .month-name {
+    font-weight: 700;
+  }
+
+  .post-count {
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    background: rgba(245, 166, 35, 0.15);
+    border-radius: 50px;
+    color: var(--accent-primary);
+  }
+
+  .posts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .post-item {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .post-day {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    min-width: 24px;
+    font-family: monospace;
+  }
+
+  .post-link {
+    text-decoration: none;
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+    line-height: 1.5;
+  }
+
+  .post-link:hover {
+    color: var(--accent-primary);
+  }
+
+  .post-title {
+    font-size: 1rem;
+  }
+
+  .archive-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(245, 166, 35, 0.1);
+    border: 1px solid rgba(245, 166, 35, 0.2);
+    border-radius: 50px;
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    background: rgba(245, 166, 35, 0.2);
+    transform: translateX(-5px);
+  }
+
+  .back-link svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .months {
+      padding-left: 0.75rem;
+    }
+
+    .post-item {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .post-day {
+      font-size: 0.75rem;
+    }
+  }
+</style>

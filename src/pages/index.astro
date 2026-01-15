@@ -2,6 +2,8 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import ScrollReveal from '../components/ScrollReveal.astro';
+import TypeWriter from '../components/TypeWriter.astro';
 import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 ---
 
@@ -13,55 +15,70 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	<body>
 		<Header />
 		<main>
-			<!-- Hero Section -->
+			<!-- Hero Section with Parallax -->
 			<section class="hero">
+				<div class="parallax-bg">
+					<div class="parallax-orb orb-1"></div>
+					<div class="parallax-orb orb-2"></div>
+					<div class="parallax-orb orb-3"></div>
+				</div>
 				<div class="hero-content">
-					<div class="hero-badge">🎧 Audio-First Vocabulary Learning</div>
-					<h1>Learn Languages<br/><span class="gradient-text">On The Go</span></h1>
-					<p class="hero-description">
-						BitLingo transforms your commute, workout, and daily chores into productive language learning sessions. 
-						No screens. No subscriptions. Just your words, your pace.
-					</p>
-					<div class="hero-cta">
-						<a href="https://bitlingo.app" class="btn-primary" target="_blank" rel="noopener noreferrer">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-								<polyline points="7 10 12 15 17 10"/>
-								<line x1="12" y1="15" x2="12" y2="3"/>
-							</svg>
-							Get BitLingo Free
-						</a>
-						<a href={`/blog/${DEFAULT_LANG}`} class="btn-secondary">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-								<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-							</svg>
-							Read the Blog
-						</a>
-					</div>
+					<ScrollReveal animation="fade-up" delay={0}>
+						<div class="hero-badge">🎧 Audio-First Vocabulary Learning</div>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-up" delay={100}>
+						<h1>Learn Languages<br/><span class="gradient-text"><TypeWriter texts={["On The Go", "While Driving", "During Workouts", "Hands-Free"]} speed={80} pauseDuration={2500} /></span></h1>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-up" delay={200}>
+						<p class="hero-description">
+							BitLingo transforms your commute, workout, and daily chores into productive language learning sessions. 
+							No screens. No subscriptions. Just your words, your pace.
+						</p>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-up" delay={300}>
+						<div class="hero-cta">
+							<a href="https://bitlingo.app" class="btn-primary" target="_blank" rel="noopener noreferrer">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+									<polyline points="7 10 12 15 17 10"/>
+									<line x1="12" y1="15" x2="12" y2="3"/>
+								</svg>
+								Get BitLingo Free
+							</a>
+							<a href={`/blog/${DEFAULT_LANG}`} class="btn-secondary">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+									<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+								</svg>
+								Read the Blog
+							</a>
+						</div>
+					</ScrollReveal>
 				</div>
 				<div class="hero-visual">
-					<div class="phone-mockup">
-						<div class="phone-screen">
-							<div class="app-header">
-								<span class="app-logo">B</span>
-								<span class="app-title"><span class="bit">bit</span><span class="lingo">Lingo</span></span>
-							</div>
-							<div class="vocab-card">
-								<div class="word-primary">Apprendre</div>
-								<div class="word-pronunciation">ah-PRAHN-druh</div>
-								<div class="word-translation">to learn</div>
-								<div class="audio-wave">
-									<span></span><span></span><span></span><span></span><span></span>
-									<span></span><span></span><span></span><span></span><span></span>
+					<ScrollReveal animation="zoom-in" delay={200}>
+						<div class="phone-mockup">
+							<div class="phone-screen">
+								<div class="app-header">
+									<span class="app-logo">B</span>
+									<span class="app-title"><span class="bit">bit</span><span class="lingo">Lingo</span></span>
 								</div>
+								<div class="vocab-card">
+									<div class="word-primary">Apprendre</div>
+									<div class="word-pronunciation">ah-PRAHN-druh</div>
+									<div class="word-translation">to learn</div>
+									<div class="audio-wave">
+										<span></span><span></span><span></span><span></span><span></span>
+										<span></span><span></span><span></span><span></span><span></span>
+									</div>
+								</div>
+								<div class="progress-bar">
+									<div class="progress-fill"></div>
+								</div>
+								<div class="progress-text">12 of 20 words</div>
 							</div>
-							<div class="progress-bar">
-								<div class="progress-fill"></div>
-							</div>
-							<div class="progress-text">12 of 20 words</div>
 						</div>
-					</div>
+					</ScrollReveal>
 					<div class="floating-bubbles">
 						<div class="bubble bubble-1">Hola</div>
 						<div class="bubble bubble-2">Bonjour</div>
@@ -73,108 +90,265 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 			<!-- Features Grid -->
 			<section class="features">
-				<h2 class="section-title">Why BitLingo?</h2>
+				<ScrollReveal animation="fade-up">
+					<h2 class="section-title">Why BitLingo?</h2>
+				</ScrollReveal>
 				<div class="features-grid">
-					<div class="feature-card">
-						<div class="feature-icon">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<path d="M9 18V5l12-2v13"/>
-								<circle cx="6" cy="18" r="3"/>
-								<circle cx="18" cy="16" r="3"/>
-							</svg>
+					<ScrollReveal animation="fade-up" delay={0}>
+						<div class="feature-card">
+							<div class="feature-icon">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M9 18V5l12-2v13"/>
+									<circle cx="6" cy="18" r="3"/>
+									<circle cx="18" cy="16" r="3"/>
+								</svg>
+							</div>
+							<h3>Listen & Repeat</h3>
+							<p>Audio-driven sessions that work while driving, walking, or working out. No screen required.</p>
 						</div>
-						<h3>Listen & Repeat</h3>
-						<p>Audio-driven sessions that work while driving, walking, or working out. No screen required.</p>
-					</div>
-					<div class="feature-card">
-						<div class="feature-icon">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
-							</svg>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-up" delay={100}>
+						<div class="feature-card">
+							<div class="feature-icon">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+								</svg>
+							</div>
+							<h3>Your Vocabulary</h3>
+							<p>Load exactly the words you need—travel phrases, exam prep, or industry jargon.</p>
 						</div>
-						<h3>Your Vocabulary</h3>
-						<p>Load exactly the words you need—travel phrases, exam prep, or industry jargon.</p>
-					</div>
-					<div class="feature-card">
-						<div class="feature-icon">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-								<line x1="12" y1="18" x2="12.01" y2="18"/>
-							</svg>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-up" delay={200}>
+						<div class="feature-card">
+							<div class="feature-icon">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+									<line x1="12" y1="18" x2="12.01" y2="18"/>
+								</svg>
+							</div>
+							<h3>Hands-Free</h3>
+							<p>Perfect for "eyes-busy" moments like commutes and chores. Your hands stay free.</p>
 						</div>
-						<h3>Hands-Free</h3>
-						<p>Perfect for "eyes-busy" moments like commutes and chores. Your hands stay free.</p>
-					</div>
-					<div class="feature-card">
-						<div class="feature-icon">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-							</svg>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-up" delay={300}>
+						<div class="feature-card">
+							<div class="feature-icon">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+								</svg>
+							</div>
+							<h3>Track Progress</h3>
+							<p>Stay motivated with bite-sized sessions and progress tracking that respects your schedule.</p>
 						</div>
-						<h3>Track Progress</h3>
-						<p>Stay motivated with bite-sized sessions and progress tracking that respects your schedule.</p>
-					</div>
-					<div class="feature-card">
-						<div class="feature-icon">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<line x1="1" y1="1" x2="23" y2="23"/>
-								<path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
-								<path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
-								<path d="M10.71 5.05A16 16 0 0 1 22.58 9"/>
-								<path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
-								<path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
-								<line x1="12" y1="20" x2="12.01" y2="20"/>
-							</svg>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-up" delay={400}>
+						<div class="feature-card">
+							<div class="feature-icon">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<line x1="1" y1="1" x2="23" y2="23"/>
+									<path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+									<path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+									<path d="M10.71 5.05A16 16 0 0 1 22.58 9"/>
+									<path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+									<path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+									<line x1="12" y1="20" x2="12.01" y2="20"/>
+								</svg>
+							</div>
+							<h3>Works Offline</h3>
+							<p>No internet? No problem. Works as a PWA so you can practice anywhere, anytime.</p>
 						</div>
-						<h3>Works Offline</h3>
-						<p>No internet? No problem. Works as a PWA so you can practice anywhere, anytime.</p>
-					</div>
-					<div class="feature-card">
-						<div class="feature-icon">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-							</svg>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-up" delay={500}>
+						<div class="feature-card">
+							<div class="feature-icon">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+								</svg>
+							</div>
+							<h3>Private & Free</h3>
+							<p>Data stored locally. No accounts, no paywalls, no tracking. Just pure learning.</p>
 						</div>
-						<h3>Private & Free</h3>
-						<p>Data stored locally. No accounts, no paywalls, no tracking. Just pure learning.</p>
-					</div>
+					</ScrollReveal>
 				</div>
 			</section>
 
 			<!-- Stats Section -->
-			<section class="stats">
-				<div class="stat">
-					<div class="stat-value">10m</div>
-					<div class="stat-label">Daily practice</div>
+			<ScrollReveal animation="fade-up">
+				<section class="stats">
+					<div class="stat">
+						<div class="stat-value counter" data-target="10">0</div>
+						<div class="stat-label">min daily practice</div>
+					</div>
+					<div class="stat">
+						<div class="stat-value counter" data-target="100">0</div>
+						<div class="stat-label">+ language pairs</div>
+					</div>
+					<div class="stat">
+						<div class="stat-value">∞</div>
+						<div class="stat-label">Custom words</div>
+					</div>
+					<div class="stat">
+						<div class="stat-value">$0</div>
+						<div class="stat-label">Forever free</div>
+					</div>
+				</section>
+			</ScrollReveal>
+
+			<!-- How It Works -->
+			<section class="how-it-works">
+				<ScrollReveal animation="fade-up">
+					<h2 class="section-title">How It Works</h2>
+				</ScrollReveal>
+				<div class="steps">
+					<ScrollReveal animation="fade-right" delay={0}>
+						<div class="step">
+							<div class="step-number">1</div>
+							<div class="step-content">
+								<h3>Add Your Words</h3>
+								<p>Import vocabulary lists or create your own custom sets for any language pair.</p>
+							</div>
+						</div>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-right" delay={150}>
+						<div class="step">
+							<div class="step-number">2</div>
+							<div class="step-content">
+								<h3>Start a Session</h3>
+								<p>Put on headphones and let BitLingo guide you through audio-based practice.</p>
+							</div>
+						</div>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-right" delay={300}>
+						<div class="step">
+							<div class="step-number">3</div>
+							<div class="step-content">
+								<h3>Learn Anywhere</h3>
+								<p>Practice during commutes, workouts, or chores—no screen needed.</p>
+							</div>
+						</div>
+					</ScrollReveal>
 				</div>
-				<div class="stat">
-					<div class="stat-value">100+</div>
-					<div class="stat-label">Language pairs</div>
-				</div>
-				<div class="stat">
-					<div class="stat-value">∞</div>
-					<div class="stat-label">Custom words</div>
-				</div>
-				<div class="stat">
-					<div class="stat-value">$0</div>
-					<div class="stat-label">Forever free</div>
+			</section>
+
+			<!-- Testimonials -->
+			<section class="testimonials">
+				<ScrollReveal animation="fade-up">
+					<h2 class="section-title">What Learners Say</h2>
+				</ScrollReveal>
+				<div class="testimonials-grid">
+					<ScrollReveal animation="fade-up" delay={0}>
+						<div class="testimonial-card">
+							<div class="testimonial-content">
+								<p>"Finally, an app that lets me learn while driving! I've picked up more Spanish in 2 weeks than months with other apps."</p>
+							</div>
+							<div class="testimonial-author">
+								<div class="author-avatar">🚗</div>
+								<div class="author-info">
+									<div class="author-name">Daily Commuter</div>
+									<div class="author-role">Learning Spanish</div>
+								</div>
+							</div>
+						</div>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-up" delay={100}>
+						<div class="testimonial-card">
+							<div class="testimonial-content">
+								<p>"I use it during my morning runs. The audio-first approach is perfect for staying active while learning."</p>
+							</div>
+							<div class="testimonial-author">
+								<div class="author-avatar">🏃</div>
+								<div class="author-info">
+									<div class="author-name">Fitness Enthusiast</div>
+									<div class="author-role">Learning French</div>
+								</div>
+							</div>
+						</div>
+					</ScrollReveal>
+					<ScrollReveal animation="fade-up" delay={200}>
+						<div class="testimonial-card">
+							<div class="testimonial-content">
+								<p>"Love that I can import my own vocabulary. Perfect for preparing for my business trip to Japan!"</p>
+							</div>
+							<div class="testimonial-author">
+								<div class="author-avatar">✈️</div>
+								<div class="author-info">
+									<div class="author-name">Business Traveler</div>
+									<div class="author-role">Learning Japanese</div>
+								</div>
+							</div>
+						</div>
+					</ScrollReveal>
 				</div>
 			</section>
 
 			<!-- CTA Section -->
-			<section class="cta-section">
-				<h2>Ready to Learn?</h2>
-				<p>Turn your wasted time into language gains. Start with 10 minutes a day.</p>
-				<a href={`/blog/${DEFAULT_LANG}`} class="btn-primary">
-					Explore the Blog
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<line x1="5" y1="12" x2="19" y2="12"/>
-						<polyline points="12 5 19 12 12 19"/>
-					</svg>
-				</a>
-			</section>
+			<ScrollReveal animation="zoom-in">
+				<section class="cta-section">
+					<h2>Ready to Learn?</h2>
+					<p>Turn your wasted time into language gains. Start with 10 minutes a day.</p>
+					<div class="cta-buttons">
+						<a href="https://bitlingo.app" class="btn-primary" target="_blank" rel="noopener noreferrer">
+							Try BitLingo Free
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<line x1="5" y1="12" x2="19" y2="12"/>
+								<polyline points="12 5 19 12 12 19"/>
+							</svg>
+						</a>
+						<a href={`/blog/${DEFAULT_LANG}`} class="btn-secondary">
+							Explore the Blog
+						</a>
+					</div>
+				</section>
+			</ScrollReveal>
 		</main>
 		<Footer />
+
+		<script>
+			// Counter animation for stats
+			document.addEventListener('DOMContentLoaded', () => {
+				const counters = document.querySelectorAll('.counter');
+				
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							const counter = entry.target as HTMLElement;
+							const target = parseInt(counter.dataset.target || '0');
+							const duration = 2000;
+							const step = target / (duration / 16);
+							let current = 0;
+
+							const updateCounter = () => {
+								current += step;
+								if (current < target) {
+									counter.textContent = Math.floor(current).toString();
+									requestAnimationFrame(updateCounter);
+								} else {
+									counter.textContent = target.toString();
+								}
+							};
+
+							updateCounter();
+							observer.unobserve(counter);
+						}
+					});
+				}, { threshold: 0.5 });
+
+				counters.forEach((counter) => observer.observe(counter));
+
+				// Parallax effect for background orbs
+				const parallaxBg = document.querySelector('.parallax-bg');
+				if (parallaxBg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+					window.addEventListener('scroll', () => {
+						const scrollY = window.scrollY;
+						const orbs = parallaxBg.querySelectorAll('.parallax-orb');
+						orbs.forEach((orb, index) => {
+							const speed = 0.1 + (index * 0.05);
+							(orb as HTMLElement).style.transform = `translateY(${scrollY * speed}px)`;
+						});
+					}, { passive: true });
+				}
+			});
+		</script>
 	</body>
 </html>
 
@@ -183,8 +357,52 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		padding-top: 0;
 	}
 
+	/* Parallax Background */
+	.parallax-bg {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		pointer-events: none;
+		overflow: hidden;
+		z-index: 0;
+	}
+
+	.parallax-orb {
+		position: absolute;
+		border-radius: 50%;
+		filter: blur(80px);
+		opacity: 0.4;
+	}
+
+	.orb-1 {
+		width: 600px;
+		height: 600px;
+		background: radial-gradient(circle, rgba(245, 166, 35, 0.3) 0%, transparent 70%);
+		top: -200px;
+		left: -200px;
+	}
+
+	.orb-2 {
+		width: 400px;
+		height: 400px;
+		background: radial-gradient(circle, rgba(78, 205, 196, 0.2) 0%, transparent 70%);
+		top: 50%;
+		right: -100px;
+	}
+
+	.orb-3 {
+		width: 300px;
+		height: 300px;
+		background: radial-gradient(circle, rgba(245, 166, 35, 0.2) 0%, transparent 70%);
+		bottom: -100px;
+		left: 30%;
+	}
+
 	/* Hero Section */
 	.hero {
+		position: relative;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 3rem;
@@ -192,10 +410,12 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		padding: 4rem 1.5rem;
 		max-width: 1200px;
 		margin: 0 auto;
-		min-height: 80vh;
+		min-height: 85vh;
 	}
 
 	.hero-content {
+		position: relative;
+		z-index: 1;
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
@@ -213,12 +433,15 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		font-weight: 600;
 		color: var(--accent-primary);
 		width: fit-content;
+		animation: pulse-glow 3s ease-in-out infinite;
 	}
 
 	.hero h1 {
 		font-size: clamp(2.5rem, 5vw, 4rem);
 		line-height: 1.1;
 		margin: 0;
+		background: none;
+		-webkit-text-fill-color: var(--text-primary);
 	}
 
 	.gradient-text {
@@ -226,6 +449,8 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
+		display: inline-block;
+		min-height: 1.2em;
 	}
 
 	.hero-description {
@@ -290,6 +515,7 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		z-index: 1;
 	}
 
 	.phone-mockup {
@@ -461,6 +687,11 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		50% { transform: translateY(-15px); }
 	}
 
+	@keyframes pulse-glow {
+		0%, 100% { box-shadow: 0 0 10px rgba(245, 166, 35, 0.2); }
+		50% { box-shadow: 0 0 20px rgba(245, 166, 35, 0.4); }
+	}
+
 	/* Features Section */
 	.features {
 		padding: 4rem 1.5rem;
@@ -486,6 +717,7 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		border-radius: 20px;
 		padding: 2rem;
 		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		height: 100%;
 	}
 
 	.feature-card:hover {
@@ -531,7 +763,7 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		gap: 2rem;
 		padding: 4rem 1.5rem;
 		max-width: 1000px;
-		margin: 0 auto;
+		margin: 2rem auto;
 		background: linear-gradient(145deg, rgba(245, 166, 35, 0.1), rgba(232, 147, 12, 0.05));
 		border: 1px solid rgba(245, 166, 35, 0.2);
 		border-radius: 24px;
@@ -556,12 +788,118 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		margin-top: 0.25rem;
 	}
 
+	/* How It Works */
+	.how-it-works {
+		padding: 4rem 1.5rem;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.steps {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.step {
+		display: flex;
+		gap: 1.5rem;
+		align-items: flex-start;
+	}
+
+	.step-number {
+		width: 48px;
+		height: 48px;
+		min-width: 48px;
+		background: linear-gradient(135deg, #f5a623, #e8930c);
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 800;
+		font-size: 1.25rem;
+		color: #1a365d;
+	}
+
+	.step-content h3 {
+		margin-bottom: 0.5rem;
+		color: var(--text-primary);
+	}
+
+	.step-content p {
+		color: var(--text-secondary);
+		margin: 0;
+	}
+
+	/* Testimonials */
+	.testimonials {
+		padding: 4rem 1.5rem;
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.testimonials-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.testimonial-card {
+		background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 20px;
+		padding: 2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		height: 100%;
+	}
+
+	.testimonial-content p {
+		font-size: 1.05rem;
+		line-height: 1.7;
+		color: var(--text-secondary);
+		margin: 0;
+		font-style: italic;
+	}
+
+	.testimonial-author {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-top: auto;
+	}
+
+	.author-avatar {
+		width: 48px;
+		height: 48px;
+		background: linear-gradient(135deg, rgba(245, 166, 35, 0.2), rgba(245, 166, 35, 0.1));
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.5rem;
+	}
+
+	.author-name {
+		font-weight: 600;
+		color: var(--text-primary);
+	}
+
+	.author-role {
+		font-size: 0.85rem;
+		color: var(--text-muted);
+	}
+
 	/* CTA Section */
 	.cta-section {
 		text-align: center;
 		padding: 5rem 1.5rem;
 		max-width: 600px;
 		margin: 0 auto;
+		background: linear-gradient(145deg, rgba(245, 166, 35, 0.08), rgba(245, 166, 35, 0.02));
+		border: 1px solid rgba(245, 166, 35, 0.15);
+		border-radius: 32px;
 	}
 
 	.cta-section h2 {
@@ -572,6 +910,13 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	.cta-section p {
 		font-size: 1.15rem;
 		margin-bottom: 2rem;
+	}
+
+	.cta-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		justify-content: center;
 	}
 
 	/* Responsive */
@@ -614,6 +959,12 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 			gap: 1.5rem;
 			padding: 2rem 1rem;
 		}
+
+		.step {
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+		}
 	}
 
 	@media (max-width: 480px) {
@@ -623,6 +974,10 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		}
 
 		.features-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.testimonials-grid {
 			grid-template-columns: 1fr;
 		}
 	}

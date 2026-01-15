@@ -1,0 +1,114 @@
+---
+/**
+ * ScrollReveal Component
+ * Wraps content and reveals it with animation when scrolled into view
+ */
+interface Props {
+  animation?: 'fade-up' | 'fade-down' | 'fade-left' | 'fade-right' | 'zoom-in' | 'flip';
+  delay?: number;
+  duration?: number;
+  threshold?: number;
+  class?: string;
+}
+
+const { 
+  animation = 'fade-up', 
+  delay = 0, 
+  duration = 600,
+  threshold = 0.1,
+  class: className = ''
+} = Astro.props;
+---
+
+<div 
+  class={`scroll-reveal ${animation} ${className}`}
+  data-delay={delay}
+  data-duration={duration}
+  data-threshold={threshold}
+>
+  <slot />
+</div>
+
+<style>
+  .scroll-reveal {
+    opacity: 0;
+    transition-property: opacity, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+  }
+
+  .scroll-reveal.visible {
+    opacity: 1;
+    transform: none !important;
+  }
+
+  /* Fade Up */
+  .fade-up {
+    transform: translateY(40px);
+  }
+
+  /* Fade Down */
+  .fade-down {
+    transform: translateY(-40px);
+  }
+
+  /* Fade Left */
+  .fade-left {
+    transform: translateX(40px);
+  }
+
+  /* Fade Right */
+  .fade-right {
+    transform: translateX(-40px);
+  }
+
+  /* Zoom In */
+  .zoom-in {
+    transform: scale(0.9);
+  }
+
+  /* Flip */
+  .flip {
+    transform: perspective(1000px) rotateX(10deg);
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const reveals = document.querySelectorAll('.scroll-reveal');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLElement;
+          const delay = parseInt(el.dataset.delay || '0');
+          const duration = parseInt(el.dataset.duration || '600');
+          
+          el.style.transitionDuration = `${duration}ms`;
+          
+          setTimeout(() => {
+            el.classList.add('visible');
+          }, delay);
+          
+          observer.unobserve(el);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    reveals.forEach((reveal) => {
+      observer.observe(reveal);
+    });
+  });
+</script>

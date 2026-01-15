@@ -1,0 +1,284 @@
+---
+/**
+ * Newsletter Component
+ * Email signup form for newsletter subscription
+ */
+interface Props {
+  title?: string;
+  description?: string;
+  buttonText?: string;
+  compact?: boolean;
+}
+
+const { 
+  title = '📬 Stay Updated',
+  description = 'Get weekly language learning tips, new features, and exclusive content delivered to your inbox.',
+  buttonText = 'Subscribe',
+  compact = false
+} = Astro.props;
+---
+
+<div class={`newsletter ${compact ? 'newsletter-compact' : ''}`}>
+  {!compact && (
+    <div class="newsletter-header">
+      <h3 class="newsletter-title">{title}</h3>
+      <p class="newsletter-description">{description}</p>
+    </div>
+  )}
+  
+  <form class="newsletter-form" id="newsletter-form">
+    <div class="form-group">
+      <input 
+        type="email" 
+        name="email" 
+        placeholder="your@email.com" 
+        required 
+        class="email-input"
+        aria-label="Email address"
+      />
+      <button type="submit" class="submit-btn">
+        <span class="btn-text">{buttonText}</span>
+        <span class="btn-loading" hidden>
+          <svg class="spinner" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="60" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </div>
+    <div class="form-message" hidden></div>
+  </form>
+  
+  <p class="newsletter-privacy">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+    No spam, unsubscribe anytime.
+  </p>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('newsletter-form') as HTMLFormElement;
+    if (!form) return;
+
+    const submitBtn = form.querySelector('.submit-btn') as HTMLButtonElement;
+    const btnText = form.querySelector('.btn-text') as HTMLElement;
+    const btnLoading = form.querySelector('.btn-loading') as HTMLElement;
+    const btnIcon = form.querySelector('.btn-icon') as HTMLElement;
+    const messageEl = form.querySelector('.form-message') as HTMLElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const email = formData.get('email') as string;
+
+      // Show loading state
+      submitBtn.disabled = true;
+      btnText.hidden = true;
+      btnIcon.hidden = true;
+      btnLoading.hidden = false;
+
+      try {
+        // Simulate API call - replace with actual newsletter service
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Store locally for now (replace with actual API)
+        const subscribers = JSON.parse(localStorage.getItem('newsletter_subscribers') || '[]');
+        if (!subscribers.includes(email)) {
+          subscribers.push(email);
+          localStorage.setItem('newsletter_subscribers', JSON.stringify(subscribers));
+        }
+
+        // Show success message
+        messageEl.textContent = '🎉 Thanks for subscribing! Check your inbox.';
+        messageEl.className = 'form-message success';
+        messageEl.hidden = false;
+        form.reset();
+
+        // Track subscription
+        window.dispatchEvent(new CustomEvent('newsletter:subscribed', { detail: { email } }));
+
+      } catch (error) {
+        // Show error message
+        messageEl.textContent = 'Something went wrong. Please try again.';
+        messageEl.className = 'form-message error';
+        messageEl.hidden = false;
+      } finally {
+        // Reset button state
+        submitBtn.disabled = false;
+        btnText.hidden = false;
+        btnIcon.hidden = false;
+        btnLoading.hidden = true;
+      }
+    });
+  });
+</script>
+
+<style>
+  .newsletter {
+    padding: 2rem;
+    background: linear-gradient(145deg, rgba(245, 166, 35, 0.1), rgba(245, 166, 35, 0.05));
+    border: 1px solid rgba(245, 166, 35, 0.2);
+    border-radius: 24px;
+  }
+
+  .newsletter-compact {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .newsletter-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .newsletter-title {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem;
+    color: var(--text-primary);
+  }
+
+  .newsletter-description {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .newsletter-form {
+    max-width: 450px;
+    margin: 0 auto;
+  }
+
+  .form-group {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .email-input {
+    flex: 1;
+    padding: 0.875rem 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 50px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+  }
+
+  .email-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.15);
+  }
+
+  .email-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #f5a623, #e8930c);
+    border: none;
+    border-radius: 50px;
+    color: #1a365d;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 166, 35, 0.4);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .btn-icon {
+    width: 18px;
+    height: 18px;
+    stroke: #1a365d;
+    transition: transform 0.3s ease;
+  }
+
+  .submit-btn:hover:not(:disabled) .btn-icon {
+    transform: translateX(3px);
+  }
+
+  .spinner {
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .form-message {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .form-message.success {
+    background: rgba(78, 205, 196, 0.15);
+    border: 1px solid rgba(78, 205, 196, 0.3);
+    color: var(--accent-teal);
+  }
+
+  .form-message.error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+  }
+
+  .newsletter-privacy {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .newsletter-privacy svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .newsletter-compact .newsletter-privacy {
+    margin-top: 0.75rem;
+  }
+
+  @media (max-width: 500px) {
+    .form-group {
+      flex-direction: column;
+    }
+
+    .submit-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

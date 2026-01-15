@@ -1,0 +1,250 @@
+---
+/**
+ * PWA Install Prompt Component
+ * Shows a banner prompting users to install the app
+ */
+interface Props {
+  appName?: string;
+}
+
+const { appName = 'BitLingo Blog' } = Astro.props;
+---
+
+<div class="pwa-install-prompt" id="pwa-install-prompt" hidden>
+  <div class="prompt-content">
+    <div class="prompt-icon">
+      <span class="app-logo">B</span>
+    </div>
+    <div class="prompt-text">
+      <h4>Install {appName}</h4>
+      <p>Add to your home screen for quick access</p>
+    </div>
+  </div>
+  <div class="prompt-actions">
+    <button class="dismiss-btn" id="pwa-dismiss-btn" aria-label="Dismiss">
+      Later
+    </button>
+    <button class="install-btn" id="pwa-install-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Install
+    </button>
+  </div>
+</div>
+
+<script>
+  let deferredPrompt: any = null;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    // Stash the event so it can be triggered later
+    deferredPrompt = e;
+    
+    // Check if user has dismissed before
+    const dismissed = localStorage.getItem('pwa_prompt_dismissed');
+    const dismissedTime = dismissed ? parseInt(dismissed) : 0;
+    const daysSinceDismissed = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24);
+    
+    // Show prompt if not dismissed or dismissed more than 7 days ago
+    if (!dismissed || daysSinceDismissed > 7) {
+      showInstallPrompt();
+    }
+  });
+
+  function showInstallPrompt() {
+    const prompt = document.getElementById('pwa-install-prompt');
+    if (prompt) {
+      prompt.hidden = false;
+      prompt.classList.add('visible');
+    }
+  }
+
+  function hideInstallPrompt() {
+    const prompt = document.getElementById('pwa-install-prompt');
+    if (prompt) {
+      prompt.classList.remove('visible');
+      setTimeout(() => {
+        prompt.hidden = true;
+      }, 300);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const installBtn = document.getElementById('pwa-install-btn');
+    const dismissBtn = document.getElementById('pwa-dismiss-btn');
+
+    installBtn?.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+
+      // Show the install prompt
+      deferredPrompt.prompt();
+      
+      // Wait for the user to respond to the prompt
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+        // Track installation
+        window.dispatchEvent(new CustomEvent('pwa:installed'));
+      }
+      
+      // Clear the deferredPrompt
+      deferredPrompt = null;
+      hideInstallPrompt();
+    });
+
+    dismissBtn?.addEventListener('click', () => {
+      localStorage.setItem('pwa_prompt_dismissed', Date.now().toString());
+      hideInstallPrompt();
+    });
+  });
+
+  // Handle successful installation
+  window.addEventListener('appinstalled', () => {
+    hideInstallPrompt();
+    deferredPrompt = null;
+  });
+</script>
+
+<style>
+  .pwa-install-prompt {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    border-radius: 16px;
+    box-shadow: var(--shadow-elevated), 0 0 30px rgba(245, 166, 35, 0.15);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: calc(100vw - 2rem);
+  }
+
+  .pwa-install-prompt.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  .prompt-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .prompt-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .app-logo {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #f5a623, #e8930c);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: #1a365d;
+  }
+
+  .prompt-text h4 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    color: var(--text-primary);
+  }
+
+  .prompt-text p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .prompt-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .dismiss-btn {
+    padding: 0.6rem 1rem;
+    background: none;
+    border: 1px solid var(--border-subtle);
+    border-radius: 50px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .dismiss-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--text-muted);
+  }
+
+  .install-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    background: linear-gradient(135deg, #f5a623, #e8930c);
+    border: none;
+    border-radius: 50px;
+    color: #1a365d;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .install-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(245, 166, 35, 0.4);
+  }
+
+  .install-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: #1a365d;
+  }
+
+  @media (max-width: 600px) {
+    .pwa-install-prompt {
+      flex-direction: column;
+      bottom: 1rem;
+      left: 1rem;
+      right: 1rem;
+      transform: translateX(0) translateY(100px);
+      gap: 1rem;
+    }
+
+    .pwa-install-prompt.visible {
+      transform: translateX(0) translateY(0);
+    }
+
+    .prompt-content {
+      width: 100%;
+    }
+
+    .prompt-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+</style>

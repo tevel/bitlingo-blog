@@ -6,6 +6,10 @@ import Footer from '../../../components/Footer.astro';
 import FormattedDate from '../../../components/FormattedDate.astro';
 import Header from '../../../components/Header.astro';
 import ReadingTime from '../../../components/ReadingTime.astro';
+import Search from '../../../components/Search.astro';
+import TagCloud from '../../../components/TagCloud.astro';
+import PopularPosts from '../../../components/PopularPosts.astro';
+import ScrollReveal from '../../../components/ScrollReveal.astro';
 import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE, SUPPORTED_LANGS } from '../../../consts';
 import { calculateReadingTime } from '../../../utils/readingTime';
 
@@ -32,6 +36,26 @@ const posts = (await getCollection('blog'))
 
 const featuredPost = posts[0];
 const otherPosts = posts.slice(1);
+
+// Translations for search placeholder
+const searchPlaceholders: Record<string, string> = {
+	en: 'Search articles...',
+	es: 'Buscar artículos...',
+	fr: 'Rechercher des articles...',
+	de: 'Artikel suchen...',
+	it: 'Cerca articoli...',
+	pt: 'Pesquisar artigos...',
+	ja: '記事を検索...',
+	ko: '기사 검색...',
+	zh: '搜索文章...',
+	ar: 'البحث في المقالات...',
+	ru: 'Поиск статей...',
+	hi: 'लेख खोजें...',
+	tr: 'Makale ara...',
+	pl: 'Szukaj artykułów...',
+	uk: 'Пошук статей...',
+	he: 'חפש מאמרים...',
+};
 ---
 
 <!doctype html>
@@ -73,77 +97,113 @@ const otherPosts = posts.slice(1);
 		<main>
 			<!-- Page Header -->
 			<section class="page-header">
-				<div class="header-badge">📚 BitLingo Blog</div>
-				<h1>Learn Smarter,<br/><span class="gradient-text">Not Harder</span></h1>
-				<p class="header-description">
-					Tips, strategies, and insights to maximize your audio-first language learning journey.
-				</p>
+				<ScrollReveal animation="fade-up">
+					<div class="header-badge">📚 BitLingo Blog</div>
+					<h1>Learn Smarter,<br/><span class="gradient-text">Not Harder</span></h1>
+					<p class="header-description">
+						Tips, strategies, and insights to maximize your audio-first language learning journey.
+					</p>
+				</ScrollReveal>
+				
+				<!-- Search Bar -->
+				<ScrollReveal animation="fade-up" delay={100}>
+					<div class="search-wrapper">
+						<Search lang={lang} placeholder={searchPlaceholders[lang] || searchPlaceholders.en} />
+					</div>
+				</ScrollReveal>
 			</section>
 
-			<!-- Featured Post -->
-			{featuredPost && (
-				<section class="featured-section">
-					<a href={`/blog/${lang}/${getPathSlug(featuredPost)}/`} class="featured-card">
-						<div class="featured-image">
-							{featuredPost.data.heroImage && (
-								<Image 
-									width={800} 
-									height={400} 
-									src={featuredPost.data.heroImage} 
-									alt={featuredPost.data.ogImageAlt || featuredPost.data.title}
-								/>
-							)}
-							<div class="featured-badge">Featured</div>
-						</div>
-						<div class="featured-content">
-							<div class="post-meta">
-								<FormattedDate date={featuredPost.data.pubDate} />
-								<span class="meta-separator">•</span>
-								<ReadingTime minutes={calculateReadingTime(featuredPost.body || '')} lang={lang} size="small" />
-							</div>
-							<h2>{featuredPost.data.title}</h2>
-							<p>{featuredPost.data.description}</p>
-							<span class="read-more">
-								Read article
+			<div class="content-layout">
+				<div class="main-content">
+					<!-- Featured Post -->
+					{featuredPost && (
+						<ScrollReveal animation="fade-up">
+							<section class="featured-section">
+								<a href={`/blog/${lang}/${getPathSlug(featuredPost)}/`} class="featured-card">
+									<div class="featured-image">
+										{featuredPost.data.heroImage && (
+											<Image 
+												width={800} 
+												height={400} 
+												src={featuredPost.data.heroImage} 
+												alt={featuredPost.data.ogImageAlt || featuredPost.data.title}
+											/>
+										)}
+										<div class="featured-badge">Featured</div>
+									</div>
+									<div class="featured-content">
+										<div class="post-meta">
+											<FormattedDate date={featuredPost.data.pubDate} />
+											<span class="meta-separator">•</span>
+											<ReadingTime minutes={calculateReadingTime(featuredPost.body || '')} lang={lang} size="small" />
+										</div>
+										<h2>{featuredPost.data.title}</h2>
+										<p>{featuredPost.data.description}</p>
+										<span class="read-more">
+											Read article
+											<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+												<line x1="5" y1="12" x2="19" y2="12"/>
+												<polyline points="12 5 19 12 12 19"/>
+											</svg>
+										</span>
+									</div>
+								</a>
+							</section>
+						</ScrollReveal>
+					)}
+
+					<!-- Posts Grid -->
+					<section class="posts-section">
+						<div class="section-header">
+							<h2 class="section-title">Latest Articles</h2>
+							<a href={`/blog/${lang}/archive/`} class="archive-link">
+								View Archive
 								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 									<line x1="5" y1="12" x2="19" y2="12"/>
 									<polyline points="12 5 19 12 12 19"/>
 								</svg>
-							</span>
+							</a>
 						</div>
-					</a>
-				</section>
-			)}
-
-			<!-- Posts Grid -->
-			<section class="posts-section">
-				<h2 class="section-title">Latest Articles</h2>
-				<div class="posts-grid">
-					{otherPosts.map((post) => (
-						<a href={`/blog/${lang}/${getPathSlug(post)}/`} class="post-card">
-							<div class="post-image">
-								{post.data.heroImage && (
-									<Image 
-										width={400} 
-										height={200} 
-										src={post.data.heroImage} 
-										alt={post.data.ogImageAlt || post.data.title}
-									/>
-								)}
-							</div>
-							<div class="post-content">
-								<div class="post-meta">
-									<FormattedDate date={post.data.pubDate} />
-									<span class="meta-separator">•</span>
-									<ReadingTime minutes={calculateReadingTime(post.body || '')} lang={lang} size="small" />
-								</div>
-								<h3>{post.data.title}</h3>
-								<p>{post.data.description}</p>
-							</div>
-						</a>
-					))}
+						<div class="posts-grid">
+							{otherPosts.map((post, index) => (
+								<ScrollReveal animation="fade-up" delay={index * 50}>
+									<a href={`/blog/${lang}/${getPathSlug(post)}/`} class="post-card">
+										<div class="post-image">
+											{post.data.heroImage && (
+												<Image 
+													width={400} 
+													height={200} 
+													src={post.data.heroImage} 
+													alt={post.data.ogImageAlt || post.data.title}
+												/>
+											)}
+										</div>
+										<div class="post-content">
+											<div class="post-meta">
+												<FormattedDate date={post.data.pubDate} />
+												<span class="meta-separator">•</span>
+												<ReadingTime minutes={calculateReadingTime(post.body || '')} lang={lang} size="small" />
+											</div>
+											<h3>{post.data.title}</h3>
+											<p>{post.data.description}</p>
+										</div>
+									</a>
+								</ScrollReveal>
+							))}
+						</div>
+					</section>
 				</div>
-			</section>
+
+				<!-- Sidebar -->
+				<aside class="sidebar">
+					<ScrollReveal animation="fade-left" delay={200}>
+						<PopularPosts lang={lang} limit={5} />
+					</ScrollReveal>
+					<ScrollReveal animation="fade-left" delay={300}>
+						<TagCloud lang={lang} limit={15} />
+					</ScrollReveal>
+				</aside>
+			</div>
 		</main>
 		<Footer />
 	</body>
@@ -151,7 +211,7 @@ const otherPosts = posts.slice(1);
 
 <style>
 	main {
-		max-width: 1200px;
+		max-width: 1400px;
 		margin: 0 auto;
 		padding: 2rem 1.5rem 4rem;
 	}
@@ -193,12 +253,38 @@ const otherPosts = posts.slice(1);
 		font-size: 1.15rem;
 		color: var(--text-secondary);
 		max-width: 600px;
-		margin: 0 auto;
+		margin: 0 auto 2rem;
+	}
+
+	.search-wrapper {
+		display: flex;
+		justify-content: center;
+		margin-top: 1.5rem;
+	}
+
+	/* Content Layout */
+	.content-layout {
+		display: grid;
+		grid-template-columns: 1fr 320px;
+		gap: 3rem;
+		align-items: start;
+	}
+
+	.main-content {
+		min-width: 0;
+	}
+
+	.sidebar {
+		position: sticky;
+		top: 100px;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
 	}
 
 	/* Featured Section */
 	.featured-section {
-		margin-bottom: 4rem;
+		margin-bottom: 3rem;
 	}
 
 	.featured-card {
@@ -310,18 +396,50 @@ const otherPosts = posts.slice(1);
 
 	/* Posts Section */
 	.posts-section {
-		padding-top: 2rem;
+		padding-top: 1rem;
+	}
+
+	.section-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 2rem;
 	}
 
 	.section-title {
 		font-size: 1.5rem;
-		margin-bottom: 2rem;
+		margin: 0;
 		color: var(--text-primary);
+	}
+
+	.archive-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: var(--accent-primary);
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 0.9rem;
+		transition: all 0.2s ease;
+	}
+
+	.archive-link:hover {
+		color: var(--accent-light);
+	}
+
+	.archive-link svg {
+		width: 16px;
+		height: 16px;
+		transition: transform 0.2s ease;
+	}
+
+	.archive-link:hover svg {
+		transform: translateX(3px);
 	}
 
 	.posts-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 		gap: 1.5rem;
 	}
 
@@ -334,6 +452,7 @@ const otherPosts = posts.slice(1);
 		overflow: hidden;
 		text-decoration: none;
 		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		height: 100%;
 	}
 
 	.post-card:hover {
@@ -368,7 +487,7 @@ const otherPosts = posts.slice(1);
 	}
 
 	.post-content h3 {
-		font-size: 1.15rem;
+		font-size: 1.1rem;
 		margin: 0.5rem 0 0.75rem;
 		color: var(--text-primary);
 		line-height: 1.4;
@@ -391,6 +510,19 @@ const otherPosts = posts.slice(1);
 	}
 
 	/* Responsive */
+	@media (max-width: 1100px) {
+		.content-layout {
+			grid-template-columns: 1fr;
+		}
+
+		.sidebar {
+			position: static;
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+			gap: 1.5rem;
+		}
+	}
+
 	@media (max-width: 900px) {
 		.featured-card {
 			grid-template-columns: 1fr;
@@ -415,6 +547,16 @@ const otherPosts = posts.slice(1);
 		}
 
 		.posts-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.section-header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.75rem;
+		}
+
+		.sidebar {
 			grid-template-columns: 1fr;
 		}
 	}
