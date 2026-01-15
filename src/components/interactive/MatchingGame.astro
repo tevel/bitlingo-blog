@@ -201,6 +201,9 @@ const words = targetData.words.slice(0, pairCount);
           (window as any).triggerConfetti({ particleCount: 70 });
         }
         
+        // Dispatch event for gamification
+        window.dispatchEvent(new CustomEvent('bitlingo:game-complete'));
+        
         // Setup share buttons
         const shareText = `I matched all ${pairCount} word pairs in the BitLingo matching game! 🔗 Try it yourself:`;
         const shareUrl = window.location.href;

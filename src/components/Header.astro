@@ -1,6 +1,7 @@
 ---
 import { DEFAULT_LANG } from '../consts';
 import ThemeToggle from './ThemeToggle.astro';
+import ProgressWidget from './ProgressWidget.astro';
 ---
 
 <header>
@@ -73,7 +74,10 @@ import ThemeToggle from './ThemeToggle.astro';
 			<span>Open App</span>
 		</a>
 		
-		<ThemeToggle />
+		<div class="header-widgets">
+			<ProgressWidget compact={true} />
+			<ThemeToggle />
+		</div>
 		
 		<button class="mobile-menu-btn" aria-label="Toggle menu">
 			<span></span>
@@ -234,6 +238,12 @@ import ThemeToggle from './ThemeToggle.astro';
 		height: 16px;
 		fill: #1a365d;
 		stroke: none;
+	}
+
+	.header-widgets {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
 	}
 	
 	.cta-button:hover {

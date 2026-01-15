@@ -194,6 +194,9 @@ const cards = words.flatMap(word => [
           (window as any).triggerConfetti({ particleCount: 80 });
         }
         
+        // Dispatch event for gamification
+        window.dispatchEvent(new CustomEvent('bitlingo:game-complete'));
+        
         // Setup share buttons
         const shareText = `I completed the BitLingo memory game in ${moves} moves! 🧠 Try it yourself:`;
         const shareUrl = window.location.href;

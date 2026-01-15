@@ -208,6 +208,9 @@ const words = targetData.words;
           (window as any).triggerConfetti({ particleCount: 60 });
         }
         
+        // Dispatch event for gamification
+        window.dispatchEvent(new CustomEvent('bitlingo:quiz-complete'));
+        
         // Update share links with score
         const shareText = `I scored ${score}/${questionCount} on the BitLingo vocabulary quiz! 🎯 Try it yourself:`;
         const shareUrl = window.location.href;

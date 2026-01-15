@@ -287,6 +287,9 @@ const words = targetData.words;
           (window as any).triggerConfetti({ particleCount: correctCount > 10 ? 100 : 50 });
         }
         
+        // Dispatch event for gamification
+        window.dispatchEvent(new CustomEvent('bitlingo:game-complete'));
+        
         // Setup share buttons
         const shareText = `⚡ I scored ${correctCount} correct answers (${wpm} WPM) in the BitLingo Speed Round! Can you beat my score?`;
         const shareUrl = window.location.href;

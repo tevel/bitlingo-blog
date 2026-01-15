@@ -1,0 +1,617 @@
+---
+/**
+ * Progress Widget Component
+ * Shows user's streak, XP, level, and badges
+ * Appears in header or sidebar
+ */
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<div class={`progress-widget ${compact ? 'compact' : ''}`} id="progress-widget">
+  <div class="progress-content">
+    <!-- Streak -->
+    <div class="stat streak-stat">
+      <span class="stat-icon">🔥</span>
+      <div class="stat-info">
+        <span class="stat-value" id="streak-value">0</span>
+        <span class="stat-label">day streak</span>
+      </div>
+    </div>
+
+    <!-- Level & XP -->
+    <div class="stat level-stat">
+      <span class="stat-icon">⭐</span>
+      <div class="stat-info">
+        <span class="stat-value" id="level-value">1</span>
+        <span class="stat-label" id="level-title">Beginner</span>
+      </div>
+    </div>
+
+    <!-- XP Progress Bar -->
+    <div class="xp-bar-container">
+      <div class="xp-info">
+        <span id="xp-current">0</span> XP
+        <span class="xp-next">/ <span id="xp-next">100</span></span>
+      </div>
+      <div class="xp-bar">
+        <div class="xp-fill" id="xp-fill" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Badges Preview -->
+    <div class="badges-preview" id="badges-preview">
+      <div class="badges-list"></div>
+      <button class="badges-expand" id="badges-expand" aria-label="View all badges">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 16v-4"/>
+          <path d="M12 8h.01"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  
+  <!-- XP Gain Notification -->
+  <div class="xp-notification" id="xp-notification" hidden>
+    <span class="xp-gain">+0 XP</span>
+  </div>
+</div>
+
+<!-- Badges Modal -->
+<div class="badges-modal" id="badges-modal" hidden>
+  <div class="modal-backdrop"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>🏆 Your Achievements</h3>
+      <button class="modal-close" id="modal-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-stats">
+      <div class="modal-stat">
+        <span class="modal-stat-value" id="modal-xp">0</span>
+        <span class="modal-stat-label">Total XP</span>
+      </div>
+      <div class="modal-stat">
+        <span class="modal-stat-value" id="modal-articles">0</span>
+        <span class="modal-stat-label">Articles Read</span>
+      </div>
+      <div class="modal-stat">
+        <span class="modal-stat-value" id="modal-games">0</span>
+        <span class="modal-stat-label">Games Played</span>
+      </div>
+    </div>
+    <div class="badges-grid" id="badges-grid"></div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const widget = document.getElementById('progress-widget');
+    if (!widget) return;
+
+    // Initialize gamification if not loaded
+    const initGamification = () => {
+      if (!window.bitlingoProgress) {
+        // Minimal fallback
+        const stored = localStorage.getItem('bitlingo-progress');
+        return stored ? JSON.parse(stored) : {
+          xp: 0, level: 1, streak: 0, lastVisit: '', articlesRead: [],
+          gamesPlayed: 0, quizzesCompleted: 0, badges: [], totalVisits: 0
+        };
+      }
+      return window.bitlingoProgress.getProgress();
+    };
+
+    const LEVELS = [
+      { level: 1, xp: 0, title: 'Beginner' },
+      { level: 2, xp: 100, title: 'Learner' },
+      { level: 3, xp: 300, title: 'Explorer' },
+      { level: 4, xp: 600, title: 'Enthusiast' },
+      { level: 5, xp: 1000, title: 'Scholar' },
+      { level: 6, xp: 1500, title: 'Expert' },
+      { level: 7, xp: 2200, title: 'Master' },
+      { level: 8, xp: 3000, title: 'Champion' },
+      { level: 9, xp: 4000, title: 'Legend' },
+      { level: 10, xp: 5500, title: 'Polyglot' },
+    ];
+
+    const BADGES = [
+      { id: 'first_steps', name: 'First Steps', icon: '🚀' },
+      { id: 'bookworm', name: 'Bookworm', icon: '📚' },
+      { id: 'quiz_master', name: 'Quiz Master', icon: '🎯' },
+      { id: 'game_lover', name: 'Game Lover', icon: '🎮' },
+      { id: 'streak_starter', name: 'Streak Starter', icon: '🔥' },
+      { id: 'week_warrior', name: 'Week Warrior', icon: '⚡' },
+      { id: 'dedicated_learner', name: 'Dedicated Learner', icon: '👑' },
+      { id: 'level_5', name: 'Rising Star', icon: '⭐' },
+      { id: 'level_10', name: 'Polyglot', icon: '🏆' },
+      { id: 'xp_1000', name: 'XP Hunter', icon: '💎' },
+    ];
+
+    // Update display
+    const updateDisplay = (progress: any) => {
+      const streakEl = document.getElementById('streak-value');
+      const levelEl = document.getElementById('level-value');
+      const levelTitleEl = document.getElementById('level-title');
+      const xpCurrentEl = document.getElementById('xp-current');
+      const xpNextEl = document.getElementById('xp-next');
+      const xpFillEl = document.getElementById('xp-fill');
+      const badgesListEl = document.querySelector('.badges-list');
+      
+      if (streakEl) streakEl.textContent = progress.streak.toString();
+      if (levelEl) levelEl.textContent = progress.level.toString();
+      
+      const levelInfo = LEVELS.find(l => l.level === progress.level) || LEVELS[0];
+      const nextLevel = LEVELS.find(l => l.level === progress.level + 1);
+      
+      if (levelTitleEl) levelTitleEl.textContent = levelInfo.title;
+      if (xpCurrentEl) xpCurrentEl.textContent = progress.xp.toString();
+      
+      if (nextLevel) {
+        if (xpNextEl) xpNextEl.textContent = nextLevel.xp.toString();
+        const progressPercent = ((progress.xp - levelInfo.xp) / (nextLevel.xp - levelInfo.xp)) * 100;
+        if (xpFillEl) xpFillEl.style.width = `${Math.min(100, progressPercent)}%`;
+      } else {
+        if (xpNextEl) xpNextEl.textContent = 'MAX';
+        if (xpFillEl) xpFillEl.style.width = '100%';
+      }
+      
+      // Update badges preview
+      if (badgesListEl) {
+        const earnedBadges = BADGES.filter(b => progress.badges.includes(b.id)).slice(-3);
+        badgesListEl.innerHTML = earnedBadges.map(b => 
+          `<span class="badge-icon" title="${b.name}">${b.icon}</span>`
+        ).join('');
+      }
+      
+      // Update modal stats
+      const modalXp = document.getElementById('modal-xp');
+      const modalArticles = document.getElementById('modal-articles');
+      const modalGames = document.getElementById('modal-games');
+      
+      if (modalXp) modalXp.textContent = progress.xp.toString();
+      if (modalArticles) modalArticles.textContent = progress.articlesRead.length.toString();
+      if (modalGames) modalGames.textContent = progress.gamesPlayed.toString();
+      
+      // Update badges grid
+      const badgesGrid = document.getElementById('badges-grid');
+      if (badgesGrid) {
+        badgesGrid.innerHTML = BADGES.map(b => {
+          const earned = progress.badges.includes(b.id);
+          return `
+            <div class="badge-card ${earned ? 'earned' : 'locked'}">
+              <span class="badge-icon">${b.icon}</span>
+              <span class="badge-name">${b.name}</span>
+            </div>
+          `;
+        }).join('');
+      }
+    };
+
+    // Show XP notification
+    const showXpNotification = (xp: number) => {
+      const notif = document.getElementById('xp-notification');
+      const gainEl = notif?.querySelector('.xp-gain');
+      if (notif && gainEl && xp > 0) {
+        gainEl.textContent = `+${xp} XP`;
+        notif.hidden = false;
+        notif.classList.add('show');
+        setTimeout(() => {
+          notif.classList.remove('show');
+          setTimeout(() => { notif.hidden = true; }, 300);
+        }, 2000);
+      }
+    };
+
+    // Initialize and update streak on page load
+    let progress = initGamification();
+    
+    // Update streak for daily visit
+    const today = new Date().toISOString().split('T')[0];
+    if (progress.lastVisit !== today) {
+      let xpGained = 0;
+      
+      if (!progress.lastVisit) {
+        progress.streak = 1;
+        progress.totalVisits = 1;
+        xpGained = 110; // First visit + daily
+        if (!progress.badges.includes('first_steps')) {
+          progress.badges.push('first_steps');
+        }
+      } else {
+        const lastDate = new Date(progress.lastVisit);
+        const todayDate = new Date(today);
+        const diffDays = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 1) {
+          progress.streak += 1;
+          xpGained = 10 + (progress.streak * 5);
+        } else {
+          progress.streak = 1;
+          xpGained = 10;
+        }
+        progress.totalVisits += 1;
+      }
+      
+      progress.lastVisit = today;
+      progress.xp += xpGained;
+      
+      // Recalculate level
+      for (let i = LEVELS.length - 1; i >= 0; i--) {
+        if (progress.xp >= LEVELS[i].xp) {
+          progress.level = LEVELS[i].level;
+          break;
+        }
+      }
+      
+      // Check streak badges
+      if (progress.streak >= 3 && !progress.badges.includes('streak_starter')) {
+        progress.badges.push('streak_starter');
+      }
+      if (progress.streak >= 7 && !progress.badges.includes('week_warrior')) {
+        progress.badges.push('week_warrior');
+      }
+      
+      localStorage.setItem('bitlingo-progress', JSON.stringify(progress));
+      
+      // Show XP notification after a short delay
+      setTimeout(() => showXpNotification(xpGained), 500);
+    }
+    
+    updateDisplay(progress);
+    
+    // Modal handling
+    const modal = document.getElementById('badges-modal');
+    const expandBtn = document.getElementById('badges-expand');
+    const closeBtn = document.getElementById('modal-close');
+    const backdrop = modal?.querySelector('.modal-backdrop');
+    
+    const openModal = () => {
+      if (modal) {
+        modal.hidden = false;
+        setTimeout(() => modal.classList.add('open'), 10);
+      }
+    };
+    
+    const closeModal = () => {
+      if (modal) {
+        modal.classList.remove('open');
+        setTimeout(() => { modal.hidden = true; }, 300);
+      }
+    };
+    
+    expandBtn?.addEventListener('click', openModal);
+    closeBtn?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
+    
+    // Listen for custom events from games
+    window.addEventListener('bitlingo:quiz-complete', () => {
+      progress.quizzesCompleted += 1;
+      progress.xp += 50;
+      for (let i = LEVELS.length - 1; i >= 0; i--) {
+        if (progress.xp >= LEVELS[i].xp) { progress.level = LEVELS[i].level; break; }
+      }
+      if (progress.quizzesCompleted >= 10 && !progress.badges.includes('quiz_master')) {
+        progress.badges.push('quiz_master');
+      }
+      localStorage.setItem('bitlingo-progress', JSON.stringify(progress));
+      updateDisplay(progress);
+      showXpNotification(50);
+    });
+    
+    window.addEventListener('bitlingo:game-complete', () => {
+      progress.gamesPlayed += 1;
+      progress.xp += 30;
+      for (let i = LEVELS.length - 1; i >= 0; i--) {
+        if (progress.xp >= LEVELS[i].xp) { progress.level = LEVELS[i].level; break; }
+      }
+      if (progress.gamesPlayed >= 20 && !progress.badges.includes('game_lover')) {
+        progress.badges.push('game_lover');
+      }
+      localStorage.setItem('bitlingo-progress', JSON.stringify(progress));
+      updateDisplay(progress);
+      showXpNotification(30);
+    });
+  });
+</script>
+
+<style>
+  .progress-widget {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    font-size: 0.85rem;
+    position: relative;
+  }
+
+  .progress-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .stat-icon {
+    font-size: 1.1rem;
+  }
+
+  .stat-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  .stat-value {
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  .xp-bar-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 80px;
+  }
+
+  .xp-info {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  .xp-next {
+    opacity: 0.6;
+  }
+
+  .xp-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-light));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  .badges-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .badges-list {
+    display: flex;
+    gap: 0.15rem;
+  }
+
+  .badge-icon {
+    font-size: 1rem;
+  }
+
+  .badges-expand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .badges-expand:hover {
+    color: var(--accent-primary);
+  }
+
+  .badges-expand svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* XP Notification */
+  .xp-notification {
+    position: absolute;
+    top: -30px;
+    right: 10px;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+
+  .xp-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Modal */
+  .badges-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .badges-modal.open .modal-backdrop {
+    opacity: 1;
+  }
+
+  .modal-content {
+    position: relative;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    transform: scale(0.9);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .badges-modal.open .modal-content {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  .modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+
+  .modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+  }
+
+  .modal-close svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .modal-stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-stat {
+    text-align: center;
+  }
+
+  .modal-stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+  }
+
+  .modal-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .badge-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+  }
+
+  .badge-card.earned {
+    background: rgba(245, 166, 35, 0.1);
+    border-color: var(--border-accent);
+  }
+
+  .badge-card.locked {
+    opacity: 0.4;
+    filter: grayscale(100%);
+  }
+
+  .badge-card .badge-icon {
+    font-size: 2rem;
+  }
+
+  .badge-name {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+
+  /* Compact mode */
+  .progress-widget.compact .xp-bar-container,
+  .progress-widget.compact .badges-preview {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .progress-widget {
+      padding: 0.4rem 0.75rem;
+    }
+    
+    .xp-bar-container {
+      display: none;
+    }
+  }
+</style>
