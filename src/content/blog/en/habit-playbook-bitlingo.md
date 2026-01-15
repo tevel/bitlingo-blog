@@ -1,10 +1,30 @@
 ---
-title: "Habit playbook: make BitLingo stick in 10 minutes a day"
-description: "A repeatable micro-routine that fits commutes, walks, and chores—without screens or subscriptions."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "en"
-slug: "habit-playbook-bitlingo"
+title: 'Habit playbook: make BitLingo stick in 10 minutes a day'
+description: A repeatable micro-routine that fits commutes, walks, and chores—without
+  screens or subscriptions.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: en
+slug: en-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: 'Habit playbook: make BitLingo stick in 10 minutes a day'
+seoDescription: Build a sustainable language learning habit with BitLingo's 10-minute
+  daily routine. No subscriptions, no screens—just consistent micro-sessions that
+  fit into commutes, walks, and chores.
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- daily language habit
+- micro learning routine
+- 10 minutes a day language
+- consistent vocabulary practice
+- language learning app
+- vocabulary builder
+- audio flashcards
+- learn languages while driving
+- hands-free language learning
+- commute learning app
+- offline vocabulary practice
+- audio-first learning
 ---
 
 Busy schedules kill most language goals. BitLingo’s audio-first approach keeps the bar low so you can build a streak that lasts with a hands-free language learning app.

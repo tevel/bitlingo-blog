@@ -1,10 +1,27 @@
 ---
-title: "맞춤 어휘 덱을 몇 분 만에 만들기"
-description: "일반 단어장은 건너뛰고, 필요한 표현만 넣어 BitLingo로 핸즈프리 연습하세요."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "ko"
-slug: "custom-vocabulary-workflow"
+title: 맞춤 어휘 덱을 몇 분 만에 만들기
+description: 일반 단어장은 건너뛰고, 필요한 표현만 넣어 BitLingo로 핸즈프리 연습하세요.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: ko
+slug: ko-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: 맞춤 어휘 덱을 몇 분 만에 만들기
+seoDescription: 일반적인 단어 목록에 시간을 낭비하지 마세요. BitLingo로 몇 분 만에 개인화된 어휘 덱을 만들고 목표에 중요한
+  단어만 연습하는 방법을 배우세요.
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- 맞춤 어휘 목록
+- 개인 단어 카드
+- 나만의 단어장
+- 언어 학습 앱
+- 오디오 어휘
+- 운전 중 언어 학습
+- 핸즈프리 언어 학습
+- 단어 카드
+- 오프라인 학습
+- 출퇴근 학습
+- BitLingo
 ---
 
 BitLingo는 **당신의** 어휘를 중심에 둡니다. 아이디어에서 ‘오디오 플래시카드’ 덱을 완성하는 빠른 흐름입니다.

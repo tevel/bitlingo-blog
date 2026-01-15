@@ -1,10 +1,28 @@
 ---
-title: "Offline: praktyka słówek w samolocie i bez zasięgu"
-description: "Zainstaluj BitLingo jako PWA i kontynuuj naukę, gdy znika sygnał—w samolocie, metrze czy na trasach poza miastem."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-4.jpg"
-lang: "pl"
-slug: "offline-practice-guide"
+title: 'Offline: praktyka słówek w samolocie i bez zasięgu'
+description: Zainstaluj BitLingo jako PWA i kontynuuj naukę, gdy znika sygnał—w samolocie,
+  metrze czy na trasach poza miastem.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-offline-practice-guide.svg
+lang: pl
+slug: pl-offline-practice-guide
+path: offline-practice-guide
+seoTitle: 'Offline: praktyka słówek w samolocie i bez zasięgu'
+seoDescription: Ucz się dalej, gdy sygnał znika. Zainstaluj BitLingo jako PWA i ćwicz
+  offline podczas lotów lub w miejscach bez zasięgu.
+ogImageAlt: Smartphone showing BitLingo app above clouds with OFFLINE badge, French vocabulary Voyage, and audio waveform - learn languages without internet
+keywords:
+- nauka języków offline
+- słówka bez internetu
+- tryb samolotowy
+- aplikacja do nauki języków
+- słówka audio
+- nauka języków w samochodzie
+- nauka bez użycia rąk
+- fiszki słownictwa
+- nauka offline
+- nauka w drodze
+- BitLingo
 ---
 
 Brak internetu? Żaden problem. BitLingo zapisuje listy lokalnie i działa offline, więc możesz ćwiczyć wszędzie. To Twój towarzysz audio-first, gdy chcesz powtarzać bez sieci.

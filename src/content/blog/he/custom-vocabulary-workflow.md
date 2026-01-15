@@ -1,10 +1,28 @@
 ---
-title: "בנו חבילת מילים מותאמת בדקות"
-description: "דלגו על רשימות כלליות. הוסיפו רק את הביטויים החשובים ותרגלו ללא ידיים עם BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "he"
-slug: "custom-vocabulary-workflow"
+title: בנו חבילת מילים מותאמת בדקות
+description: דלגו על רשימות כלליות. הוסיפו רק את הביטויים החשובים ותרגלו ללא ידיים
+  עם BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: he
+slug: he-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: בנו חבילת מילים מותאמת בדקות
+seoDescription: הפסיקו לבזבז זמן על רשימות מילים גנריות. למדו איך לבנות חבילות מילים
+  מותאמות אישית בדקות עם BitLingo.
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- רשימות מילים מותאמות
+- כרטיסיות אישיות
+- יצירת חבילת מילים
+- אפליקציה ללמידת שפות
+- אוצר מילים באודיו
+- ללמוד שפות בנהיגה
+- למידה ללא ידיים
+- כרטיסיות מילים
+- למידה אופליין
+- למידה בדרך
+- BitLingo
 ---
 
 BitLingo בנוי סביב **אוצר המילים שלכם**, לא שלנו. זהו זרם מהיר מהרעיון אל חבילת “אודיו-פלשקארדס” מוכנה.

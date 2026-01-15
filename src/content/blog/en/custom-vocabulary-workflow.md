@@ -1,10 +1,30 @@
 ---
-title: "Build a custom vocabulary deck in minutes"
-description: "Skip generic word lists. Load only the phrases you care about, then practice them hands-free with BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "en"
-slug: "custom-vocabulary-workflow"
+title: Build a custom vocabulary deck in minutes
+description: Skip generic word lists. Load only the phrases you care about, then practice
+  them hands-free with BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: en
+slug: en-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: Build a custom vocabulary deck in minutes
+seoDescription: Stop wasting time on generic word lists. Learn how to build personalized
+  vocabulary decks in minutes with BitLingo and practice only the words that matter
+  to your goals.
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- custom vocabulary lists
+- personalized flashcards
+- build your own word deck
+- targeted vocabulary learning
+- language learning app
+- vocabulary builder
+- audio flashcards
+- learn languages while driving
+- hands-free language learning
+- commute learning app
+- offline vocabulary practice
+- audio-first learning
 ---
 
 BitLingo is built around **your** vocabulary—not ours. Here’s a fast workflow to go from idea to a practice-ready deck using audio flashcards for language learning.

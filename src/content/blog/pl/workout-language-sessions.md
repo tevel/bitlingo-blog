@@ -1,10 +1,27 @@
 ---
-title: "Ucz się języka podczas treningu"
-description: "Dołóż pętle słówek audio do siły lub kardio. Bez rąk, bezpiecznie, konsekwentnie."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "pl"
-slug: "workout-language-sessions"
+title: Ucz się języka podczas treningu
+description: Dołóż pętle słówek audio do siły lub kardio. Bez rąk, bezpiecznie, konsekwentnie.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: pl
+slug: pl-workout-language-sessions
+path: workout-language-sessions
+seoTitle: Ucz się języka podczas treningu
+seoDescription: Zamień trening w sesję nauki języka. Pętle audio BitLingo pozwalają
+  ćwiczyć słownictwo podczas cardio lub spacerów—bez użycia rąk i bezpiecznie.
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- nauka języków podczas ćwiczeń
+- słówka na siłowni
+- fitness i nauka
+- aplikacja do nauki języków
+- słówka audio
+- nauka języków w samochodzie
+- nauka bez użycia rąk
+- fiszki słownictwa
+- nauka offline
+- nauka w drodze
+- BitLingo
 ---
 
 Czas na trening już masz. Wzmocnij słownictwo, nie psując techniki ani koncentracji—z aplikacją do nauki bez użycia rąk.

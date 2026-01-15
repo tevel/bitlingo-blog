@@ -1,10 +1,30 @@
 ---
-title: "Pratique de vocabulaire hors ligne pour vols et zones blanches"
-description: "Installez BitLingo en PWA et continuez à apprendre quand le signal coupe—en vol, dans le métro ou en trajet rural."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-4.jpg"
-lang: "fr"
-slug: "offline-practice-guide"
+title: Pratique de vocabulaire hors ligne pour vols et zones blanches
+description: Installez BitLingo en PWA et continuez à apprendre quand le signal coupe—en
+  vol, dans le métro ou en trajet rural.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-offline-practice-guide.svg
+lang: fr
+slug: fr-offline-practice-guide
+path: offline-practice-guide
+seoTitle: Pratique de vocabulaire hors ligne pour vols et zones blanches
+seoDescription: Continuez à apprendre quand le signal tombe. Installez BitLingo en
+  PWA et pratiquez hors ligne pendant les vols ou zones sans couverture—vos progrès
+  ne s'arrêtent jamais.
+ogImageAlt: Smartphone showing BitLingo app above clouds with OFFLINE badge, French vocabulary Voyage, and audio waveform - learn languages without internet
+keywords:
+- apprendre langues hors ligne
+- vocabulaire sans internet
+- mode avion
+- application apprentissage langues
+- vocabulaire audio
+- apprendre langues en voiture
+- apprentissage mains libres
+- cartes de vocabulaire
+- vocabulaire hors ligne
+- apprendre en conduisant
+- application vocabulaire
+- BitLingo
 ---
 
 Pas de connexion ? Pas de souci. BitLingo stocke vos listes en local et fonctionne hors ligne, pour pratiquer partout. C’est votre compagnon d’apprentissage sans réseau quand vous voulez encore des révisions audio-first.

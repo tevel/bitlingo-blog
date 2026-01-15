@@ -1,10 +1,27 @@
 ---
-title: "습관 플레이북: BitLingo를 하루 10분으로 굳히기"
-description: "통근·산책·집안일에 녹아드는 반복 가능한 미니 루틴—화면도 구독도 없음."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "ko"
-slug: "habit-playbook-bitlingo"
+title: '습관 플레이북: BitLingo를 하루 10분으로 굳히기'
+description: 통근·산책·집안일에 녹아드는 반복 가능한 미니 루틴—화면도 구독도 없음.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: ko
+slug: ko-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: '습관 플레이북: BitLingo를 하루 10분으로 굳히기'
+seoDescription: BitLingo의 하루 10분 루틴으로 지속 가능한 언어 학습 습관을 만드세요. 구독 없이, 화면 없이—출퇴근과 집안일에
+  맞는 마이크로 세션.
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- 매일 언어 습관
+- 마이크로 학습
+- 하루 10분
+- 언어 학습 앱
+- 오디오 어휘
+- 운전 중 언어 학습
+- 핸즈프리 언어 학습
+- 단어 카드
+- 오프라인 학습
+- 출퇴근 학습
+- BitLingo
 ---
 
 바쁜 일정은 언어 목표를 무너뜨리기 쉽습니다. BitLingo의 오디오 퍼스트 접근은 진입 장벽을 낮추고, 핸즈프리 학습으로 지속 가능한 연속을 만들 수 있게 합니다.

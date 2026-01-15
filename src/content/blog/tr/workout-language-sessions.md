@@ -1,10 +1,28 @@
 ---
-title: "Antrenman yaparken dil öğren"
-description: "Güç veya kardiyoya kelime ses döngüleri ekle. Eller serbest, güvenli, sürdürülebilir."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "tr"
-slug: "workout-language-sessions"
+title: Antrenman yaparken dil öğren
+description: Güç veya kardiyoya kelime ses döngüleri ekle. Eller serbest, güvenli,
+  sürdürülebilir.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: tr
+slug: tr-workout-language-sessions
+path: workout-language-sessions
+seoTitle: Antrenman yaparken dil öğren
+seoDescription: Antrenmanınızı dil öğrenme seansına dönüştürün. BitLingo'nun ses döngüleri,
+  kardio veya yürüyüş sırasında kelime pratiği yapmanızı sağlar—eller serbest ve güvenli.
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- egzersiz yaparken dil öğren
+- spor salonunda kelime
+- fitness ve öğrenme
+- dil öğrenme uygulaması
+- sesli kelime
+- araba sürerken dil öğren
+- eller serbest dil öğrenimi
+- kelime kartları
+- çevrimdışı öğrenme
+- yolda öğrenme
+- BitLingo
 ---
 
 Antrenman zamanı zaten ayrılmış. Duruşu ya da odağı bozmadan kelime haznesini güçlendir—eller serbest öğrenme uygulamasıyla.

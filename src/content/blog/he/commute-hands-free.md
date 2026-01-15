@@ -1,10 +1,28 @@
 ---
-title: "למידת שפה ללא ידיים בזמן הנסיעה"
-description: "הפוך את הנהיגה או הרכבת לחזרות מילים בטוחות בעזרת לולאות \"הקשב וחזור\" של BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "he"
-slug: "commute-hands-free"
+title: למידת שפה ללא ידיים בזמן הנסיעה
+description: הפוך את הנהיגה או הרכבת לחזרות מילים בטוחות בעזרת לולאות "הקשב וחזור"
+  של BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: he
+slug: he-commute-hands-free
+path: commute-hands-free
+seoTitle: למידת שפה ללא ידיים בזמן הנסיעה
+seoDescription: הפוך את הנסיעה היומית שלך לזמן לימוד פרודוקטיבי. הגישה האודיו של BitLingo
+  מאפשרת לתרגל מילים בבטחה בזמן נהיגה או בתחבורה ציבורית.
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- ללמוד שפות בנסיעה
+- מילים במכונית
+- למידה באודיו
+- אפליקציה ללמידת שפות
+- אוצר מילים באודיו
+- ללמוד שפות בנהיגה
+- למידה ללא ידיים
+- כרטיסיות מילים
+- למידה אופליין
+- למידה בדרך
+- BitLingo
 ---
 
 גם כשהעיניים על הכביש או על שמות התחנות, אפשר להגדיל אוצר מילים. BitLingo הוא אודיו-פרסט, בלי צורך במסך. זהו אפליקציית **למידה ללא ידיים** שנבנתה לנסיעות.

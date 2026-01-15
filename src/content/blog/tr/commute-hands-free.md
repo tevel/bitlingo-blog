@@ -1,10 +1,29 @@
 ---
-title: "Yolculukta eller serbest dil pratiği"
-description: "Araba veya tren vaktini BitLingo'nun dinle-tekrarla ses döngüleriyle güvenli kelime tekrarına dönüştür."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "tr"
-slug: "commute-hands-free"
+title: Yolculukta eller serbest dil pratiği
+description: Araba veya tren vaktini BitLingo'nun dinle-tekrarla ses döngüleriyle
+  güvenli kelime tekrarına dönüştür.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: tr
+slug: tr-commute-hands-free
+path: commute-hands-free
+seoTitle: Yolculukta eller serbest dil pratiği
+seoDescription: Günlük yolculuğunuzu verimli dil öğrenme zamanına dönüştürün. BitLingo'nun
+  ses öncelikli yaklaşımı, araba sürerken veya toplu taşımada güvenle kelime pratiği
+  yapmanızı sağlar.
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- yolculukta dil öğren
+- arabada kelime
+- sesli öğrenme
+- dil öğrenme uygulaması
+- sesli kelime
+- araba sürerken dil öğren
+- eller serbest dil öğrenimi
+- kelime kartları
+- çevrimdışı öğrenme
+- yolda öğrenme
+- BitLingo
 ---
 
 Gözleriniz yol veya durak tabelalarında olsa bile kelime haznenizi artırabilirsiniz. BitLingo ses önceliklidir, ekrana bakmanız gerekmez. Yolculuklar için tasarlanmış **eller serbest öğrenme** uygulamasıdır.

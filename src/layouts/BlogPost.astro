@@ -5,27 +5,49 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import { DEFAULT_LANG } from '../consts';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
-const heroAlt = `${title} hero image`;
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	lang = 'en',
+	keywords = [],
+	seoTitle,
+	seoDescription,
+	ogImageAlt,
+} = Astro.props;
+const heroAlt = ogImageAlt || `${title} hero image`;
 const pageUrl = new URL(Astro.url, Astro.site);
 const imageUrl = heroImage ? new URL(heroImage.src, Astro.url) : null;
 const datePublished = pubDate.toISOString();
 const dateModified = (updatedDate ?? pubDate).toISOString();
+const resolvedTitle = seoTitle || `${title} | BitLingo`;
+const resolvedDescription = seoDescription || description;
+const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 ---
 
-<html lang="en">
+<html lang={lang}>
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead
+			title={resolvedTitle}
+			description={resolvedDescription}
+			image={heroImage}
+			lang={lang}
+			keywords={resolvedKeywords}
+			ogImageAlt={heroAlt}
+		/>
 		{imageUrl && (
 			<script type="application/ld+json">
 				{JSON.stringify({
 					'@context': 'https://schema.org',
 					'@type': 'Article',
-					headline: title,
-					description,
+					headline: resolvedTitle,
+					description: resolvedDescription,
 					datePublished,
 					dateModified,
 					author: { '@type': 'Organization', name: 'BitLingo' },
@@ -39,76 +61,445 @@ const dateModified = (updatedDate ?? pubDate).toISOString();
 					},
 					image: imageUrl,
 					mainEntityOfPage: pageUrl,
+					articleSection: 'Language learning',
+					inLanguage: lang,
+					keywords: resolvedKeywords,
 				})}
 			</script>
 		)}
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
+		<meta property="article:published_time" content={datePublished} />
+		<meta property="article:modified_time" content={dateModified} />
+		<meta name="author" content="BitLingo" />
 	</head>
 
 	<body>
 		<Header />
 		<main>
 			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt={heroAlt} />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
+				<!-- Hero Section -->
+				<header class="article-header">
+					<a href={`/blog/${lang}`} class="back-link">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<line x1="19" y1="12" x2="5" y2="12"/>
+							<polyline points="12 19 5 12 12 5"/>
+						</svg>
+						Back to Blog
+					</a>
+					<div class="article-meta">
+						<div class="meta-item">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+								<line x1="16" y1="2" x2="16" y2="6"/>
+								<line x1="8" y1="2" x2="8" y2="6"/>
+								<line x1="3" y1="10" x2="21" y2="10"/>
+							</svg>
 							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
 						</div>
-						<h1>{title}</h1>
-						<hr />
+						{updatedDate && (
+							<div class="meta-item updated">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M1 4v6h6"/>
+									<path d="M23 20v-6h-6"/>
+									<path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+								</svg>
+								Updated <FormattedDate date={updatedDate} />
+							</div>
+						)}
 					</div>
+					<h1>{title}</h1>
+					<p class="article-description">{description}</p>
+				</header>
+
+				<!-- Hero Image -->
+				{heroImage && (
+					<div class="hero-image">
+						<Image width={1200} height={600} src={heroImage} alt={heroAlt} />
+					</div>
+				)}
+
+				<!-- Article Content -->
+				<div class="article-content prose">
 					<slot />
 				</div>
+
+				<!-- Article Footer -->
+				<footer class="article-footer">
+					<div class="share-section">
+						<span class="share-label">Share this article</span>
+						<div class="share-buttons">
+							<a 
+								href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(pageUrl.toString())}`} 
+								target="_blank" 
+								rel="noopener noreferrer" 
+								class="share-btn"
+								aria-label="Share on Twitter"
+							>
+								<svg viewBox="0 0 24 24" fill="currentColor">
+									<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+								</svg>
+							</a>
+							<a 
+								href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(pageUrl.toString())}&title=${encodeURIComponent(title)}`} 
+								target="_blank" 
+								rel="noopener noreferrer" 
+								class="share-btn"
+								aria-label="Share on LinkedIn"
+							>
+								<svg viewBox="0 0 24 24" fill="currentColor">
+									<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+								</svg>
+							</a>
+							<button 
+								class="share-btn copy-link" 
+								data-url={pageUrl.toString()}
+								aria-label="Copy link"
+							>
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+									<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+								</svg>
+							</button>
+						</div>
+					</div>
+					<a href={`/blog/${lang}`} class="back-to-blog">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<line x1="19" y1="12" x2="5" y2="12"/>
+							<polyline points="12 19 5 12 12 5"/>
+						</svg>
+						Back to all articles
+					</a>
+				</footer>
 			</article>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<script>
+	// Copy link functionality
+	document.querySelectorAll('.copy-link').forEach((btn) => {
+		btn.addEventListener('click', async () => {
+			const url = btn.getAttribute('data-url');
+			if (url) {
+				await navigator.clipboard.writeText(url);
+				const svg = btn.querySelector('svg');
+				if (svg) {
+					svg.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+					setTimeout(() => {
+						svg.innerHTML = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>';
+					}, 2000);
+				}
+			}
+		});
+	});
+</script>
+
+<style>
+	main {
+		max-width: 100%;
+		padding: 0;
+		margin: 0;
+	}
+
+	article {
+		width: 100%;
+	}
+
+	/* Article Header */
+	.article-header {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 2rem 1.5rem 0;
+		text-align: center;
+	}
+
+	.back-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 1rem;
+		background: rgba(67, 97, 238, 0.1);
+		border: 1px solid rgba(67, 97, 238, 0.2);
+		border-radius: 50px;
+		color: var(--text-secondary);
+		font-size: 0.85rem;
+		font-weight: 500;
+		text-decoration: none;
+		transition: all 0.3s ease;
+		margin-bottom: 2rem;
+	}
+
+	.back-link:hover {
+		background: rgba(67, 97, 238, 0.2);
+		color: var(--accent-cyan);
+	}
+
+	.back-link svg {
+		width: 16px;
+		height: 16px;
+		min-width: 16px;
+		max-width: 16px;
+		flex-shrink: 0;
+	}
+
+	.article-meta {
+		display: flex;
+		justify-content: center;
+		gap: 1.5rem;
+		margin-bottom: 1.5rem;
+		flex-wrap: wrap;
+	}
+
+	.meta-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: var(--text-muted);
+		font-size: 0.9rem;
+	}
+
+	.meta-item svg {
+		width: 16px;
+		height: 16px;
+		min-width: 16px;
+		max-width: 16px;
+		opacity: 0.7;
+		flex-shrink: 0;
+	}
+
+	.meta-item.updated {
+		color: var(--accent-cyan);
+	}
+
+	.article-header h1 {
+		font-size: clamp(2rem, 5vw, 3rem);
+		line-height: 1.2;
+		margin: 0 0 1rem;
+		background: linear-gradient(135deg, var(--text-primary), var(--accent-cyan));
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.article-description {
+		font-size: 1.15rem;
+		color: var(--text-secondary);
+		max-width: 600px;
+		margin: 0 auto;
+		line-height: 1.7;
+	}
+
+	/* Hero Image */
+	.hero-image {
+		max-width: 1000px;
+		margin: 3rem auto;
+		padding: 0 1.5rem;
+	}
+
+	.hero-image img {
+		width: 100%;
+		height: auto;
+		border-radius: 20px;
+		box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 40px rgba(67, 97, 238, 0.1);
+	}
+
+	/* Article Content */
+	.article-content {
+		max-width: 750px;
+		margin: 0 auto;
+		padding: 0 1.5rem 3rem;
+	}
+
+	.article-content :global(h2) {
+		font-size: 1.75rem;
+		margin-top: 3rem;
+		margin-bottom: 1rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+	}
+
+	.article-content :global(h3) {
+		font-size: 1.35rem;
+		margin-top: 2rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.article-content :global(p) {
+		color: var(--text-secondary);
+		font-size: 1.05rem;
+		line-height: 1.8;
+	}
+
+	.article-content :global(a) {
+		color: var(--accent-cyan);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+		transition: color 0.3s ease;
+	}
+
+	.article-content :global(a:hover) {
+		color: var(--accent-pink);
+	}
+
+	.article-content :global(ul),
+	.article-content :global(ol) {
+		margin: 1.5rem 0;
+		padding-left: 1.5rem;
+	}
+
+	.article-content :global(li) {
+		margin-bottom: 0.75rem;
+		color: var(--text-secondary);
+		line-height: 1.7;
+	}
+
+	.article-content :global(strong) {
+		color: var(--text-primary);
+		font-weight: 600;
+	}
+
+	.article-content :global(blockquote) {
+		margin: 2rem 0;
+		padding: 1.5rem 2rem;
+		background: linear-gradient(145deg, rgba(67, 97, 238, 0.1), rgba(114, 9, 183, 0.1));
+		border-left: 4px solid var(--accent-purple);
+		border-radius: 0 16px 16px 0;
+	}
+
+	.article-content :global(blockquote p) {
+		color: var(--text-primary);
+		font-size: 1.1rem;
+		margin: 0;
+	}
+
+	.article-content :global(code) {
+		background: rgba(67, 97, 238, 0.15);
+		border: 1px solid rgba(67, 97, 238, 0.2);
+		padding: 0.2em 0.5em;
+		border-radius: 6px;
+		font-size: 0.9em;
+		color: var(--accent-cyan);
+	}
+
+	.article-content :global(pre) {
+		background: var(--bg-card);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 12px;
+		padding: 1.5rem;
+		overflow-x: auto;
+	}
+
+	.article-content :global(pre code) {
+		background: none;
+		border: none;
+		padding: 0;
+		color: var(--text-primary);
+	}
+
+	/* Article Footer */
+	.article-footer {
+		max-width: 750px;
+		margin: 0 auto;
+		padding: 3rem 1.5rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 2rem;
+	}
+
+	.share-section {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.share-label {
+		font-size: 0.9rem;
+		color: var(--text-muted);
+		font-weight: 500;
+	}
+
+	.share-buttons {
+		display: flex;
+		gap: 0.75rem;
+	}
+
+	.share-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 12px;
+		color: var(--text-secondary);
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.share-btn:hover {
+		background: rgba(67, 97, 238, 0.2);
+		border-color: rgba(67, 97, 238, 0.3);
+		color: var(--accent-cyan);
+		transform: translateY(-2px);
+	}
+
+	.share-btn svg {
+		width: 20px;
+		height: 20px;
+		min-width: 20px;
+		max-width: 20px;
+		flex-shrink: 0;
+	}
+
+	.back-to-blog {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.75rem 1.5rem;
+		background: linear-gradient(135deg, #4361ee, #7209b7);
+		border-radius: 50px;
+		color: white;
+		font-weight: 600;
+		text-decoration: none;
+		transition: all 0.3s ease;
+		box-shadow: 0 4px 20px rgba(67, 97, 238, 0.3);
+	}
+
+	.back-to-blog:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 30px rgba(67, 97, 238, 0.5);
+		color: white;
+	}
+
+	.back-to-blog svg {
+		width: 18px;
+		height: 18px;
+		min-width: 18px;
+		max-width: 18px;
+		flex-shrink: 0;
+	}
+
+	/* Responsive */
+	@media (max-width: 768px) {
+		.article-header {
+			padding: 1.5rem 1rem 0;
+		}
+
+		.hero-image {
+			padding: 0 1rem;
+			margin: 2rem auto;
+		}
+
+		.article-content {
+			padding: 0 1rem 2rem;
+		}
+
+		.article-footer {
+			padding: 2rem 1rem;
+		}
+	}
+</style>

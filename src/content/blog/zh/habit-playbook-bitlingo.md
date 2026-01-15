@@ -1,10 +1,26 @@
 ---
-title: "习惯手册：让 BitLingo 每天 10 分钟坚持下去"
-description: "可重复的微型日程，适合通勤、散步、家务——无需屏幕或订阅。"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "zh"
-slug: "habit-playbook-bitlingo"
+title: 习惯手册：让 BitLingo 每天 10 分钟坚持下去
+description: 可重复的微型日程，适合通勤、散步、家务——无需屏幕或订阅。
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: zh
+slug: zh-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: 习惯手册：让 BitLingo 每天 10 分钟坚持下去
+seoDescription: 用BitLingo的每日10分钟例程建立可持续的语言学习习惯。无需订阅，无需屏幕——只需融入通勤和家务的微学习。
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- 每日语言习惯
+- 微学习
+- 每天10分钟
+- 语言学习应用
+- 音频词汇
+- 开车学语言
+- 免提语言学习
+- 词汇卡片
+- 离线学习
+- 通勤学习
+- BitLingo
 ---
 
 忙碌的日程常常打败语言目标。BitLingo 的音频优先让起步门槛低，用免手学习应用建立可持续的连胜。

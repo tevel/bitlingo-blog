@@ -1,10 +1,26 @@
 ---
-title: "通勤时的免手语言练习"
-description: "把开车或乘车的时间变成安全的词汇音频循环练习，用 BitLingo 的“听-跟读”模式。"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "zh"
-slug: "commute-hands-free"
+title: 通勤时的免手语言练习
+description: 把开车或乘车的时间变成安全的词汇音频循环练习，用 BitLingo 的“听-跟读”模式。
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: zh
+slug: zh-commute-hands-free
+path: commute-hands-free
+seoTitle: 通勤时的免手语言练习
+seoDescription: 将每日通勤变成高效的语言学习时间。BitLingo的音频优先方式让你在开车或乘坐公共交通时安全地练习词汇——无需看屏幕。
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- 通勤学外语
+- 开车学单词
+- 音频学习
+- 语言学习应用
+- 音频词汇
+- 开车学语言
+- 免提语言学习
+- 词汇卡片
+- 离线学习
+- 通勤学习
+- BitLingo
 ---
 
 即使眼睛忙着看路或看站牌，你仍能增长词汇。BitLingo 主打音频，不需要看屏幕。它是一款为通勤设计的**免手学习**应用。

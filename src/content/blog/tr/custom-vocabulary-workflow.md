@@ -1,10 +1,28 @@
 ---
-title: "Dakikalar içinde özel kelime destesi oluştur"
-description: "Genel listeleri geç. Yalnızca gereken ifadeleri ekle ve BitLingo ile eller serbest çalış."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "tr"
-slug: "custom-vocabulary-workflow"
+title: Dakikalar içinde özel kelime destesi oluştur
+description: Genel listeleri geç. Yalnızca gereken ifadeleri ekle ve BitLingo ile
+  eller serbest çalış.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: tr
+slug: tr-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: Dakikalar içinde özel kelime destesi oluştur
+seoDescription: Genel kelime listeleriyle vakit kaybetmeyi bırakın. BitLingo ile dakikalar
+  içinde kişiselleştirilmiş kelime desteleri oluşturmayı öğrenin.
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- özel kelime listeleri
+- kişisel kartlar
+- kendi desteni oluştur
+- dil öğrenme uygulaması
+- sesli kelime
+- araba sürerken dil öğren
+- eller serbest dil öğrenimi
+- kelime kartları
+- çevrimdışı öğrenme
+- yolda öğrenme
+- BitLingo
 ---
 
 BitLingo **sizin** kelime listeniz etrafında kurulu. Fikirden “sesli flashcard” destesine giden hızlı bir akış.

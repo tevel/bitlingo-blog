@@ -1,10 +1,28 @@
 ---
-title: "Учите языки во время тренировок"
-description: "Сочетайте силовые или кардио с аудио-циклами слов. Свободные руки, безопасность и стабильность."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "ru"
-slug: "workout-language-sessions"
+title: Учите языки во время тренировок
+description: Сочетайте силовые или кардио с аудио-циклами слов. Свободные руки, безопасность
+  и стабильность.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: ru
+slug: ru-workout-language-sessions
+path: workout-language-sessions
+seoTitle: Учите языки во время тренировок
+seoDescription: Превратите тренировку в сессию изучения языков. Аудио-петли BitLingo
+  позволяют практиковать во время кардио или прогулок—без рук и безопасно.
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- изучение языков на тренировке
+- словарный запас в спортзале
+- фитнес и обучение
+- приложение для изучения языков
+- аудио словарный запас
+- учить языки за рулём
+- изучение языков без рук
+- карточки для изучения слов
+- офлайн изучение языков
+- учить слова в дороге
+- BitLingo
 ---
 
 Твое время на тренировку уже выделено. Используй его, чтобы укреплять словарь, не нарушая технику и фокус — с приложением для обучения без рук.

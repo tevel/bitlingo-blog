@@ -1,10 +1,30 @@
 ---
-title: "Aprende idiomas mientras entrenas"
-description: "Combina fuerza o cardio con bucles de vocabulario solo audio. Sin manos, seguro y constante."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "es"
-slug: "workout-language-sessions"
+title: Aprende idiomas mientras entrenas
+description: Combina fuerza o cardio con bucles de vocabulario solo audio. Sin manos,
+  seguro y constante.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: es
+slug: es-workout-language-sessions
+path: workout-language-sessions
+seoTitle: Aprende idiomas mientras entrenas
+seoDescription: Convierte tu entrenamiento en una sesión de aprendizaje. Los bucles
+  de audio de BitLingo te permiten practicar vocabulario durante cardio o caminatas—manos
+  libres y seguro.
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- aprender idiomas mientras entrenas
+- vocabulario en el gimnasio
+- fitness y aprendizaje
+- aplicación para aprender idiomas
+- vocabulario audio
+- aprender idiomas en el coche
+- aprendizaje manos libres
+- tarjetas de vocabulario
+- practicar vocabulario offline
+- aprender idiomas mientras conduces
+- app de vocabulario
+- BitLingo
 ---
 
 Tu tiempo de entrenamiento ya está reservado. Úsalo para reforzar vocabulario sin afectar tu forma ni tu concentración con una app de aprendizaje de idiomas manos libres.

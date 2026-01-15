@@ -1,10 +1,28 @@
 ---
-title: "Офлайн-практика слів: для перельотів і зон без зв’язку"
-description: "Встановіть BitLingo як PWA й продовжуйте вчитись без сигналу — в літаку, метро чи на заміських маршрутах."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-4.jpg"
-lang: "uk"
-slug: "offline-practice-guide"
+title: 'Офлайн-практика слів: для перельотів і зон без зв’язку'
+description: Встановіть BitLingo як PWA й продовжуйте вчитись без сигналу — в літаку,
+  метро чи на заміських маршрутах.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-offline-practice-guide.svg
+lang: uk
+slug: uk-offline-practice-guide
+path: offline-practice-guide
+seoTitle: 'Офлайн-практика слів: для перельотів і зон без зв’язку'
+seoDescription: Продовжуйте вчитися, коли сигнал зникає. Встановіть BitLingo як PWA
+  і практикуйте офлайн під час польотів або в зонах без покриття.
+ogImageAlt: Smartphone showing BitLingo app above clouds with OFFLINE badge, French vocabulary Voyage, and audio waveform - learn languages without internet
+keywords:
+- вивчення мов офлайн
+- слова без інтернету
+- режим польоту
+- додаток для вивчення мов
+- аудіо словниковий запас
+- вивчення мов за кермом
+- навчання без рук
+- картки для слів
+- офлайн навчання
+- навчання в дорозі
+- BitLingo
 ---
 
 Немає мережі? Не біда. BitLingo зберігає списки локально й працює офлайн, тож ви можете тренуватись будь-де. Це ваш аудіо-first помічник для повторення без інтернету.

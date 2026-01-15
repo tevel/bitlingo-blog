@@ -1,10 +1,28 @@
 ---
-title: "تعلّم اللغة دون استخدام اليدين أثناء التنقل"
-description: "حوّل وقت القيادة أو القطار إلى تكرارات آمنة للمفردات بالصوت فقط عبر حلقات الاستماع والتكرار في BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "ar"
-slug: "commute-hands-free"
+title: تعلّم اللغة دون استخدام اليدين أثناء التنقل
+description: حوّل وقت القيادة أو القطار إلى تكرارات آمنة للمفردات بالصوت فقط عبر حلقات
+  الاستماع والتكرار في BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: ar
+slug: ar-commute-hands-free
+path: commute-hands-free
+seoTitle: تعلّم اللغة دون استخدام اليدين أثناء التنقل
+seoDescription: حوّل وقت تنقلك اليومي إلى وقت تعلم منتج. نهج BitLingo الصوتي يتيح
+  لك ممارسة المفردات بأمان أثناء القيادة أو ركوب وسائل النقل العام.
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- تعلم اللغات في التنقل
+- مفردات في السيارة
+- تعلم صوتي
+- تطبيق تعلم اللغات
+- مفردات صوتية
+- تعلم اللغات أثناء القيادة
+- تعلم بدون استخدام اليدين
+- بطاقات المفردات
+- تعلم بدون إنترنت
+- تعلم أثناء التنقل
+- BitLingo
 ---
 
 حتى لو كانت عيناك منشغلتين بالطريق أو أسماء المحطات، يمكنك زيادة مفرداتك. BitLingo يعتمد على الصوت أولاً، لذلك لن تحتاج للنظر إلى الشاشة. إنه تطبيق **تعلّم بلا استخدام اليدين** مصمم للتنقل.

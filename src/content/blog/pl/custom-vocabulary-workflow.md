@@ -1,10 +1,27 @@
 ---
-title: "Zbuduj własną talię słówek w kilka minut"
-description: "Pomiń ogólne listy. Dodaj tylko potrzebne frazy i ćwicz bez rąk z BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "pl"
-slug: "custom-vocabulary-workflow"
+title: Zbuduj własną talię słówek w kilka minut
+description: Pomiń ogólne listy. Dodaj tylko potrzebne frazy i ćwicz bez rąk z BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: pl
+slug: pl-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: Zbuduj własną talię słówek w kilka minut
+seoDescription: Przestań tracić czas na ogólne listy słów. Naucz się tworzyć spersonalizowane
+  zestawy słownictwa w kilka minut z BitLingo.
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- własne listy słówek
+- spersonalizowane fiszki
+- stwórz własny zestaw
+- aplikacja do nauki języków
+- słówka audio
+- nauka języków w samochodzie
+- nauka bez użycia rąk
+- fiszki słownictwa
+- nauka offline
+- nauka w drodze
+- BitLingo
 ---
 
 BitLingo powstało wokół **Twojego** słownika, nie naszego. Oto szybki flow od pomysłu do gotowej talii „audio-flashcards”.

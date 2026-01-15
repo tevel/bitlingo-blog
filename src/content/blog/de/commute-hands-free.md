@@ -1,10 +1,29 @@
 ---
-title: "Sprachpraxis freihändig auf dem Arbeitsweg"
-description: "Mach aus Autofahrten oder Zugstrecken sichere Audio-Vokabelwiederholungen mit den Hör-und-Wiederhol-Schleifen von BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "de"
-slug: "commute-hands-free"
+title: Sprachpraxis freihändig auf dem Arbeitsweg
+description: Mach aus Autofahrten oder Zugstrecken sichere Audio-Vokabelwiederholungen
+  mit den Hör-und-Wiederhol-Schleifen von BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: de
+slug: de-commute-hands-free
+path: commute-hands-free
+seoTitle: Sprachpraxis freihändig auf dem Arbeitsweg
+seoDescription: Verwandeln Sie Ihren täglichen Pendelweg in produktive Lernzeit. BitLingos
+  Audio-Ansatz ermöglicht sicheres Vokabeltraining beim Autofahren oder in öffentlichen
+  Verkehrsmitteln.
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- Sprachen lernen beim Pendeln
+- Vokabeln im Auto
+- Audiolernen unterwegs
+- Sprachen lernen App
+- Vokabel-App
+- Audio-Vokabeltrainer
+- Sprachen lernen beim Autofahren
+- freihändiges Sprachenlernen
+- Vokabeln offline üben
+- Pendler-Lern-App
+- BitLingo
 ---
 
 Wenn deine Augen mit Fahren oder dem Lesen von Stationen beschäftigt sind, kannst du trotzdem Wortschatz aufbauen. BitLingo ist audio-first, sodass du nie aufs Display schauen musst. Es ist eine **freihändige Sprachlern-App**, die speziell für Pendelwege gedacht ist.

@@ -1,10 +1,27 @@
 ---
-title: "פלייבוק הרגלים: לעגן את BitLingo ב־10 דקות ביום"
-description: "מיקרו-רוטינה חוזרת שנכנסת לנסיעות, הליכות ועבודות בית—בלי מסך ובלי מנוי."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "he"
-slug: "habit-playbook-bitlingo"
+title: 'פלייבוק הרגלים: לעגן את BitLingo ב־10 דקות ביום'
+description: מיקרו-רוטינה חוזרת שנכנסת לנסיעות, הליכות ועבודות בית—בלי מסך ובלי מנוי.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: he
+slug: he-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: 'פלייבוק הרגלים: לעגן את BitLingo ב־10 דקות ביום'
+seoDescription: בנו הרגל לימוד שפות בר-קיימא עם שגרת 10 הדקות של BitLingo. ללא מנויים,
+  ללא מסכים—רק מיקרו-שיעורים שמשתלבים בנסיעות ומטלות.
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- הרגל שפה יומי
+- לימוד מיקרו
+- 10 דקות ביום
+- אפליקציה ללמידת שפות
+- אוצר מילים באודיו
+- ללמוד שפות בנהיגה
+- למידה ללא ידיים
+- כרטיסיות מילים
+- למידה אופליין
+- למידה בדרך
+- BitLingo
 ---
 
 יומן עמוס מפיל מטרות שפה. הגישה האודיו-פרסט של BitLingo מורידה חסם, כדי שאפליקציית לימוד ללא ידיים תייצר רצף יציב.

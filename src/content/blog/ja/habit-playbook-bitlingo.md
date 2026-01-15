@@ -1,10 +1,26 @@
 ---
-title: "ハビットプレイブック：BitLingo を毎日10分で定着"
-description: "通勤・散歩・家事にフィットする再現性の高いミクロ習慣—画面もサブスクも不要。"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "ja"
-slug: "habit-playbook-bitlingo"
+title: ハビットプレイブック：BitLingo を毎日10分で定着
+description: 通勤・散歩・家事にフィットする再現性の高いミクロ習慣—画面もサブスクも不要。
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: ja
+slug: ja-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: ハビットプレイブック：BitLingo を毎日10分で定着
+seoDescription: BitLingoの1日10分ルーティンで持続可能な語学習慣を構築。サブスク不要、画面不要—通勤や家事に組み込めるマイクロセッション。
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- 毎日の語学習慣
+- マイクロ学習
+- 1日10分
+- 語学学習アプリ
+- 音声単語帳
+- 運転中に語学学習
+- ハンズフリー語学
+- 単語カード
+- オフライン学習
+- 通勤学習
+- BitLingo
 ---
 
 忙しい予定は語学目標を崩しがち。BitLingo の音声優先アプローチはハードルを下げ、ハンズフリー学習で続けやすい連勝を作ります。

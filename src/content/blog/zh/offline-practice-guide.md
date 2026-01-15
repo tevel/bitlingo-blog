@@ -1,10 +1,26 @@
 ---
-title: "离线词汇练习：航班与无信号场景"
-description: "把 BitLingo 安装为 PWA，信号掉线时也能继续学习——在飞机、地铁或偏远路段。"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-4.jpg"
-lang: "zh"
-slug: "offline-practice-guide"
+title: 离线词汇练习：航班与无信号场景
+description: 把 BitLingo 安装为 PWA，信号掉线时也能继续学习——在飞机、地铁或偏远路段。
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-offline-practice-guide.svg
+lang: zh
+slug: zh-offline-practice-guide
+path: offline-practice-guide
+seoTitle: 离线词汇练习：航班与无信号场景
+seoDescription: 信号中断时继续学习。将BitLingo安装为PWA，在飞机上或无信号区域离线练习词汇——你的进步永不停止。
+ogImageAlt: Smartphone showing BitLingo app above clouds with OFFLINE badge, French vocabulary Voyage, and audio waveform - learn languages without internet
+keywords:
+- 离线学语言
+- 无网络学习
+- 飞行模式学习
+- 语言学习应用
+- 音频词汇
+- 开车学语言
+- 免提语言学习
+- 词汇卡片
+- 离线学习
+- 通勤学习
+- BitLingo
 ---
 
 没网络？没关系。BitLingo 本地保存列表并支持离线，让你随时练习。这是想继续 audio-first 复习时的离线伙伴。

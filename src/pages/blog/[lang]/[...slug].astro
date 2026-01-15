@@ -5,11 +5,18 @@ import { DEFAULT_LANG, SUPPORTED_LANGS } from '../../../consts';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
+	const getPathSlug = (post: (typeof posts)[number]) => {
+		if (post.data.path) return post.data.path;
+		if (post.data.slug?.startsWith(`${post.data.lang}-`)) {
+			return post.data.slug.slice(post.data.lang.length + 1);
+		}
+		return post.data.slug ?? post.slug ?? post.id;
+	};
 	return SUPPORTED_LANGS.flatMap((lang) =>
 		posts
 			.filter((post) => post.data.lang === lang)
 			.map((post) => ({
-				params: { lang, slug: post.data.slug ?? post.slug },
+				params: { lang, slug: getPathSlug(post) },
 				props: { postId: post.id },
 			})),
 	);
@@ -21,13 +28,20 @@ if (!SUPPORTED_LANGS.includes(lang)) {
 }
 
 const posts = await getCollection('blog');
+const getPathSlug = (post: (typeof posts)[number]) => {
+	if (post.data.path) return post.data.path;
+	if (post.data.slug?.startsWith(`${post.data.lang}-`)) {
+		return post.data.slug.slice(post.data.lang.length + 1);
+	}
+	return post.data.slug ?? post.slug ?? post.id;
+};
 let post = posts.find(
-	(p) => p.data.lang === lang && (p.data.slug ?? p.slug) === slug,
+	(p) => p.data.lang === lang && getPathSlug(p) === slug,
 );
 
 if (!post) {
 	post = posts.find(
-		(p) => p.data.lang === DEFAULT_LANG && (p.data.slug ?? p.slug) === slug,
+		(p) => p.data.lang === DEFAULT_LANG && getPathSlug(p) === slug,
 	);
 }
 

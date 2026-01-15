@@ -1,10 +1,28 @@
 ---
-title: "ممارسة المفردات دون اتصال للرحلات والمناطق بلا إشارة"
-description: "ثبّت BitLingo كـ PWA وواصل التعلم عند انقطاع الإشارة—في الطائرة أو المترو أو الطرق الريفية."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-4.jpg"
-lang: "ar"
-slug: "offline-practice-guide"
+title: ممارسة المفردات دون اتصال للرحلات والمناطق بلا إشارة
+description: ثبّت BitLingo كـ PWA وواصل التعلم عند انقطاع الإشارة—في الطائرة أو المترو
+  أو الطرق الريفية.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-offline-practice-guide.svg
+lang: ar
+slug: ar-offline-practice-guide
+path: offline-practice-guide
+seoTitle: ممارسة المفردات دون اتصال للرحلات والمناطق بلا إشارة
+seoDescription: استمر في التعلم عندما تنقطع الإشارة. ثبّت BitLingo كـ PWA وتدرب أوفلاين
+  خلال الرحلات أو المناطق بدون تغطية.
+ogImageAlt: Smartphone showing BitLingo app above clouds with OFFLINE badge, French vocabulary Voyage, and audio waveform - learn languages without internet
+keywords:
+- تعلم لغات بدون إنترنت
+- مفردات أوفلاين
+- وضع الطائرة
+- تطبيق تعلم اللغات
+- مفردات صوتية
+- تعلم اللغات أثناء القيادة
+- تعلم بدون استخدام اليدين
+- بطاقات المفردات
+- تعلم بدون إنترنت
+- تعلم أثناء التنقل
+- BitLingo
 ---
 
 لا توجد شبكة؟ لا مشكلة. BitLingo يخزن القوائم محليًا ويعمل دون اتصال لتتدرب في أي مكان. إنه رفيقك للتكرار الصوتي عندما تريد الاستمرار بلا إنترنت.

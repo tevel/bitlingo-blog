@@ -1,10 +1,28 @@
 ---
-title: "Playbook nawyków: BitLingo w 10 minut dziennie"
-description: "Powtarzalna mini-rutyna, która mieści się w dojazdach, spacerach i domowych obowiązkach—bez ekranu i subskrypcji."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "pl"
-slug: "habit-playbook-bitlingo"
+title: 'Playbook nawyków: BitLingo w 10 minut dziennie'
+description: Powtarzalna mini-rutyna, która mieści się w dojazdach, spacerach i domowych
+  obowiązkach—bez ekranu i subskrypcji.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: pl
+slug: pl-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: 'Playbook nawyków: BitLingo w 10 minut dziennie'
+seoDescription: Zbuduj trwały nawyk nauki języka z 10-minutową rutyną BitLingo. Bez
+  subskrypcji, bez ekranów—tylko mikro-sesje pasujące do dojazdów i obowiązków.
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- codzienny nawyk językowy
+- mikro-nauka
+- 10 minut dziennie
+- aplikacja do nauki języków
+- słówka audio
+- nauka języków w samochodzie
+- nauka bez użycia rąk
+- fiszki słownictwa
+- nauka offline
+- nauka w drodze
+- BitLingo
 ---
 
 Zapracowany kalendarz potrafi zniszczyć cele językowe. Podejście audio-first w BitLingo obniża próg, by z aplikacją do nauki bez użycia rąk zbudować trwałą serię.

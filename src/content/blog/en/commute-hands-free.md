@@ -1,10 +1,30 @@
 ---
-title: "Hands-free language practice on your commute"
-description: "Turn drive time or train rides into safe, audio-only vocabulary reps with BitLingo's listen-and-repeat loops."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "en"
-slug: "commute-hands-free"
+title: Hands-free language practice on your commute
+description: Turn drive time or train rides into safe, audio-only vocabulary reps
+  with BitLingo's listen-and-repeat loops.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: en
+slug: en-commute-hands-free
+path: commute-hands-free
+seoTitle: Hands-free language practice on your commute
+seoDescription: Transform your daily commute into productive language learning time.
+  BitLingo's audio-first approach lets you safely practice vocabulary while driving
+  or taking public transit—no screen required.
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- commute language learning
+- learn while driving
+- audio learning in car
+- safe driving vocabulary practice
+- language learning app
+- vocabulary builder
+- audio flashcards
+- learn languages while driving
+- hands-free language learning
+- commute learning app
+- offline vocabulary practice
+- audio-first learning
 ---
 
 If your eyes are busy steering or scanning train stops, you can still grow your vocabulary. BitLingo is built to be audio-first, so you never need to look down at a screen. It’s a **hands-free language learning app** purpose-built for commutes.

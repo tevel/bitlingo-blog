@@ -1,10 +1,29 @@
 ---
-title: "Monte um deck de vocabulário sob medida em minutos"
-description: "Esqueça listas genéricas. Carregue só as frases que importam e pratique-as sem usar as mãos com o BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "pt"
-slug: "custom-vocabulary-workflow"
+title: Monte um deck de vocabulário sob medida em minutos
+description: Esqueça listas genéricas. Carregue só as frases que importam e pratique-as
+  sem usar as mãos com o BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: pt
+slug: pt-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: Monte um deck de vocabulário sob medida em minutos
+seoDescription: Pare de perder tempo com listas genéricas. Aprenda a criar baralhos
+  de vocabulário personalizados em minutos com BitLingo e pratique apenas as palavras
+  importantes.
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- listas vocabulário personalizadas
+- cartões personalizados
+- criar baralho palavras
+- aplicativo para aprender idiomas
+- vocabulário por áudio
+- aprender idiomas no carro
+- aprendizado sem as mãos
+- cartões de vocabulário
+- vocabulário offline
+- aprender no trajeto
+- BitLingo
 ---
 
 O BitLingo é feito em torno do **seu** vocabulário, não do nosso. Aqui vai um fluxo rápido para sair da ideia e ter um deck pronto com “audio flashcards”.

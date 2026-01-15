@@ -1,10 +1,27 @@
 ---
-title: "Вчіть мову під час тренувань"
-description: "Додавайте аудіо-петлі слів до сили чи кардіо. Без рук, безпечно, послідовно."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "uk"
-slug: "workout-language-sessions"
+title: Вчіть мову під час тренувань
+description: Додавайте аудіо-петлі слів до сили чи кардіо. Без рук, безпечно, послідовно.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: uk
+slug: uk-workout-language-sessions
+path: workout-language-sessions
+seoTitle: Вчіть мову під час тренувань
+seoDescription: Перетворіть тренування на сеанс вивчення мов. Аудіо-петлі BitLingo
+  дозволяють практикувати під час кардіо або прогулянок—без рук і безпечно.
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- вивчення мов на тренуванні
+- слова в спортзалі
+- фітнес і навчання
+- додаток для вивчення мов
+- аудіо словниковий запас
+- вивчення мов за кермом
+- навчання без рук
+- картки для слів
+- офлайн навчання
+- навчання в дорозі
+- BitLingo
 ---
 
 Час на тренування вже заплановано. Посилюйте словник, не ламаючи техніку й фокус — з застосунком для навчання без рук.

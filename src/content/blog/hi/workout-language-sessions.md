@@ -1,10 +1,28 @@
 ---
-title: "वर्कआउट करते-करते भाषा सीखें"
-description: "स्ट्रेंथ या कार्डियो में ऑडियो शब्दावली लूप जोड़ें। हैंड्स-फ़्री, सुरक्षित, लगातार।"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "hi"
-slug: "workout-language-sessions"
+title: वर्कआउट करते-करते भाषा सीखें
+description: स्ट्रेंथ या कार्डियो में ऑडियो शब्दावली लूप जोड़ें। हैंड्स-फ़्री, सुरक्षित,
+  लगातार।
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: hi
+slug: hi-workout-language-sessions
+path: workout-language-sessions
+seoTitle: वर्कआउट करते-करते भाषा सीखें
+seoDescription: अपनी कसरत को भाषा सीखने के सत्र में बदलें। BitLingo के ऑडियो लूप कार्डियो
+  या सैर के दौरान शब्दावली अभ्यास करने देते हैं—हैंड्स-फ्री और सुरक्षित।
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- व्यायाम करते हुए भाषा सीखें
+- जिम में शब्दावली
+- फिटनेस और सीखना
+- भाषा सीखने का ऐप
+- ऑडियो शब्दावली
+- गाड़ी चलाते हुए भाषा सीखें
+- हैंड्स-फ्री भाषा सीखना
+- शब्द कार्ड
+- ऑफलाइन सीखना
+- यात्रा में सीखना
+- BitLingo
 ---
 
 वर्कआउट का समय तय है। उसी में शब्दावली मज़बूत करें, बिना पोस्टर या फोकस बिगाड़े—हैंड्स-फ़्री सीखने वाले ऐप से।

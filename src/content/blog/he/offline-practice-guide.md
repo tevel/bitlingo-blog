@@ -1,10 +1,28 @@
 ---
-title: "תרגול מילים אוףליין: טיסות ואזורים בלי קליטה"
-description: "התקינו את BitLingo כ-PWA והמשיכו ללמוד כשהסיגנל נופל—במטוס, במטרו או בדרכים מרוחקות."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-4.jpg"
-lang: "he"
-slug: "offline-practice-guide"
+title: 'תרגול מילים אוףליין: טיסות ואזורים בלי קליטה'
+description: התקינו את BitLingo כ-PWA והמשיכו ללמוד כשהסיגנל נופל—במטוס, במטרו או
+  בדרכים מרוחקות.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-offline-practice-guide.svg
+lang: he
+slug: he-offline-practice-guide
+path: offline-practice-guide
+seoTitle: 'תרגול מילים אוףליין: טיסות ואזורים בלי קליטה'
+seoDescription: המשיכו ללמוד כשאין קליטה. התקינו את BitLingo כ-PWA ותרגלו אופליין
+  בטיסות או באזורים ללא כיסוי.
+ogImageAlt: Smartphone showing BitLingo app above clouds with OFFLINE badge, French vocabulary Voyage, and audio waveform - learn languages without internet
+keywords:
+- למידת שפות אופליין
+- מילים ללא אינטרנט
+- מצב טיסה
+- אפליקציה ללמידת שפות
+- אוצר מילים באודיו
+- ללמוד שפות בנהיגה
+- למידה ללא ידיים
+- כרטיסיות מילים
+- למידה אופליין
+- למידה בדרך
+- BitLingo
 ---
 
 אין אינטרנט? אין בעיה. BitLingo שומר את הרשימות מקומית ועובד אוףליין כדי שתוכלו להתאמן בכל מקום. זהו בן לוויה אודיו-פרסט לחזרות ללא רשת.

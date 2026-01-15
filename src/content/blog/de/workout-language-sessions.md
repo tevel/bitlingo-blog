@@ -1,10 +1,28 @@
 ---
-title: "Lerne Sprachen, während du trainierst"
-description: "Kopple Kraft- oder Cardio-Sessions mit Audio-Vokabelschleifen. Freihändig, sicher und konstant."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "de"
-slug: "workout-language-sessions"
+title: Lerne Sprachen, während du trainierst
+description: Kopple Kraft- oder Cardio-Sessions mit Audio-Vokabelschleifen. Freihändig,
+  sicher und konstant.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: de
+slug: de-workout-language-sessions
+path: workout-language-sessions
+seoTitle: Lerne Sprachen, während du trainierst
+seoDescription: Verwandeln Sie Ihr Training in eine Lerneinheit. BitLingos Audio-Schleifen
+  ermöglichen Vokabeltraining bei Cardio oder Spaziergängen—freihändig und sicher.
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- Sprachen lernen beim Sport
+- Vokabeln im Fitnessstudio
+- Training und Lernen
+- Sprachen lernen App
+- Vokabel-App
+- Audio-Vokabeltrainer
+- Sprachen lernen beim Autofahren
+- freihändiges Sprachenlernen
+- Vokabeln offline üben
+- Pendler-Lern-App
+- BitLingo
 ---
 
 Deine Trainingszeit ist fest eingeplant. Nutze sie, um Wortschatz zu stärken, ohne Haltung oder Fokus zu gefährden—mit einer freihändigen Lern-App.

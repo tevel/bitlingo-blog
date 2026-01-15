@@ -1,10 +1,28 @@
 ---
-title: "Habit-Playbook: BitLingo in 10 Minuten pro Tag verankern"
-description: "Eine wiederholbare Mikro-Routine für Pendelwege, Spaziergänge und Hausarbeit—ohne Bildschirm und ohne Abo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "de"
-slug: "habit-playbook-bitlingo"
+title: 'Habit-Playbook: BitLingo in 10 Minuten pro Tag verankern'
+description: Eine wiederholbare Mikro-Routine für Pendelwege, Spaziergänge und Hausarbeit—ohne
+  Bildschirm und ohne Abo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: de
+slug: de-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: 'Habit-Playbook: BitLingo in 10 Minuten pro Tag verankern'
+seoDescription: Bauen Sie eine nachhaltige Sprachlerngewohnheit mit BitLingos 10-Minuten-Routine
+  auf. Keine Abos, keine Bildschirme—nur Mikro-Sessions für Pendeln und Hausarbeit.
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- tägliche Sprachgewohnheit
+- Mikro-Lernroutine
+- 10 Minuten pro Tag
+- Sprachen lernen App
+- Vokabel-App
+- Audio-Vokabeltrainer
+- Sprachen lernen beim Autofahren
+- freihändiges Sprachenlernen
+- Vokabeln offline üben
+- Pendler-Lern-App
+- BitLingo
 ---
 
 Volle Kalender lassen Sprachziele oft scheitern. Der audio-first Ansatz von BitLingo senkt die Einstiegshürde, damit du mit einer freihändigen Lern-App eine dauerhafte Serie aufbauen kannst.

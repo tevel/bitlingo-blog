@@ -1,10 +1,29 @@
 ---
-title: "Вивчення мови без рук у дорозі"
-description: "Перетворіть поїздку авто чи потягом на безпечні повторення слів завдяки аудіопетлям «слухай і повторюй» у BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "uk"
-slug: "commute-hands-free"
+title: Вивчення мови без рук у дорозі
+description: Перетворіть поїздку авто чи потягом на безпечні повторення слів завдяки
+  аудіопетлям «слухай і повторюй» у BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: uk
+slug: uk-commute-hands-free
+path: commute-hands-free
+seoTitle: Вивчення мови без рук у дорозі
+seoDescription: Перетворіть щоденну дорогу на продуктивний час вивчення мов. Аудіо-підхід
+  BitLingo дозволяє безпечно практикувати словниковий запас за кермом або в громадському
+  транспорті.
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- вивчення мов у дорозі
+- слова в машині
+- аудіо навчання
+- додаток для вивчення мов
+- аудіо словниковий запас
+- вивчення мов за кермом
+- навчання без рук
+- картки для слів
+- офлайн навчання
+- навчання в дорозі
+- BitLingo
 ---
 
 Навіть якщо очі зайняті дорогою чи таблом станцій, ви можете поповнювати словник. BitLingo — аудіо-first, тож екран не потрібен. Це застосунок для **навчання без рук**, створений для поїздок.

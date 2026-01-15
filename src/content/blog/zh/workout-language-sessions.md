@@ -1,10 +1,26 @@
 ---
-title: "锻炼时学语言"
-description: "把力量或有氧训练与词汇音频循环结合。免手、安全、持续。"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "zh"
-slug: "workout-language-sessions"
+title: 锻炼时学语言
+description: 把力量或有氧训练与词汇音频循环结合。免手、安全、持续。
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: zh
+slug: zh-workout-language-sessions
+path: workout-language-sessions
+seoTitle: 锻炼时学语言
+seoDescription: 将锻炼变成语言学习课程。BitLingo的音频循环让你在有氧运动或散步时练习词汇——免提且安全。
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- 健身时学语言
+- 健身房学单词
+- 运动中学习
+- 语言学习应用
+- 音频词汇
+- 开车学语言
+- 免提语言学习
+- 词汇卡片
+- 离线学习
+- 通勤学习
+- BitLingo
 ---
 
 训练时间已排好。用它来巩固词汇，而不影响动作或注意力——通过免手学习应用。

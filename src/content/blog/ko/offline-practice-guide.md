@@ -1,10 +1,27 @@
 ---
-title: "오프라인 어휘 연습: 비행기·지하철·무신호 구간에서"
-description: "BitLingo를 PWA로 설치해 신호가 끊겨도 학습을 이어가세요—비행, 지하철, 시골 이동 중에도."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-4.jpg"
-lang: "ko"
-slug: "offline-practice-guide"
+title: '오프라인 어휘 연습: 비행기·지하철·무신호 구간에서'
+description: BitLingo를 PWA로 설치해 신호가 끊겨도 학습을 이어가세요—비행, 지하철, 시골 이동 중에도.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-offline-practice-guide.svg
+lang: ko
+slug: ko-offline-practice-guide
+path: offline-practice-guide
+seoTitle: '오프라인 어휘 연습: 비행기·지하철·무신호 구간에서'
+seoDescription: 신호가 끊겨도 계속 학습하세요. BitLingo를 PWA로 설치하고 비행기나 음영 지역에서 오프라인으로 어휘 연습—진행은
+  멈추지 않습니다.
+ogImageAlt: Smartphone showing BitLingo app above clouds with OFFLINE badge, French vocabulary Voyage, and audio waveform - learn languages without internet
+keywords:
+- 오프라인 언어 학습
+- 인터넷 없이 학습
+- 비행기 모드
+- 언어 학습 앱
+- 오디오 어휘
+- 운전 중 언어 학습
+- 핸즈프리 언어 학습
+- 단어 카드
+- 오프라인 학습
+- 출퇴근 학습
+- BitLingo
 ---
 
 신호가 없어도 문제 없습니다. BitLingo는 리스트를 로컬에 저장하고 오프라인으로 작동해 어디서든 연습할 수 있습니다. 오디오 퍼스트 복습을 이어가고 싶을 때의 오프라인 파트너입니다.

@@ -1,10 +1,28 @@
 ---
-title: "Плейбук звичок: закріпіть BitLingo за 10 хвилин на день"
-description: "Повторювана міні-рутина, що вписується в поїздки, прогулянки й хатні справи — без екрана й підписок."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "uk"
-slug: "habit-playbook-bitlingo"
+title: 'Плейбук звичок: закріпіть BitLingo за 10 хвилин на день'
+description: Повторювана міні-рутина, що вписується в поїздки, прогулянки й хатні
+  справи — без екрана й підписок.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: uk
+slug: uk-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: 'Плейбук звичок: закріпіть BitLingo за 10 хвилин на день'
+seoDescription: Побудуйте стійку звичку вивчення мов з 10-хвилинною рутиною BitLingo.
+  Без підписок, без екранів—тільки мікро-сесії під час доїзду і домашніх справ.
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- щоденна звичка мов
+- мікро-навчання
+- 10 хвилин на день
+- додаток для вивчення мов
+- аудіо словниковий запас
+- вивчення мов за кермом
+- навчання без рук
+- картки для слів
+- офлайн навчання
+- навчання в дорозі
+- BitLingo
 ---
 
 Зайнятий графік руйнує мовні цілі. Аудіо-first підхід BitLingo знижує бар’єр, щоб з застосунком для навчання без рук вибудувати стійку серію.

@@ -1,10 +1,28 @@
 ---
-title: "Соберите свой словарный набор за минуты"
-description: "Забудьте про общие списки. Загружайте только нужные фразы и тренируйте их без рук с BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "ru"
-slug: "custom-vocabulary-workflow"
+title: Соберите свой словарный набор за минуты
+description: Забудьте про общие списки. Загружайте только нужные фразы и тренируйте
+  их без рук с BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: ru
+slug: ru-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: Соберите свой словарный набор за минуты
+seoDescription: Перестаньте тратить время на общие списки слов. Узнайте, как создать
+  персонализированные колоды за минуты с BitLingo и учите только нужные вам слова.
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- персональные списки слов
+- собственные карточки
+- создать колоду слов
+- приложение для изучения языков
+- аудио словарный запас
+- учить языки за рулём
+- изучение языков без рук
+- карточки для изучения слов
+- офлайн изучение языков
+- учить слова в дороге
+- BitLingo
 ---
 
 BitLingo строится вокруг **вашего** словаря, а не нашего. Вот быстрый поток, чтобы перейти от идеи к готовому набору с «аудио-флэшкартами».

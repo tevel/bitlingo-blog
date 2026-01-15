@@ -1,10 +1,29 @@
 ---
-title: "Playbook привычек: закрепить BitLingo за 10 минут в день"
-description: "Повторяемая микро-рутина, которая вписывается в поездки, прогулки и бытовые дела — без экрана и подписки."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "ru"
-slug: "habit-playbook-bitlingo"
+title: 'Playbook привычек: закрепить BitLingo за 10 минут в день'
+description: Повторяемая микро-рутина, которая вписывается в поездки, прогулки и бытовые
+  дела — без экрана и подписки.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: ru
+slug: ru-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: 'Playbook привычек: закрепить BitLingo за 10 минут в день'
+seoDescription: Создайте устойчивую привычку изучения языков с 10-минутной рутиной
+  BitLingo. Без подписок, без экранов—только микро-сессии в дороге и при домашних
+  делах.
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- ежедневная привычка языков
+- микро-обучение
+- 10 минут в день
+- приложение для изучения языков
+- аудио словарный запас
+- учить языки за рулём
+- изучение языков без рук
+- карточки для изучения слов
+- офлайн изучение языков
+- учить слова в дороге
+- BitLingo
 ---
 
 Загруженные дни рушат языковые цели. Audio-first подход BitLingo снижает порог, чтобы выстроить устойчивую серию с приложением для обучения без рук.

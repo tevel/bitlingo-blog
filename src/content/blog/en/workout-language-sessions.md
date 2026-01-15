@@ -1,10 +1,30 @@
 ---
-title: "Learn languages while you work out"
-description: "Pair strength or cardio sessions with audio-only vocabulary loops. Stay hands-free, stay safe, and keep the reps consistent."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "en"
-slug: "workout-language-sessions"
+title: Learn languages while you work out
+description: Pair strength or cardio sessions with audio-only vocabulary loops. Stay
+  hands-free, stay safe, and keep the reps consistent.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: en
+slug: en-workout-language-sessions
+path: workout-language-sessions
+seoTitle: Learn languages while you work out
+seoDescription: Turn your workout into a language learning session. BitLingo's audio
+  loops let you practice vocabulary during cardio, strength training, or walks—hands-free
+  and safe for any exercise.
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- learn language while exercising
+- gym vocabulary practice
+- workout language learning
+- fitness audio learning
+- language learning app
+- vocabulary builder
+- audio flashcards
+- learn languages while driving
+- hands-free language learning
+- commute learning app
+- offline vocabulary practice
+- audio-first learning
 ---
 
 Your workout time is already blocked on your calendar. Use it to reinforce vocabulary without breaking form or focus with a hands-free language learning app.

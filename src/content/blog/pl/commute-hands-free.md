@@ -1,10 +1,29 @@
 ---
-title: "Nauka języka bez użycia rąk w drodze"
-description: "Zamień jazdę lub pociąg w bezpieczne powtórki słówek dzięki pętlom „słuchaj i powtarzaj” w BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "pl"
-slug: "commute-hands-free"
+title: Nauka języka bez użycia rąk w drodze
+description: Zamień jazdę lub pociąg w bezpieczne powtórki słówek dzięki pętlom „słuchaj
+  i powtarzaj” w BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: pl
+slug: pl-commute-hands-free
+path: commute-hands-free
+seoTitle: Nauka języka bez użycia rąk w drodze
+seoDescription: Zamień codzienne dojazdy w produktywny czas nauki języka. Podejście
+  audio-first BitLingo pozwala bezpiecznie ćwiczyć słownictwo podczas jazdy samochodem
+  lub komunikacją miejską.
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- nauka języków w drodze
+- słówka w samochodzie
+- audio nauka
+- aplikacja do nauki języków
+- słówka audio
+- nauka języków w samochodzie
+- nauka bez użycia rąk
+- fiszki słownictwa
+- nauka offline
+- nauka w drodze
+- BitLingo
 ---
 
 Nawet jeśli oczy są zajęte drogą czy tablicą stacji, możesz rozwijać słownictwo. BitLingo jest audio-first, więc ekran nie jest potrzebny. To aplikacja do **nauki bez użycia rąk**, stworzona na dojazdy.

@@ -1,10 +1,26 @@
 ---
-title: "数分で作るカスタム語彙デッキ"
-description: "汎用リストはスキップ。必要なフレーズだけを入れて、BitLingo でハンズフリー練習。"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "ja"
-slug: "custom-vocabulary-workflow"
+title: 数分で作るカスタム語彙デッキ
+description: 汎用リストはスキップ。必要なフレーズだけを入れて、BitLingo でハンズフリー練習。
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: ja
+slug: ja-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: 数分で作るカスタム語彙デッキ
+seoDescription: 汎用的な単語リストに時間を無駄にするのはやめましょう。BitLingoで数分でパーソナライズされた単語帳を作成し、目標に必要な単語だけを練習する方法を学びましょう。
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- カスタム単語リスト
+- オリジナル単語帳
+- 自分だけの単語集
+- 語学学習アプリ
+- 音声単語帳
+- 運転中に語学学習
+- ハンズフリー語学
+- 単語カード
+- オフライン学習
+- 通勤学習
+- BitLingo
 ---
 
 BitLingo は **あなたの** 語彙を中心に作られています。アイデアから「音声フラッシュカード」デッキを作るまでの短いフローです。

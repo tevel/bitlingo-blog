@@ -1,10 +1,26 @@
 ---
-title: "通勤中のハンズフリー語学練習"
-description: "運転や電車の時間を、BitLingo の「聞いて繰り返す」音声ループで安全な語彙トレに変えよう。"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "ja"
-slug: "commute-hands-free"
+title: 通勤中のハンズフリー語学練習
+description: 運転や電車の時間を、BitLingo の「聞いて繰り返す」音声ループで安全な語彙トレに変えよう。
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: ja
+slug: ja-commute-hands-free
+path: commute-hands-free
+seoTitle: 通勤中のハンズフリー語学練習
+seoDescription: 毎日の通勤時間を生産的な語学学習に変えましょう。BitLingoの音声優先アプローチで、運転中や公共交通機関で安全に単語練習ができます。
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- 通勤中に語学
+- 運転中の単語学習
+- 音声学習
+- 語学学習アプリ
+- 音声単語帳
+- 運転中に語学学習
+- ハンズフリー語学
+- 単語カード
+- オフライン学習
+- 通勤学習
+- BitLingo
 ---
 
 目は運転や駅名でふさがっていても、語彙は増やせます。BitLingo は音声優先なので画面を見る必要なし。通勤のために作られた **ハンズフリー学習アプリ** です。

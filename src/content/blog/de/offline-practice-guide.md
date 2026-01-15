@@ -1,10 +1,28 @@
 ---
-title: "Offline-Vokabeltraining für Flüge und Funklöcher"
-description: "Installiere BitLingo als PWA und lerne weiter, wenn das Signal abbricht—im Flugzeug, in der U-Bahn oder auf ländlichen Strecken."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-4.jpg"
-lang: "de"
-slug: "offline-practice-guide"
+title: Offline-Vokabeltraining für Flüge und Funklöcher
+description: Installiere BitLingo als PWA und lerne weiter, wenn das Signal abbricht—im
+  Flugzeug, in der U-Bahn oder auf ländlichen Strecken.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-offline-practice-guide.svg
+lang: de
+slug: de-offline-practice-guide
+path: offline-practice-guide
+seoTitle: Offline-Vokabeltraining für Flüge und Funklöcher
+seoDescription: Lernen Sie weiter, wenn das Signal ausfällt. Installieren Sie BitLingo
+  als PWA und üben Sie offline während Flügen oder in Gebieten ohne Empfang.
+ogImageAlt: Smartphone showing BitLingo app above clouds with OFFLINE badge, French vocabulary Voyage, and audio waveform - learn languages without internet
+keywords:
+- Sprachen offline lernen
+- Vokabeln ohne Internet
+- Flugmodus lernen
+- Sprachen lernen App
+- Vokabel-App
+- Audio-Vokabeltrainer
+- Sprachen lernen beim Autofahren
+- freihändiges Sprachenlernen
+- Vokabeln offline üben
+- Pendler-Lern-App
+- BitLingo
 ---
 
 Kein Netz? Kein Problem. BitLingo speichert deine Decks lokal und funktioniert offline, damit du überall üben kannst. Es ist dein Begleiter für Sprachlernen ohne Verbindung, wenn du trotzdem Audio-first wiederholen willst.

@@ -1,10 +1,28 @@
 ---
-title: "تعلّم اللغات أثناء التمرين"
-description: "ادمج تمارين القوة أو الكارديو مع حلقات مفردات صوتية. بلا استخدام اليدين، آمن، ومستمر."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "ar"
-slug: "workout-language-sessions"
+title: تعلّم اللغات أثناء التمرين
+description: ادمج تمارين القوة أو الكارديو مع حلقات مفردات صوتية. بلا استخدام اليدين،
+  آمن، ومستمر.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: ar
+slug: ar-workout-language-sessions
+path: workout-language-sessions
+seoTitle: تعلّم اللغات أثناء التمرين
+seoDescription: حوّل تمرينك إلى جلسة تعلم لغات. حلقات BitLingo الصوتية تتيح ممارسة
+  المفردات أثناء الكارديو أو المشي—بدون يدين وآمن.
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- تعلم لغات أثناء التمرين
+- مفردات في الجيم
+- رياضة وتعلم
+- تطبيق تعلم اللغات
+- مفردات صوتية
+- تعلم اللغات أثناء القيادة
+- تعلم بدون استخدام اليدين
+- بطاقات المفردات
+- تعلم بدون إنترنت
+- تعلم أثناء التنقل
+- BitLingo
 ---
 
 وقت التمرين محجوز مسبقًا. استثمره في تقوية المفردات دون إفساد وضعيتك أو تركيزك—مع تطبيق تعلّم بلا استخدام اليدين.

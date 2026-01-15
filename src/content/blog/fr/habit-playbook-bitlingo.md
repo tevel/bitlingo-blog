@@ -1,10 +1,30 @@
 ---
-title: "Playbook d’habitudes : faire tenir BitLingo en 10 minutes par jour"
-description: "Une micro-routine répétable qui s’insère dans les trajets, marches et corvées—sans écran ni abonnement."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "fr"
-slug: "habit-playbook-bitlingo"
+title: 'Playbook d’habitudes : faire tenir BitLingo en 10 minutes par jour'
+description: Une micro-routine répétable qui s’insère dans les trajets, marches et
+  corvées—sans écran ni abonnement.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: fr
+slug: fr-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: 'Playbook d’habitudes : faire tenir BitLingo en 10 minutes par jour'
+seoDescription: Construisez une habitude d'apprentissage durable avec la routine de
+  10 minutes de BitLingo. Sans abonnement, sans écran—juste des micro-sessions pendant
+  vos trajets et tâches.
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- habitude quotidienne langues
+- micro-apprentissage
+- 10 minutes par jour
+- application apprentissage langues
+- vocabulaire audio
+- apprendre langues en voiture
+- apprentissage mains libres
+- cartes de vocabulaire
+- vocabulaire hors ligne
+- apprendre en conduisant
+- application vocabulaire
+- BitLingo
 ---
 
 Les emplois du temps chargés sabotent souvent les objectifs d’apprentissage. L’approche audio-first de BitLingo baisse la barre pour bâtir une racha durable avec une appli d’apprentissage mains libres.

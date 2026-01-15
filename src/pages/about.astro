@@ -1,35 +1,437 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { DEFAULT_LANG, SITE_TITLE } from '../consts';
 ---
 
-<Layout
-	title="About BitLingo"
-	description="Audio-first, hands-free vocabulary learning that turns wasted time into progress."
-	pubDate={new Date('January 14 2026')}
-	heroImage={AboutHeroImage}
->
-	<p>
-		BitLingo was built for people who learn best by listening—and who don’t have spare screen time.
-		We focus on vocabulary because it delivers quick wins: words you choose, in the order you need
-		them, practiced through short listen-and-repeat sessions.
-	</p>
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead 
+			title={`About | ${SITE_TITLE}`} 
+			description="Audio-first, hands-free vocabulary learning that turns wasted time into progress. Learn about BitLingo's mission and principles."
+		/>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<!-- Hero Section -->
+			<section class="about-hero">
+				<div class="hero-badge">✨ Our Mission</div>
+				<h1>Language Learning<br/><span class="gradient-text">Reimagined</span></h1>
+				<p class="hero-description">
+					BitLingo was built for people who learn best by listening—and who don't have 
+					spare screen time. We believe learning should fit your life, not the other way around.
+				</p>
+			</section>
 
-	<p>
-		Our principles are simple:
-	</p>
-	<ul>
-		<li><strong>Audio-first.</strong> No screen required. Safe for commutes and compatible with walking or lifting.</li>
-		<li><strong>Hands-free.</strong> Playback controls are voice-friendly and predictable.</li>
-		<li><strong>Your vocabulary only.</strong> Import your own words—travel phrases, exams, or industry jargon.</li>
-		<li><strong>Private by default.</strong> Data is stored locally; no account is required.</li>
-		<li><strong>Offline-ready.</strong> Works as a PWA so you can practice without signal.</li>
-	</ul>
+			<!-- Mission Statement -->
+			<section class="mission-card">
+				<div class="mission-icon">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<circle cx="12" cy="12" r="10"/>
+						<polygon points="10 8 16 12 10 16 10 8"/>
+					</svg>
+				</div>
+				<h2>Audio-First, Always</h2>
+				<p>
+					We focus on vocabulary because it delivers quick wins: words you choose, in the order 
+					you need them, practiced through short listen-and-repeat sessions. No screens required.
+				</p>
+			</section>
 
-	<p>
-		BitLingo is not a translation tool and not a full grammar course. It’s a focused, free way to
-		turn “eyes-busy, ears-free” time into steady vocabulary growth. If that sounds like you, the blog
-		posts here share workflows, habit tips, and product updates to help you get more from every
-		session.
-	</p>
-</Layout>
+			<!-- Principles Grid -->
+			<section class="principles">
+				<h2 class="section-title">Our Principles</h2>
+				<div class="principles-grid">
+					<div class="principle-card">
+						<div class="principle-icon">🎧</div>
+						<h3>Audio-First</h3>
+						<p>No screen required. Safe for commutes and compatible with walking or lifting.</p>
+					</div>
+					<div class="principle-card">
+						<div class="principle-icon">✋</div>
+						<h3>Hands-Free</h3>
+						<p>Playback controls are voice-friendly and predictable. Keep your hands where they belong.</p>
+					</div>
+					<div class="principle-card">
+						<div class="principle-icon">📝</div>
+						<h3>Your Vocabulary</h3>
+						<p>Import your own words—travel phrases, exams, or industry jargon. Learn what matters to you.</p>
+					</div>
+					<div class="principle-card">
+						<div class="principle-icon">🔒</div>
+						<h3>Private by Default</h3>
+						<p>Data is stored locally on your device. No account required, no tracking, no selling your data.</p>
+					</div>
+					<div class="principle-card">
+						<div class="principle-icon">📴</div>
+						<h3>Offline-Ready</h3>
+						<p>Works as a PWA so you can practice without signal—on planes, in tunnels, anywhere.</p>
+					</div>
+					<div class="principle-card">
+						<div class="principle-icon">🆓</div>
+						<h3>Forever Free</h3>
+						<p>No subscriptions, no paywalls, no premium tiers. Learning should be accessible to everyone.</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- What BitLingo Is NOT -->
+			<section class="not-section">
+				<h2 class="section-title">What BitLingo Is <em>Not</em></h2>
+				<div class="not-card">
+					<p>
+						BitLingo is not a translation tool and not a full grammar course. It's a focused, 
+						free way to turn "eyes-busy, ears-free" time into steady vocabulary growth.
+					</p>
+					<p>
+						If that sounds like you, the blog posts here share workflows, habit tips, and 
+						product updates to help you get more from every session.
+					</p>
+				</div>
+			</section>
+
+			<!-- Stats -->
+			<section class="about-stats">
+				<div class="stat">
+					<div class="stat-icon">⏱️</div>
+					<div class="stat-value">10 min</div>
+					<div class="stat-label">Daily sessions</div>
+				</div>
+				<div class="stat">
+					<div class="stat-icon">🌍</div>
+					<div class="stat-value">100+</div>
+					<div class="stat-label">Language pairs</div>
+				</div>
+				<div class="stat">
+					<div class="stat-icon">📚</div>
+					<div class="stat-value">∞</div>
+					<div class="stat-label">Custom words</div>
+				</div>
+				<div class="stat">
+					<div class="stat-icon">💰</div>
+					<div class="stat-value">$0</div>
+					<div class="stat-label">Forever</div>
+				</div>
+			</section>
+
+			<!-- CTA -->
+			<section class="cta-section">
+				<h2>Ready to Start Learning?</h2>
+				<p>Turn your commute, workout, and daily chores into productive language practice.</p>
+				<div class="cta-buttons">
+					<a href="https://bitlingo.app" class="btn-primary" target="_blank" rel="noopener noreferrer">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+							<polyline points="7 10 12 15 17 10"/>
+							<line x1="12" y1="15" x2="12" y2="3"/>
+						</svg>
+						Get BitLingo Free
+					</a>
+					<a href={`/blog/${DEFAULT_LANG}`} class="btn-secondary">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+							<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+						</svg>
+						Explore the Blog
+					</a>
+				</div>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		max-width: 1000px;
+		margin: 0 auto;
+		padding: 2rem 1.5rem 4rem;
+	}
+
+	/* Hero Section */
+	.about-hero {
+		text-align: center;
+		padding: 3rem 0 4rem;
+	}
+
+	.hero-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 1rem;
+		background: rgba(67, 97, 238, 0.15);
+		border: 1px solid rgba(67, 97, 238, 0.3);
+		border-radius: 50px;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--accent-cyan);
+		margin-bottom: 1.5rem;
+	}
+
+	.about-hero h1 {
+		font-size: clamp(2.5rem, 5vw, 3.5rem);
+		line-height: 1.1;
+		margin: 0 0 1.5rem;
+	}
+
+	.gradient-text {
+		background: linear-gradient(135deg, #4cc9f0 0%, #f72585 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.hero-description {
+		font-size: 1.2rem;
+		color: var(--text-secondary);
+		max-width: 650px;
+		margin: 0 auto;
+		line-height: 1.7;
+	}
+
+	/* Mission Card */
+	.mission-card {
+		background: linear-gradient(145deg, rgba(67, 97, 238, 0.15), rgba(114, 9, 183, 0.15));
+		border: 1px solid rgba(67, 97, 238, 0.2);
+		border-radius: 24px;
+		padding: 3rem;
+		text-align: center;
+		margin-bottom: 4rem;
+	}
+
+	.mission-icon {
+		width: 80px;
+		height: 80px;
+		background: linear-gradient(135deg, #4361ee, #7209b7);
+		border-radius: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto 1.5rem;
+		box-shadow: 0 10px 30px rgba(67, 97, 238, 0.3);
+	}
+
+	.mission-icon svg {
+		width: 40px;
+		height: 40px;
+		stroke: white;
+	}
+
+	.mission-card h2 {
+		font-size: 1.75rem;
+		margin: 0 0 1rem;
+	}
+
+	.mission-card p {
+		font-size: 1.1rem;
+		max-width: 600px;
+		margin: 0 auto;
+		line-height: 1.7;
+	}
+
+	/* Principles Section */
+	.principles {
+		margin-bottom: 4rem;
+	}
+
+	.section-title {
+		text-align: center;
+		font-size: clamp(1.75rem, 3vw, 2.25rem);
+		margin-bottom: 2.5rem;
+	}
+
+	.section-title em {
+		color: var(--accent-pink);
+		font-style: normal;
+	}
+
+	.principles-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.principle-card {
+		background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 20px;
+		padding: 2rem;
+		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.principle-card:hover {
+		transform: translateY(-5px);
+		border-color: rgba(67, 97, 238, 0.3);
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 30px rgba(67, 97, 238, 0.1);
+	}
+
+	.principle-icon {
+		font-size: 2.5rem;
+		margin-bottom: 1rem;
+	}
+
+	.principle-card h3 {
+		font-size: 1.25rem;
+		margin: 0 0 0.75rem;
+	}
+
+	.principle-card p {
+		color: var(--text-secondary);
+		font-size: 0.95rem;
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	/* Not Section */
+	.not-section {
+		margin-bottom: 4rem;
+	}
+
+	.not-card {
+		background: rgba(247, 37, 133, 0.05);
+		border: 1px solid rgba(247, 37, 133, 0.2);
+		border-radius: 20px;
+		padding: 2.5rem;
+	}
+
+	.not-card p {
+		font-size: 1.1rem;
+		line-height: 1.8;
+		margin: 0 0 1rem;
+	}
+
+	.not-card p:last-child {
+		margin: 0;
+	}
+
+	/* Stats Section */
+	.about-stats {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 1.5rem;
+		margin-bottom: 4rem;
+	}
+
+	.stat {
+		text-align: center;
+		padding: 1.5rem;
+		background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+		border: 1px solid rgba(255, 255, 255, 0.06);
+		border-radius: 16px;
+	}
+
+	.stat-icon {
+		font-size: 2rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.stat-value {
+		font-size: clamp(1.5rem, 3vw, 2rem);
+		font-weight: 800;
+		background: linear-gradient(135deg, #4cc9f0, #f72585);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.stat-label {
+		color: var(--text-muted);
+		font-size: 0.85rem;
+		margin-top: 0.25rem;
+	}
+
+	/* CTA Section */
+	.cta-section {
+		text-align: center;
+		padding: 3rem;
+		background: linear-gradient(145deg, rgba(67, 97, 238, 0.1), rgba(114, 9, 183, 0.1));
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 24px;
+	}
+
+	.cta-section h2 {
+		font-size: clamp(1.75rem, 3vw, 2.25rem);
+		margin: 0 0 1rem;
+	}
+
+	.cta-section p {
+		font-size: 1.1rem;
+		margin: 0 0 2rem;
+		color: var(--text-secondary);
+	}
+
+	.cta-buttons {
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+
+	.btn-primary, .btn-secondary {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 1rem 1.75rem;
+		border-radius: 50px;
+		font-weight: 600;
+		font-size: 1rem;
+		text-decoration: none;
+		transition: all 0.3s ease;
+	}
+
+	.btn-primary {
+		background: linear-gradient(135deg, #4361ee, #7209b7);
+		color: white;
+		box-shadow: 0 4px 20px rgba(67, 97, 238, 0.4);
+	}
+
+	.btn-primary:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 8px 30px rgba(67, 97, 238, 0.5);
+		color: white;
+	}
+
+	.btn-secondary {
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		color: var(--text-primary);
+	}
+
+	.btn-secondary:hover {
+		background: rgba(255, 255, 255, 0.1);
+		border-color: var(--accent-blue);
+		color: var(--accent-cyan);
+	}
+
+	.btn-primary svg, .btn-secondary svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	/* Responsive */
+	@media (max-width: 768px) {
+		main {
+			padding: 1.5rem 1rem 3rem;
+		}
+
+		.mission-card {
+			padding: 2rem;
+		}
+
+		.about-stats {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.cta-section {
+			padding: 2rem;
+		}
+
+		.btn-primary, .btn-secondary {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+</style>

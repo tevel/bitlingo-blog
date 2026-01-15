@@ -1,10 +1,28 @@
 ---
-title: "Alışkanlık el kitabı: BitLingo'yu günde 10 dakikada yerleştir"
-description: "Tekrarlanabilir mini rutin; yolculuk, yürüyüş ve ev işlerine uyum sağlar—ekran ve abonelik yok."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "tr"
-slug: "habit-playbook-bitlingo"
+title: 'Alışkanlık el kitabı: BitLingo''yu günde 10 dakikada yerleştir'
+description: Tekrarlanabilir mini rutin; yolculuk, yürüyüş ve ev işlerine uyum sağlar—ekran
+  ve abonelik yok.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: tr
+slug: tr-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: 'Alışkanlık el kitabı: BitLingo''yu günde 10 dakikada yerleştir'
+seoDescription: BitLingo'nun günlük 10 dakikalık rutini ile sürdürülebilir dil öğrenme
+  alışkanlığı oluşturun. Abonelik yok, ekran yok—sadece yolculuklara uyan mikro-seanslar.
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- günlük dil alışkanlığı
+- mikro öğrenme
+- günde 10 dakika
+- dil öğrenme uygulaması
+- sesli kelime
+- araba sürerken dil öğren
+- eller serbest dil öğrenimi
+- kelime kartları
+- çevrimdışı öğrenme
+- yolda öğrenme
+- BitLingo
 ---
 
 Yoğun takvim dil hedeflerini yıkar. BitLingo'nun ses öncelikli yaklaşımı eşiği düşürür, eller serbest öğrenme uygulamasıyla sürdürülebilir seri oluşturmanı kolaylaştırır.

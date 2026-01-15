@@ -1,10 +1,28 @@
 ---
-title: "كتيّب العادات: تثبيت BitLingo بـ 10 دقائق يوميًا"
-description: "روتين مصغر قابل للتكرار يناسب التنقل والمشي والأعمال المنزلية—دون شاشة أو اشتراك."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-5.jpg"
-lang: "ar"
-slug: "habit-playbook-bitlingo"
+title: 'كتيّب العادات: تثبيت BitLingo بـ 10 دقائق يوميًا'
+description: روتين مصغر قابل للتكرار يناسب التنقل والمشي والأعمال المنزلية—دون شاشة
+  أو اشتراك.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-habit-playbook-bitlingo.svg
+lang: ar
+slug: ar-habit-playbook-bitlingo
+path: habit-playbook-bitlingo
+seoTitle: 'كتيّب العادات: تثبيت BitLingo بـ 10 دقائق يوميًا'
+seoDescription: ابنِ عادة تعلم لغات مستدامة مع روتين BitLingo اليومي لـ 10 دقائق.
+  بدون اشتراكات، بدون شاشات—فقط جلسات مصغرة تناسب التنقل والأعمال المنزلية.
+ogImageAlt: 7-day streak calendar with checkmarks, 142 words learned stats, and 10-minute daily goal timer - BitLingo language learning habit tracker
+keywords:
+- عادة يومية للغات
+- تعلم مصغر
+- 10 دقائق يومياً
+- تطبيق تعلم اللغات
+- مفردات صوتية
+- تعلم اللغات أثناء القيادة
+- تعلم بدون استخدام اليدين
+- بطاقات المفردات
+- تعلم بدون إنترنت
+- تعلم أثناء التنقل
+- BitLingo
 ---
 
 الانشغال اليومي يحبط أهداف اللغة. نهج BitLingo الصوتي يخفض العتبة لتبني سلسلة مستمرة بتطبيق تعلم بلا استخدام اليدين.

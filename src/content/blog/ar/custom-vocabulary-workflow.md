@@ -1,10 +1,28 @@
 ---
-title: "أنشئ مجموعة مفردات مخصصة في دقائق"
-description: "تجاوز القوائم العامة. حمّل فقط العبارات التي تهمك وتدرّب عليها بلا استخدام اليدين مع BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "ar"
-slug: "custom-vocabulary-workflow"
+title: أنشئ مجموعة مفردات مخصصة في دقائق
+description: تجاوز القوائم العامة. حمّل فقط العبارات التي تهمك وتدرّب عليها بلا استخدام
+  اليدين مع BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: ar
+slug: ar-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: أنشئ مجموعة مفردات مخصصة في دقائق
+seoDescription: توقف عن إضاعة الوقت على قوائم الكلمات العامة. تعلم كيفية إنشاء مجموعات
+  مفردات مخصصة في دقائق مع BitLingo وتدرب فقط على الكلمات المهمة لأهدافك.
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- قوائم مفردات مخصصة
+- بطاقات شخصية
+- إنشاء مجموعة كلمات
+- تطبيق تعلم اللغات
+- مفردات صوتية
+- تعلم اللغات أثناء القيادة
+- تعلم بدون استخدام اليدين
+- بطاقات المفردات
+- تعلم بدون إنترنت
+- تعلم أثناء التنقل
+- BitLingo
 ---
 
 BitLingo مبني حول **مفرداتك** أنت. إليك تدفقًا سريعًا للانتقال من الفكرة إلى مجموعة جاهزة ببطاقات صوتية.

@@ -1,10 +1,29 @@
 ---
-title: "Pratica delle lingue a mani libere durante il tragitto"
-description: "Trasforma guida o treno in ripetizioni di vocabolario solo audio con le loop ascolta-e-ripeti di BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "it"
-slug: "commute-hands-free"
+title: Pratica delle lingue a mani libere durante il tragitto
+description: Trasforma guida o treno in ripetizioni di vocabolario solo audio con
+  le loop ascolta-e-ripeti di BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: it
+slug: it-commute-hands-free
+path: commute-hands-free
+seoTitle: Pratica delle lingue a mani libere durante il tragitto
+seoDescription: Trasforma il tuo tragitto quotidiano in tempo produttivo di apprendimento.
+  L'approccio audio-first di BitLingo ti permette di praticare il vocabolario in sicurezza
+  mentre guidi.
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- imparare nel tragitto
+- vocabolario in auto
+- audio in viaggio
+- app per imparare lingue
+- vocabolario audio
+- imparare lingue in auto
+- apprendimento senza mani
+- flashcard vocabolario
+- vocabolario offline
+- imparare durante il tragitto
+- BitLingo
 ---
 
 Se gli occhi sono occupati a guidare o a leggere le fermate, puoi comunque ampliare il vocabolario. BitLingo è audio-first, così non devi mai guardare lo schermo. È un’app di apprendimento **a mani libere** pensata per i pendolari.

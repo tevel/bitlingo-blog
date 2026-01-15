@@ -1,10 +1,29 @@
 ---
-title: "Практика языка без рук в пути"
-description: "Превратите поездки на машине или поезде в аудио-повторение словаря с циклами «слушай и повторяй» BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "ru"
-slug: "commute-hands-free"
+title: Практика языка без рук в пути
+description: Превратите поездки на машине или поезде в аудио-повторение словаря с
+  циклами «слушай и повторяй» BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: ru
+slug: ru-commute-hands-free
+path: commute-hands-free
+seoTitle: Практика языка без рук в пути
+seoDescription: Превратите ежедневную дорогу в продуктивное время для изучения языков.
+  Аудио-подход BitLingo позволяет безопасно практиковать словарный запас за рулём
+  или в общественном транспорте.
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- изучение языков в дороге
+- словарный запас в машине
+- аудио обучение
+- приложение для изучения языков
+- аудио словарный запас
+- учить языки за рулём
+- изучение языков без рук
+- карточки для изучения слов
+- офлайн изучение языков
+- учить слова в дороге
+- BitLingo
 ---
 
 Если глаза заняты дорогой или расписанием остановок, вы всё равно можете пополнять словарь. BitLingo — аудио-first, поэтому экран не нужен. Это **приложение для обучения без рук**, созданное для поездок.

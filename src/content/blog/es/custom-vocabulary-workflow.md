@@ -1,10 +1,30 @@
 ---
-title: "Crea un mazo de vocabulario a medida en minutos"
-description: "Olvida las listas genéricas. Carga solo las frases que te importan y practícalas manos libres con BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "es"
-slug: "custom-vocabulary-workflow"
+title: Crea un mazo de vocabulario a medida en minutos
+description: Olvida las listas genéricas. Carga solo las frases que te importan y
+  practícalas manos libres con BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: es
+slug: es-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: Crea un mazo de vocabulario a medida en minutos
+seoDescription: Deja de perder tiempo con listas genéricas. Aprende a crear mazos
+  de vocabulario personalizados en minutos con BitLingo y practica solo las palabras
+  que importan para tus objetivos.
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- listas de vocabulario personalizadas
+- tarjetas personalizadas
+- crear mazo de palabras
+- aplicación para aprender idiomas
+- vocabulario audio
+- aprender idiomas en el coche
+- aprendizaje manos libres
+- tarjetas de vocabulario
+- practicar vocabulario offline
+- aprender idiomas mientras conduces
+- app de vocabulario
+- BitLingo
 ---
 
 BitLingo se basa en **tu** vocabulario, no en el nuestro. Aquí tienes un flujo rápido para pasar de la idea a un mazo listo para practicar usando “audio flashcards”.

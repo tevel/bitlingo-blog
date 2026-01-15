@@ -1,10 +1,27 @@
 ---
-title: "출퇴근 중 핸즈프리 언어 연습"
-description: "운전이나 지하철 시간을 BitLingo의 듣고-따라하기 오디오 루프로 안전한 어휘 반복 시간으로 바꾸세요."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-1.jpg"
-lang: "ko"
-slug: "commute-hands-free"
+title: 출퇴근 중 핸즈프리 언어 연습
+description: 운전이나 지하철 시간을 BitLingo의 듣고-따라하기 오디오 루프로 안전한 어휘 반복 시간으로 바꾸세요.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-commute-hands-free.svg
+lang: ko
+slug: ko-commute-hands-free
+path: commute-hands-free
+seoTitle: 출퇴근 중 핸즈프리 언어 연습
+seoDescription: 매일 출퇴근 시간을 생산적인 언어 학습 시간으로 바꾸세요. BitLingo의 오디오 퍼스트 방식으로 운전 중이나 대중교통에서
+  안전하게 어휘를 연습하세요.
+ogImageAlt: Car driving at night with audio waves and multilingual vocabulary bubbles - Hola, Bonjour, 你好, Ciao - BitLingo hands-free language learning during commute
+keywords:
+- 출퇴근 언어 학습
+- 운전 중 단어
+- 오디오 학습
+- 언어 학습 앱
+- 오디오 어휘
+- 운전 중 언어 학습
+- 핸즈프리 언어 학습
+- 단어 카드
+- 오프라인 학습
+- 출퇴근 학습
+- BitLingo
 ---
 
 눈은 도로나 승강장 안내에 쓰더라도 어휘는 늘릴 수 있습니다. BitLingo는 오디오 퍼스트라 화면을 볼 필요가 없습니다. 통근을 위해 설계된 **핸즈프리 학습 앱**입니다.

@@ -1,10 +1,26 @@
 ---
-title: "几分钟打造专属词汇卡组"
-description: "跳过泛泛的词表。只加载你在乎的短语，并用 BitLingo 免手练习。"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "zh"
-slug: "custom-vocabulary-workflow"
+title: 几分钟打造专属词汇卡组
+description: 跳过泛泛的词表。只加载你在乎的短语，并用 BitLingo 免手练习。
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: zh
+slug: zh-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: 几分钟打造专属词汇卡组
+seoDescription: 别再浪费时间在通用词汇表上。学习如何用BitLingo在几分钟内创建个性化词库，只练习对你目标重要的单词。
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- 自定义词汇表
+- 个性化单词卡
+- 创建词库
+- 语言学习应用
+- 音频词汇
+- 开车学语言
+- 免提语言学习
+- 词汇卡片
+- 离线学习
+- 通勤学习
+- BitLingo
 ---
 
 BitLingo 围绕**你的**词汇展开，而不是我们的。下面是一个快速流程，让你从想法到可练的“音频闪卡”卡组。

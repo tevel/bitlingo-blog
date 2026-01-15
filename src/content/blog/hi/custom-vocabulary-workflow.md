@@ -1,10 +1,29 @@
 ---
-title: "मिनटों में अपना कस्टम शब्दावली डेक बनाएं"
-description: "जनरल लिस्ट छोड़ें। सिर्फ़ ज़रूरी वाक्यांश जोड़ें और BitLingo से हैंड्स-फ़्री अभ्यास करें।"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "hi"
-slug: "custom-vocabulary-workflow"
+title: मिनटों में अपना कस्टम शब्दावली डेक बनाएं
+description: जनरल लिस्ट छोड़ें। सिर्फ़ ज़रूरी वाक्यांश जोड़ें और BitLingo से हैंड्स-फ़्री
+  अभ्यास करें।
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: hi
+slug: hi-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: मिनटों में अपना कस्टम शब्दावली डेक बनाएं
+seoDescription: सामान्य शब्द सूचियों पर समय बर्बाद करना बंद करें। BitLingo के साथ
+  मिनटों में व्यक्तिगत शब्दावली डेक बनाना सीखें और केवल अपने लक्ष्यों के लिए महत्वपूर्ण
+  शब्दों का अभ्यास करें।
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- कस्टम शब्दावली सूची
+- व्यक्तिगत कार्ड
+- अपना शब्द डेक बनाएं
+- भाषा सीखने का ऐप
+- ऑडियो शब्दावली
+- गाड़ी चलाते हुए भाषा सीखें
+- हैंड्स-फ्री भाषा सीखना
+- शब्द कार्ड
+- ऑफलाइन सीखना
+- यात्रा में सीखना
+- BitLingo
 ---
 
 BitLingo **आपकी** शब्दावली पर केंद्रित है, हमारी पर नहीं। यह एक तेज़ फ़्लो है जिससे आइडिया से “ऑडियो फ़्लैशकार्ड” डेक तक पहुंचें।

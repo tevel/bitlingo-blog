@@ -1,10 +1,26 @@
 ---
-title: "운동하면서 언어 배우기"
-description: "근력이나 유산소에 어휘 오디오 루프를 더하세요. 핸즈프리, 안전, 꾸준함."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "ko"
-slug: "workout-language-sessions"
+title: 운동하면서 언어 배우기
+description: 근력이나 유산소에 어휘 오디오 루프를 더하세요. 핸즈프리, 안전, 꾸준함.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: ko
+slug: ko-workout-language-sessions
+path: workout-language-sessions
+seoTitle: 운동하면서 언어 배우기
+seoDescription: 운동을 언어 학습 세션으로 바꾸세요. BitLingo의 오디오 루프로 유산소나 산책 중에 어휘 연습—핸즈프리로 안전하게.
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- 운동하며 언어 학습
+- 헬스장 단어
+- 피트니스 학습
+- 언어 학습 앱
+- 오디오 어휘
+- 운전 중 언어 학습
+- 핸즈프리 언어 학습
+- 단어 카드
+- 오프라인 학습
+- 출퇴근 학습
+- BitLingo
 ---
 
 운동 시간은 이미 확보돼 있습니다. 자세나 집중을 깨지 않고 어휘를 강화하세요—핸즈프리 학습 앱으로.

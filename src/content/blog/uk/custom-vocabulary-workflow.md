@@ -1,10 +1,28 @@
 ---
-title: "Зберіть власну колоду слів за кілька хвилин"
-description: "Пропустіть загальні списки. Додавайте тільки потрібні фрази й тренуйте їх без рук у BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "uk"
-slug: "custom-vocabulary-workflow"
+title: Зберіть власну колоду слів за кілька хвилин
+description: Пропустіть загальні списки. Додавайте тільки потрібні фрази й тренуйте
+  їх без рук у BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: uk
+slug: uk-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: Зберіть власну колоду слів за кілька хвилин
+seoDescription: Перестаньте витрачати час на загальні списки слів. Дізнайтеся, як
+  створити персоналізовані колоди за лічені хвилини з BitLingo.
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- власні списки слів
+- персональні картки
+- створити власну колоду
+- додаток для вивчення мов
+- аудіо словниковий запас
+- вивчення мов за кермом
+- навчання без рук
+- картки для слів
+- офлайн навчання
+- навчання в дорозі
+- BitLingo
 ---
 
 BitLingo побудовано навколо **вашого** словника, а не нашого. Ось швидкий потік від ідеї до готової колоди «аудіо-флешок».

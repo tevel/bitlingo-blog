@@ -1,10 +1,26 @@
 ---
-title: "オフラインでの語彙練習：フライトや圏外でも"
-description: "BitLingo をPWAとしてインストールし、電波が途切れても学習を続ける—飛行機、地下鉄、地方の移動で。"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-4.jpg"
-lang: "ja"
-slug: "offline-practice-guide"
+title: オフラインでの語彙練習：フライトや圏外でも
+description: BitLingo をPWAとしてインストールし、電波が途切れても学習を続ける—飛行機、地下鉄、地方の移動で。
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-offline-practice-guide.svg
+lang: ja
+slug: ja-offline-practice-guide
+path: offline-practice-guide
+seoTitle: オフラインでの語彙練習：フライトや圏外でも
+seoDescription: 電波が途切れても学び続けましょう。BitLingoをPWAとしてインストールし、フライト中や圏外エリアでオフラインで単語練習。
+ogImageAlt: Smartphone showing BitLingo app above clouds with OFFLINE badge, French vocabulary Voyage, and audio waveform - learn languages without internet
+keywords:
+- オフライン語学
+- ネットなし学習
+- 機内モード学習
+- 語学学習アプリ
+- 音声単語帳
+- 運転中に語学学習
+- ハンズフリー語学
+- 単語カード
+- オフライン学習
+- 通勤学習
+- BitLingo
 ---
 
 通信なし？問題ありません。BitLingo はリストをローカル保存し、オフラインでも動くので、どこでも練習できます。音声優先で復習したいときのオフライン相棒です。

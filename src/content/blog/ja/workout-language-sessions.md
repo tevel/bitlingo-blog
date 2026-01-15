@@ -1,10 +1,26 @@
 ---
-title: "トレーニングしながら語学学習"
-description: "筋トレや有酸素と語彙の音声ループを組み合わせる。ハンズフリーで安全、継続しやすい。"
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "ja"
-slug: "workout-language-sessions"
+title: トレーニングしながら語学学習
+description: 筋トレや有酸素と語彙の音声ループを組み合わせる。ハンズフリーで安全、継続しやすい。
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: ja
+slug: ja-workout-language-sessions
+path: workout-language-sessions
+seoTitle: トレーニングしながら語学学習
+seoDescription: トレーニングを語学学習セッションに変えましょう。BitLingoの音声ループで、有酸素運動やウォーキング中に単語練習—ハンズフリーで安全。
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- 運動中に語学
+- ジムで単語学習
+- フィットネス学習
+- 語学学習アプリ
+- 音声単語帳
+- 運転中に語学学習
+- ハンズフリー語学
+- 単語カード
+- オフライン学習
+- 通勤学習
+- BitLingo
 ---
 
 トレーニング時間はすでに確保済み。その時間で語彙を強化し、フォームや集中を崩さずに、ハンズフリー学習アプリで進めよう。

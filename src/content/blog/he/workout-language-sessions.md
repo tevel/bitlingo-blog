@@ -1,10 +1,27 @@
 ---
-title: "לימוד שפה תוך כדי אימון"
-description: "שלבו לולאות אודיו של מילים עם כוח או קרדיו. ללא ידיים, בטוח, עקבי."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "he"
-slug: "workout-language-sessions"
+title: לימוד שפה תוך כדי אימון
+description: שלבו לולאות אודיו של מילים עם כוח או קרדיו. ללא ידיים, בטוח, עקבי.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: he
+slug: he-workout-language-sessions
+path: workout-language-sessions
+seoTitle: לימוד שפה תוך כדי אימון
+seoDescription: הפכו את האימון לשיעור לימוד שפה. לולאות האודיו של BitLingo מאפשרות
+  לתרגל בזמן קרדיו או הליכות—ללא ידיים ובטוח.
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- ללמוד שפות באימון
+- מילים בחדר כושר
+- כושר ולמידה
+- אפליקציה ללמידת שפות
+- אוצר מילים באודיו
+- ללמוד שפות בנהיגה
+- למידה ללא ידיים
+- כרטיסיות מילים
+- למידה אופליין
+- למידה בדרך
+- BitLingo
 ---
 
 זמן האימון כבר מוקדש. חזקו אוצר מילים בלי לפגוע בטכניקה או מיקוד—עם אפליקציית למידה ללא ידיים.

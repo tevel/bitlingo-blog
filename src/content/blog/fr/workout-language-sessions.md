@@ -1,10 +1,30 @@
 ---
-title: "Apprenez les langues pendant vos entraînements"
-description: "Associez musculation ou cardio à des boucles de vocabulaire audio. Mains libres, en sécurité, et régulier."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-3.jpg"
-lang: "fr"
-slug: "workout-language-sessions"
+title: Apprenez les langues pendant vos entraînements
+description: Associez musculation ou cardio à des boucles de vocabulaire audio. Mains
+  libres, en sécurité, et régulier.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-workout-language-sessions.svg
+lang: fr
+slug: fr-workout-language-sessions
+path: workout-language-sessions
+seoTitle: Apprenez les langues pendant vos entraînements
+seoDescription: Transformez votre entraînement en session d'apprentissage. Les boucles
+  audio de BitLingo permettent de pratiquer pendant le cardio ou les marches—mains
+  libres et sûr.
+ogImageAlt: Runner with earbuds surrounded by vocabulary bubbles Courir, Correr, 走る with heart rate monitor and workout timer - BitLingo language learning during exercise
+keywords:
+- apprendre langues en sport
+- vocabulaire salle de sport
+- fitness et apprentissage
+- application apprentissage langues
+- vocabulaire audio
+- apprendre langues en voiture
+- apprentissage mains libres
+- cartes de vocabulaire
+- vocabulaire hors ligne
+- apprendre en conduisant
+- application vocabulaire
+- BitLingo
 ---
 
 Votre temps d’entraînement est déjà calé. Utilisez-le pour renforcer le vocabulaire sans nuire à votre posture ni votre concentration, avec une appli d’apprentissage mains libres.

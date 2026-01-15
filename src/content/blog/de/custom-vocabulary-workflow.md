@@ -1,10 +1,29 @@
 ---
-title: "Erstelle in Minuten ein individuelles Vokabel-Deck"
-description: "Überspringe generische Listen. Lade nur die Phrasen, die dir wichtig sind, und übe sie freihändig mit BitLingo."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-2.jpg"
-lang: "de"
-slug: "custom-vocabulary-workflow"
+title: Erstelle in Minuten ein individuelles Vokabel-Deck
+description: Überspringe generische Listen. Lade nur die Phrasen, die dir wichtig
+  sind, und übe sie freihändig mit BitLingo.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-custom-vocabulary-workflow.svg
+lang: de
+slug: de-custom-vocabulary-workflow
+path: custom-vocabulary-workflow
+seoTitle: Erstelle in Minuten ein individuelles Vokabel-Deck
+seoDescription: Verschwenden Sie keine Zeit mehr mit generischen Wortlisten. Lernen
+  Sie, wie Sie mit BitLingo in Minuten personalisierte Vokabeldecks erstellen und
+  nur relevante Wörter üben.
+ogImageAlt: Stacked vocabulary flashcards showing Apprendre, Aprender, and 学习 with pronunciation guides - BitLingo custom vocabulary deck builder
+keywords:
+- eigene Vokabellisten
+- personalisierte Karteikarten
+- Vokabeldeck erstellen
+- Sprachen lernen App
+- Vokabel-App
+- Audio-Vokabeltrainer
+- Sprachen lernen beim Autofahren
+- freihändiges Sprachenlernen
+- Vokabeln offline üben
+- Pendler-Lern-App
+- BitLingo
 ---
 
 BitLingo baut auf **deinem** Wortschatz auf, nicht auf unserem. Hier ein schneller Workflow, um von der Idee zu einem übungsbereiten Deck mit „Audio-Flashcards“ zu kommen.

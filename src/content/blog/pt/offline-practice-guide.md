@@ -1,10 +1,28 @@
 ---
-title: "Prática de vocabulário offline para voos e áreas sem sinal"
-description: "Instale o BitLingo como PWA e continue aprendendo quando o sinal cair—em voos, metrô ou trajetos rurais."
-pubDate: "2026-01-14"
-heroImage: "../../../assets/blog-placeholder-4.jpg"
-lang: "pt"
-slug: "offline-practice-guide"
+title: Prática de vocabulário offline para voos e áreas sem sinal
+description: Instale o BitLingo como PWA e continue aprendendo quando o sinal cair—em
+  voos, metrô ou trajetos rurais.
+pubDate: '2026-01-14'
+heroImage: ../../../assets/hero-offline-practice-guide.svg
+lang: pt
+slug: pt-offline-practice-guide
+path: offline-practice-guide
+seoTitle: Prática de vocabulário offline para voos e áreas sem sinal
+seoDescription: Continue aprendendo quando o sinal cai. Instale o BitLingo como PWA
+  e pratique offline durante voos ou em áreas sem cobertura—seu progresso nunca para.
+ogImageAlt: Smartphone showing BitLingo app above clouds with OFFLINE badge, French vocabulary Voyage, and audio waveform - learn languages without internet
+keywords:
+- aprender idiomas offline
+- vocabulário sem internet
+- modo avião
+- aplicativo para aprender idiomas
+- vocabulário por áudio
+- aprender idiomas no carro
+- aprendizado sem as mãos
+- cartões de vocabulário
+- vocabulário offline
+- aprender no trajeto
+- BitLingo
 ---
 
 Sem conexão? Sem problema. O BitLingo guarda seus decks localmente e funciona offline para você praticar em qualquer lugar. É seu companheiro de aprendizado sem rede quando você quer continuar revendo em modo audio-first.
