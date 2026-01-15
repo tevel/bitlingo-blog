@@ -10,6 +10,7 @@ import SpeedRound from '../components/interactive/SpeedRound.astro';
 import DailyWord from '../components/interactive/DailyWord.astro';
 import LanguagePoll from '../components/interactive/LanguagePoll.astro';
 import ShareButtons from '../components/ShareButtons.astro';
+import PixelRobot from '../components/PixelRobot.astro';
 import { LANGUAGE_DATA } from '../data/vocabulary';
 import { SITE_TITLE } from '../consts';
 
@@ -166,6 +167,9 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
     </main>
 
     <Footer />
+    
+    <!-- Pixel the Robot Mascot -->
+    <PixelRobot initialMood="excited" position="bottom-right" />
     
     <!-- Confetti Script for Game Celebrations -->
     <script>

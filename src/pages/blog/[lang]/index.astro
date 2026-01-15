@@ -10,6 +10,7 @@ import Search from '../../../components/Search.astro';
 import TagCloud from '../../../components/TagCloud.astro';
 import PopularPosts from '../../../components/PopularPosts.astro';
 import ScrollReveal from '../../../components/ScrollReveal.astro';
+import PixelRobot from '../../../components/PixelRobot.astro';
 import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE, SUPPORTED_LANGS } from '../../../consts';
 import { calculateReadingTime } from '../../../utils/readingTime';
 
@@ -206,6 +207,9 @@ const searchPlaceholders: Record<string, string> = {
 			</div>
 		</main>
 		<Footer />
+		
+		<!-- Pixel the Robot Mascot -->
+		<PixelRobot initialMood="happy" position="bottom-right" />
 	</body>
 </html>
 

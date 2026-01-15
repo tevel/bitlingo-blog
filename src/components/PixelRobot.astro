@@ -1,0 +1,952 @@
+---
+/**
+ * Pixel the Robot - BitLingo's friendly mascot companion!
+ * A CSS-based animated robot that reacts to user actions and provides encouragement.
+ */
+
+interface Props {
+  initialMood?: 'idle' | 'happy' | 'excited' | 'celebrating' | 'thinking' | 'sleeping' | 'encouraging' | 'proud' | 'wave';
+  showOnLoad?: boolean;
+  position?: 'bottom-right' | 'bottom-left' | 'inline';
+}
+
+const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right' } = Astro.props;
+---
+
+<div 
+  class={`pixel-container ${position}`} 
+  data-initial-mood={initialMood}
+  data-show-on-load={showOnLoad}
+  id="pixel-robot-container"
+>
+  <!-- Speech Bubble -->
+  <div class="speech-bubble" id="pixel-speech" hidden>
+    <span class="speech-text" id="pixel-speech-text"></span>
+    <div class="speech-tail"></div>
+  </div>
+
+  <!-- The Robot -->
+  <div class="pixel-robot" id="pixel-robot" data-mood={initialMood}>
+    <!-- Antenna -->
+    <div class="antenna">
+      <div class="antenna-stem"></div>
+      <div class="antenna-ball" id="antenna-led"></div>
+    </div>
+
+    <!-- Head with Headphones -->
+    <div class="robot-head">
+      <!-- Left Headphone -->
+      <div class="headphone headphone-left">
+        <div class="headphone-cup"></div>
+      </div>
+
+      <!-- Face Screen -->
+      <div class="face-screen">
+        <!-- Eyes -->
+        <div class="eyes">
+          <div class="eye eye-left" id="eye-left"></div>
+          <div class="eye eye-right" id="eye-right"></div>
+        </div>
+        <!-- Mouth -->
+        <div class="mouth" id="pixel-mouth"></div>
+      </div>
+
+      <!-- Right Headphone -->
+      <div class="headphone headphone-right">
+        <div class="headphone-cup"></div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="robot-body">
+      <div class="body-screen">
+        <span class="heart-icon">❤️</span>
+      </div>
+      <div class="body-buttons">
+        <div class="body-button"></div>
+        <div class="body-button"></div>
+      </div>
+    </div>
+
+    <!-- Legs -->
+    <div class="robot-legs">
+      <div class="leg leg-left"></div>
+      <div class="leg leg-right"></div>
+    </div>
+
+    <!-- Arm (for waving) -->
+    <div class="robot-arm" id="pixel-arm">
+      <div class="arm-segment"></div>
+      <div class="arm-hand">👋</div>
+    </div>
+  </div>
+
+  <!-- Celebration Particles -->
+  <div class="celebration-particles" id="pixel-particles" hidden>
+    <span>✨</span><span>🎉</span><span>⭐</span><span>🌟</span><span>💫</span>
+  </div>
+</div>
+
+<script>
+  interface PixelState {
+    mood: string;
+    isAwake: boolean;
+    sleepTimer: ReturnType<typeof setTimeout> | null;
+    messageTimer: ReturnType<typeof setTimeout> | null;
+    moodResetTimer: ReturnType<typeof setTimeout> | null;
+  }
+
+  const greetings: Record<string, string[]> = {
+    night: ["Night owl learning! 🦉", "Burning the midnight oil? 🌙", "Late night study session! 📚"],
+    morning: ["Good morning! ☀️", "Rise and shine! 🌅", "Ready to learn? ☕"],
+    afternoon: ["Good afternoon! 🌤️", "Afternoon learning! 📖", "Keep going! 💪"],
+    evening: ["Good evening! 🌙", "Evening study time! 🌆", "Winding down with words! 📝"],
+    lateNight: ["Late night study! 📚", "Night study hero! 🦸", "Dedication! 🌟"]
+  };
+
+  const reactions: Record<string, string[]> = {
+    happy: ["Great job! 👏", "You're doing amazing!", "Keep it up! 💪", "Wonderful! ✨", "Nice work! 🎯"],
+    excited: ["WOW! Amazing! 🤩", "You're on fire! 🔥", "Incredible! 💥", "Superstar! ⭐", "Fantastic! 🚀"],
+    celebrating: ["🎉 CONGRATULATIONS!", "You did it! 🏆", "Achievement unlocked! 🔓", "Level up! ⬆️", "Victory! 🎊"],
+    encouraging: ["You can do it! 💪", "Don't give up! 🌟", "Almost there! 🎯", "I believe in you! ❤️", "Try again! 🔄"],
+    proud: ["I'm so proud! 🥹", "Look at you go! 🌟", "You're the best! 🏅", "Amazing progress! 📈"],
+    sleeping: ["Zzz... 💤", "*beep boop* 🤖", "Recharging... 🔋", "Sweet dreams... 😴"],
+    idle: ["Click me! 👆", "Let's learn! 📚", "Hi there! 👋", "Ready when you are! ✨"],
+    thinking: ["Hmm... 🤔", "Processing... ⚙️", "Let me think... 💭", "Calculating... 🧮"]
+  };
+
+  const funFacts: string[] = [
+    "Did you know? 🧠 Reading for 15 mins/day = 1M+ words/year!",
+    "Fun fact: Your brain creates new pathways when learning! 🧩",
+    "Tip: Spaced repetition boosts memory by 200%! 📈",
+    "Cool: Bilingual brains have more gray matter! 🧠",
+    "Wow: You can learn 3,000 words in 3 months! 📚",
+    "Amazing: Music helps language learning! 🎵",
+    "Pro tip: Practice before sleep for better retention! 😴",
+    "Secret: Speaking aloud improves memory 10x! 🗣️"
+  ];
+
+  class PixelRobot {
+    private container: HTMLElement;
+    private robot: HTMLElement;
+    private speech: HTMLElement;
+    private speechText: HTMLElement;
+    private particles: HTMLElement;
+    private arm: HTMLElement;
+    private eyeLeft: HTMLElement;
+    private eyeRight: HTMLElement;
+    private mouth: HTMLElement;
+    private antennaLed: HTMLElement;
+    private state: PixelState;
+
+    constructor(containerId: string) {
+      this.container = document.getElementById(containerId) as HTMLElement;
+      this.robot = document.getElementById('pixel-robot') as HTMLElement;
+      this.speech = document.getElementById('pixel-speech') as HTMLElement;
+      this.speechText = document.getElementById('pixel-speech-text') as HTMLElement;
+      this.particles = document.getElementById('pixel-particles') as HTMLElement;
+      this.arm = document.getElementById('pixel-arm') as HTMLElement;
+      this.eyeLeft = document.getElementById('eye-left') as HTMLElement;
+      this.eyeRight = document.getElementById('eye-right') as HTMLElement;
+      this.mouth = document.getElementById('pixel-mouth') as HTMLElement;
+      this.antennaLed = document.getElementById('antenna-led') as HTMLElement;
+
+      this.state = {
+        mood: this.container.dataset.initialMood || 'idle',
+        isAwake: true,
+        sleepTimer: null,
+        messageTimer: null,
+        moodResetTimer: null
+      };
+
+      this.init();
+    }
+
+    private init() {
+      // Click interaction
+      this.robot.addEventListener('click', () => this.handleClick());
+      
+      // Reset sleep timer on any page interaction
+      document.addEventListener('mousemove', () => this.resetSleepTimer());
+      document.addEventListener('keydown', () => this.resetSleepTimer());
+      document.addEventListener('scroll', () => this.resetSleepTimer());
+      document.addEventListener('touchstart', () => this.resetSleepTimer());
+
+      // Listen for game events
+      window.addEventListener('game:complete', ((e: CustomEvent) => this.handleGameComplete(e)) as EventListener);
+      window.addEventListener('achievement:unlocked', ((e: CustomEvent) => this.handleAchievement(e)) as EventListener);
+      window.addEventListener('xp:gained', ((e: CustomEvent) => this.handleXpGain(e)) as EventListener);
+      window.addEventListener('level:up', ((e: CustomEvent) => this.handleLevelUp(e)) as EventListener);
+
+      // Initial greeting
+      if (this.container.dataset.showOnLoad === 'true') {
+        setTimeout(() => {
+          this.setMood('wave');
+          this.showMessage(this.getTimeBasedGreeting());
+          this.resetSleepTimer();
+        }, 500);
+      }
+    }
+
+    private getTimeBasedGreeting(): string {
+      const hour = new Date().getHours();
+      let period: string;
+      
+      if (hour >= 0 && hour < 6) period = 'night';
+      else if (hour >= 6 && hour < 12) period = 'morning';
+      else if (hour >= 12 && hour < 17) period = 'afternoon';
+      else if (hour >= 17 && hour < 21) period = 'evening';
+      else period = 'lateNight';
+
+      const messages = greetings[period];
+      return messages[Math.floor(Math.random() * messages.length)];
+    }
+
+    private getRandomMessage(mood: string): string {
+      const messages = reactions[mood] || reactions.idle;
+      return messages[Math.floor(Math.random() * messages.length)];
+    }
+
+    private getRandomFunFact(): string {
+      return funFacts[Math.floor(Math.random() * funFacts.length)];
+    }
+
+    setMood(mood: string) {
+      this.state.mood = mood;
+      this.robot.dataset.mood = mood;
+      this.state.isAwake = mood !== 'sleeping';
+      
+      // Clear any existing mood reset timer
+      if (this.state.moodResetTimer) {
+        clearTimeout(this.state.moodResetTimer);
+      }
+
+      // Auto-return excited/celebrating states to happy after 3 seconds
+      if (['excited', 'celebrating'].includes(mood)) {
+        this.state.moodResetTimer = setTimeout(() => {
+          this.setMood('happy');
+        }, 3000);
+      }
+    }
+
+    showMessage(message: string, duration: number = 4000) {
+      // Clear any existing message timer
+      if (this.state.messageTimer) {
+        clearTimeout(this.state.messageTimer);
+      }
+
+      this.speechText.textContent = message;
+      this.speech.removeAttribute('hidden');
+      this.speech.classList.add('visible');
+
+      this.state.messageTimer = setTimeout(() => {
+        this.speech.classList.remove('visible');
+        setTimeout(() => {
+          this.speech.setAttribute('hidden', '');
+        }, 300);
+      }, duration);
+    }
+
+    showParticles() {
+      this.particles.removeAttribute('hidden');
+      this.particles.classList.add('active');
+      
+      setTimeout(() => {
+        this.particles.classList.remove('active');
+        this.particles.setAttribute('hidden', '');
+      }, 1500);
+    }
+
+    private handleClick() {
+      if (!this.state.isAwake) {
+        // Wake up!
+        this.setMood('happy');
+        this.showMessage("I'm awake! 🌟 Ready to learn?");
+        return;
+      }
+
+      // Random interaction
+      const interactions = [
+        () => {
+          this.setMood('happy');
+          this.showMessage(this.getRandomMessage('happy'));
+        },
+        () => {
+          this.setMood('excited');
+          this.showMessage(this.getRandomMessage('excited'));
+        },
+        () => {
+          this.setMood('thinking');
+          this.showMessage(this.getRandomFunFact(), 5000);
+        },
+        () => {
+          this.setMood('proud');
+          this.showMessage(this.getRandomMessage('proud'));
+        },
+        () => {
+          this.setMood('wave');
+          this.showMessage("Hi! Let's practice! 📚");
+        }
+      ];
+
+      const randomInteraction = interactions[Math.floor(Math.random() * interactions.length)];
+      randomInteraction();
+      this.resetSleepTimer();
+    }
+
+    private handleGameComplete(event: CustomEvent) {
+      const { game, score, total } = event.detail;
+      const percentage = total ? (score / total) * 100 : 100;
+
+      if (percentage === 100) {
+        this.setMood('celebrating');
+        this.showMessage("PERFECT SCORE! 🎉🏆");
+        this.showParticles();
+      } else if (percentage >= 80) {
+        this.setMood('excited');
+        this.showMessage(`Amazing! ${score}/${total}! 🔥`);
+      } else if (percentage >= 50) {
+        this.setMood('happy');
+        this.showMessage(`Good job! ${score}/${total}! 👏`);
+      } else {
+        this.setMood('encouraging');
+        this.showMessage("Keep practicing! You got this! 💪");
+      }
+    }
+
+    private handleAchievement(event: CustomEvent) {
+      const { badge } = event.detail;
+      this.setMood('celebrating');
+      this.showMessage(`🏅 Achievement: ${badge}!`);
+      this.showParticles();
+    }
+
+    private handleXpGain(event: CustomEvent) {
+      const { amount } = event.detail;
+      if (amount >= 50) {
+        this.setMood('excited');
+        this.showMessage(`+${amount} XP! Amazing! ⭐`);
+      } else {
+        this.setMood('happy');
+        this.showMessage(`+${amount} XP! 📈`);
+      }
+    }
+
+    private handleLevelUp(event: CustomEvent) {
+      const { level } = event.detail;
+      this.setMood('celebrating');
+      this.showMessage(`🎊 LEVEL ${level}! 🎊`);
+      this.showParticles();
+    }
+
+    private resetSleepTimer() {
+      if (this.state.sleepTimer) {
+        clearTimeout(this.state.sleepTimer);
+      }
+
+      // Only reset if not already sleeping
+      if (this.state.mood === 'sleeping') {
+        return;
+      }
+
+      // Fall asleep after 5 minutes of inactivity
+      this.state.sleepTimer = setTimeout(() => {
+        this.setMood('sleeping');
+        this.showMessage(this.getRandomMessage('sleeping'));
+      }, 5 * 60 * 1000);
+    }
+
+    // Public method to trigger moods externally
+    public trigger(mood: string, message?: string) {
+      this.setMood(mood);
+      if (message) {
+        this.showMessage(message);
+      } else {
+        this.showMessage(this.getRandomMessage(mood));
+      }
+      if (mood === 'celebrating') {
+        this.showParticles();
+      }
+    }
+  }
+
+  // Initialize when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('pixel-robot-container');
+    if (container) {
+      (window as any).pixelRobot = new PixelRobot('pixel-robot-container');
+    }
+  });
+</script>
+
+<style>
+  /* Container positioning */
+  .pixel-container {
+    z-index: 1000;
+    pointer-events: auto;
+  }
+
+  .pixel-container.bottom-right {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .pixel-container.bottom-left {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+  }
+
+  .pixel-container.inline {
+    position: relative;
+    display: inline-block;
+  }
+
+  @media (max-width: 768px) {
+    .pixel-container.bottom-right,
+    .pixel-container.bottom-left {
+      bottom: 80px; /* Above mobile nav */
+    }
+  }
+
+  /* Speech Bubble */
+  .speech-bubble {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background: linear-gradient(180deg, #1a4a6e 0%, #0f3555 100%);
+    border: 2px solid #ffd700;
+    border-radius: 16px;
+    padding: 10px 16px;
+    min-width: 120px;
+    max-width: 220px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 215, 0, 0.2);
+  }
+
+  .speech-bubble.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-15px);
+  }
+
+  .speech-bubble[hidden] {
+    display: none;
+  }
+
+  .speech-text {
+    color: #f0f4f8;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .speech-tail {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #ffd700;
+  }
+
+  .speech-tail::before {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: -8px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #0f3555;
+  }
+
+  /* Robot Base */
+  .pixel-robot {
+    width: 80px;
+    height: 120px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  }
+
+  .pixel-robot:hover {
+    transform: scale(1.05);
+  }
+
+  .pixel-robot:active {
+    transform: scale(0.95);
+  }
+
+  /* Antenna */
+  .antenna {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .antenna-ball {
+    width: 10px;
+    height: 10px;
+    background: #ff4444;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #ff4444;
+    animation: antenna-pulse 2s ease-in-out infinite;
+  }
+
+  .antenna-stem {
+    width: 3px;
+    height: 12px;
+    background: linear-gradient(180deg, #6b6b80 0%, #4a4a5a 100%);
+    border-radius: 2px;
+  }
+
+  @keyframes antenna-pulse {
+    0%, 100% { 
+      background: #ff4444;
+      box-shadow: 0 0 8px #ff4444;
+    }
+    50% { 
+      background: #44ff44;
+      box-shadow: 0 0 12px #44ff44;
+    }
+  }
+
+  /* Robot Head */
+  .robot-head {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 45px;
+    background: linear-gradient(135deg, #5a5a6e 0%, #3d3d4d 100%);
+    border: 2px solid #6b6b80;
+    border-radius: 12px 12px 8px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 
+      inset 0 2px 0 rgba(255, 255, 255, 0.2),
+      0 3px 0 #2d2d3d;
+  }
+
+  /* Headphones */
+  .headphone {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 24px;
+  }
+
+  .headphone-left {
+    left: -10px;
+  }
+
+  .headphone-right {
+    right: -10px;
+  }
+
+  .headphone-cup {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+    border-radius: 4px;
+    border: 2px solid #5a9fe3;
+    box-shadow: 
+      inset 0 2px 0 rgba(255, 255, 255, 0.3),
+      0 2px 0 #2a5a8d;
+  }
+
+  /* Face Screen */
+  .face-screen {
+    width: 44px;
+    height: 32px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+    border: 2px solid #2a2a4e;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 4px;
+  }
+
+  /* Eyes */
+  .eyes {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .eye {
+    width: 10px;
+    height: 10px;
+    background: #00ff88;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00ff88;
+    transition: all 0.2s ease;
+  }
+
+  /* Mouth */
+  .mouth {
+    width: 16px;
+    height: 3px;
+    background: #00ff88;
+    border-radius: 2px;
+    box-shadow: 0 0 6px #00ff88;
+    transition: all 0.2s ease;
+  }
+
+  /* Robot Body */
+  .robot-body {
+    position: absolute;
+    top: 68px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 32px;
+    background: linear-gradient(135deg, #5a5a6e 0%, #3d3d4d 100%);
+    border: 2px solid #6b6b80;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 4px;
+    box-shadow: 
+      inset 0 2px 0 rgba(255, 255, 255, 0.2),
+      0 3px 0 #2d2d3d;
+  }
+
+  .body-screen {
+    width: 20px;
+    height: 14px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+    border: 1px solid #2a2a4e;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .heart-icon {
+    font-size: 10px;
+    animation: heart-beat 1.5s ease-in-out infinite;
+  }
+
+  @keyframes heart-beat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  .body-buttons {
+    display: flex;
+    gap: 4px;
+  }
+
+  .body-button {
+    width: 6px;
+    height: 6px;
+    background: #ffd700;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(255, 215, 0, 0.5);
+  }
+
+  /* Robot Legs */
+  .robot-legs {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+  }
+
+  .leg {
+    width: 10px;
+    height: 16px;
+    background: linear-gradient(180deg, #5a5a6e 0%, #3d3d4d 100%);
+    border: 2px solid #6b6b80;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 2px 0 #2d2d3d;
+  }
+
+  /* Robot Arm (for waving) */
+  .robot-arm {
+    position: absolute;
+    top: 70px;
+    right: -20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform-origin: top center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .arm-segment {
+    width: 6px;
+    height: 16px;
+    background: linear-gradient(180deg, #5a5a6e 0%, #3d3d4d 100%);
+    border: 1px solid #6b6b80;
+    border-radius: 3px;
+  }
+
+  .arm-hand {
+    font-size: 16px;
+    margin-top: 2px;
+  }
+
+  /* Celebration Particles */
+  .celebration-particles {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 100px;
+    pointer-events: none;
+  }
+
+  .celebration-particles[hidden] {
+    display: none;
+  }
+
+  .celebration-particles span {
+    position: absolute;
+    font-size: 16px;
+    opacity: 0;
+  }
+
+  .celebration-particles.active span {
+    animation: particle-burst 1.5s ease-out forwards;
+  }
+
+  .celebration-particles.active span:nth-child(1) { animation-delay: 0ms; --tx: -30px; --ty: -50px; }
+  .celebration-particles.active span:nth-child(2) { animation-delay: 100ms; --tx: 30px; --ty: -40px; }
+  .celebration-particles.active span:nth-child(3) { animation-delay: 200ms; --tx: -20px; --ty: -60px; }
+  .celebration-particles.active span:nth-child(4) { animation-delay: 300ms; --tx: 40px; --ty: -30px; }
+  .celebration-particles.active span:nth-child(5) { animation-delay: 400ms; --tx: 0px; --ty: -70px; }
+
+  @keyframes particle-burst {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0) scale(0.5);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(var(--tx), var(--ty)) scale(1.2);
+    }
+  }
+
+  /* =========================== */
+  /* MOOD STATES                 */
+  /* =========================== */
+
+  /* IDLE - Default subtle animation */
+  .pixel-robot[data-mood="idle"] {
+    animation: idle-bob 3s ease-in-out infinite;
+  }
+
+  @keyframes idle-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+
+  /* HAPPY - Curved eyes, smile */
+  .pixel-robot[data-mood="happy"] .eye {
+    height: 6px;
+    border-radius: 6px 6px 0 0;
+  }
+
+  .pixel-robot[data-mood="happy"] .mouth {
+    height: 6px;
+    border-radius: 0 0 8px 8px;
+  }
+
+  /* EXCITED - Sparkle eyes, open mouth, bouncing */
+  .pixel-robot[data-mood="excited"] {
+    animation: bounce 0.5s ease infinite;
+  }
+
+  .pixel-robot[data-mood="excited"] .eye {
+    animation: sparkle 0.5s ease infinite;
+  }
+
+  .pixel-robot[data-mood="excited"] .mouth {
+    width: 12px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes sparkle {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 8px #00ff88; }
+    50% { transform: scale(1.3); box-shadow: 0 0 15px #00ff88, 0 0 25px #00ff88; }
+  }
+
+  /* CELEBRATING - Extra bouncing, particles shown */
+  .pixel-robot[data-mood="celebrating"] {
+    animation: celebrate-bounce 0.4s ease infinite;
+  }
+
+  .pixel-robot[data-mood="celebrating"] .eye {
+    animation: sparkle 0.3s ease infinite;
+  }
+
+  .pixel-robot[data-mood="celebrating"] .mouth {
+    width: 18px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .pixel-robot[data-mood="celebrating"] .antenna-ball {
+    background: #ffd700 !important;
+    box-shadow: 0 0 15px #ffd700 !important;
+    animation: none;
+  }
+
+  @keyframes celebrate-bounce {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    25% { transform: translateY(-10px) rotate(2deg); }
+    50% { transform: translateY(0) rotate(-2deg); }
+    75% { transform: translateY(-10px) rotate(2deg); }
+  }
+
+  /* THINKING - Looking up, tilt */
+  .pixel-robot[data-mood="thinking"] {
+    animation: think-tilt 2s ease-in-out infinite;
+  }
+
+  .pixel-robot[data-mood="thinking"] .eye {
+    transform: translateY(-3px);
+  }
+
+  .pixel-robot[data-mood="thinking"] .mouth {
+    width: 8px;
+    height: 6px;
+    border-radius: 50%;
+    margin-left: 8px;
+  }
+
+  @keyframes think-tilt {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(8deg); }
+  }
+
+  /* SLEEPING - Closed eyes, gentle bob */
+  .pixel-robot[data-mood="sleeping"] {
+    animation: sleep-bob 2s ease-in-out infinite;
+  }
+
+  .pixel-robot[data-mood="sleeping"] .eye {
+    height: 3px;
+    border-radius: 3px;
+    animation: none;
+    box-shadow: 0 0 4px #00ff88;
+  }
+
+  .pixel-robot[data-mood="sleeping"] .mouth {
+    width: 10px;
+    height: 2px;
+  }
+
+  .pixel-robot[data-mood="sleeping"] .antenna-ball {
+    background: #444 !important;
+    box-shadow: 0 0 4px #333 !important;
+    animation: none;
+  }
+
+  .pixel-robot[data-mood="sleeping"] .heart-icon {
+    animation: none;
+    opacity: 0.5;
+  }
+
+  @keyframes sleep-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+  }
+
+  /* ENCOURAGING - Determined look */
+  .pixel-robot[data-mood="encouraging"] .eye {
+    height: 8px;
+    width: 12px;
+    border-radius: 2px 2px 6px 6px;
+  }
+
+  .pixel-robot[data-mood="encouraging"] .mouth {
+    height: 4px;
+    width: 14px;
+    background: linear-gradient(90deg, transparent 20%, #00ff88 20%, #00ff88 80%, transparent 80%);
+  }
+
+  /* PROUD - Big happy smile */
+  .pixel-robot[data-mood="proud"] .eye {
+    height: 5px;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 0 10px #00ff88, 0 0 20px rgba(0, 255, 136, 0.5);
+  }
+
+  .pixel-robot[data-mood="proud"] .mouth {
+    height: 8px;
+    width: 20px;
+    border-radius: 0 0 10px 10px;
+  }
+
+  /* WAVE - Arm visible and waving */
+  .pixel-robot[data-mood="wave"] .robot-arm {
+    opacity: 1;
+    animation: wave-arm 0.6s ease-in-out 3;
+  }
+
+  .pixel-robot[data-mood="wave"] .eye {
+    height: 6px;
+    border-radius: 6px 6px 0 0;
+  }
+
+  .pixel-robot[data-mood="wave"] .mouth {
+    height: 6px;
+    border-radius: 0 0 8px 8px;
+  }
+
+  @keyframes wave-arm {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(-45deg); }
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .pixel-robot,
+    .pixel-robot[data-mood="idle"],
+    .pixel-robot[data-mood="excited"],
+    .pixel-robot[data-mood="celebrating"],
+    .pixel-robot[data-mood="thinking"],
+    .pixel-robot[data-mood="sleeping"],
+    .pixel-robot[data-mood="wave"] .robot-arm,
+    .antenna-ball,
+    .heart-icon,
+    .eye,
+    .celebration-particles span {
+      animation: none !important;
+    }
+  }
+</style>

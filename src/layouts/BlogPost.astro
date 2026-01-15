@@ -18,6 +18,7 @@ import Comments from '../components/Comments.astro';
 import Newsletter from '../components/Newsletter.astro';
 import MobileNav from '../components/MobileNav.astro';
 import PWAInstallPrompt from '../components/PWAInstallPrompt.astro';
+import PixelRobot from '../components/PixelRobot.astro';
 import { DEFAULT_LANG } from '../consts';
 
 type Props = CollectionEntry<'blog'>['data'] & { 
@@ -252,6 +253,7 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 		<Footer />
 		<MobileNav lang={lang} />
 		<PWAInstallPrompt />
+		<PixelRobot initialMood="wave" position="bottom-right" />
 		
 		<!-- Confetti Script for Game Celebrations -->
 		<script is:inline>

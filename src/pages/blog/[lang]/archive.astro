@@ -5,6 +5,7 @@ import Footer from '../../../components/Footer.astro';
 import Header from '../../../components/Header.astro';
 import FormattedDate from '../../../components/FormattedDate.astro';
 import ScrollReveal from '../../../components/ScrollReveal.astro';
+import PixelRobot from '../../../components/PixelRobot.astro';
 import { SITE_TITLE, SUPPORTED_LANGS } from '../../../consts';
 
 export async function getStaticPaths() {
@@ -115,6 +116,8 @@ const pageDescription = `Browse all ${posts.length} articles in the BitLingo blo
           Back to Blog
         </a>
       </section>
+
+      <PixelRobot />
     </main>
     <Footer />
   </body>
