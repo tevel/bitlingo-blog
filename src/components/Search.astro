@@ -68,14 +68,14 @@ const searchIndex = posts.map(post => ({
     const container = document.querySelector('.search-container');
     if (!container) return;
 
-    const input = container.querySelector('.search-input') as HTMLInputElement;
-    const clearBtn = container.querySelector('.search-clear') as HTMLButtonElement;
-    const resultsContainer = container.querySelector('.search-results') as HTMLElement;
-    const resultsList = container.querySelector('.results-list') as HTMLUListElement;
-    const resultsCount = container.querySelector('.results-count') as HTMLElement;
-    const noResults = container.querySelector('.no-results') as HTMLElement;
+    const input = container.querySelector('.search-input');
+    const clearBtn = container.querySelector('.search-clear');
+    const resultsContainer = container.querySelector('.search-results');
+    const resultsList = container.querySelector('.results-list');
+    const resultsCount = container.querySelector('.results-count');
+    const noResults = container.querySelector('.no-results');
 
-    function search(query: string) {
+    function search(query) {
       if (!query.trim()) {
         resultsContainer.hidden = true;
         clearBtn.hidden = true;
@@ -86,16 +86,16 @@ const searchIndex = posts.map(post => ({
       const normalizedQuery = query.toLowerCase().trim();
       const words = normalizedQuery.split(/\s+/);
 
-      const results = searchIndex.filter((post: any) => {
+      const results = searchIndex.filter((post) => {
         const titleMatch = post.title.toLowerCase().includes(normalizedQuery);
         const descMatch = post.description.toLowerCase().includes(normalizedQuery);
-        const keywordMatch = post.keywords.some((k: string) => 
+        const keywordMatch = post.keywords.some((k) => 
           k.toLowerCase().includes(normalizedQuery)
         );
-        const wordMatch = words.every((word: string) => 
+        const wordMatch = words.every((word) => 
           post.title.toLowerCase().includes(word) ||
           post.description.toLowerCase().includes(word) ||
-          post.keywords.some((k: string) => k.toLowerCase().includes(word))
+          post.keywords.some((k) => k.toLowerCase().includes(word))
         );
         return titleMatch || descMatch || keywordMatch || wordMatch;
       });
@@ -108,7 +108,7 @@ const searchIndex = posts.map(post => ({
         noResults.hidden = false;
       } else {
         noResults.hidden = true;
-        resultsList.innerHTML = results.map((post: any) => `
+        resultsList.innerHTML = results.map((post) => `
           <li class="result-item">
             <a href="/blog/${lang}/${post.slug}/">
               <h4>${highlightMatch(post.title, normalizedQuery)}</h4>
@@ -119,18 +119,18 @@ const searchIndex = posts.map(post => ({
       }
     }
 
-    function highlightMatch(text: string, query: string): string {
+    function highlightMatch(text, query) {
       if (!query) return text;
       const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
       return text.replace(regex, '<mark>$1</mark>');
     }
 
-    function truncate(text: string, length: number): string {
+    function truncate(text, length) {
       if (text.length <= length) return text;
       return text.substring(0, length).trim() + '...';
     }
 
-    let debounceTimer: number;
+    let debounceTimer;
     input.addEventListener('input', () => {
       clearTimeout(debounceTimer);
       debounceTimer = window.setTimeout(() => {
@@ -147,7 +147,7 @@ const searchIndex = posts.map(post => ({
 
     // Close on click outside
     document.addEventListener('click', (e) => {
-      if (!container.contains(e.target as Node)) {
+      if (!container.contains(e.target)) {
         resultsContainer.hidden = true;
       }
     });

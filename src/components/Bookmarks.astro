@@ -45,7 +45,7 @@ const { lang = 'en' } = Astro.props;
       list.hidden = false;
       emptyMsg.hidden = true;
 
-      list.innerHTML = bookmarks.map((bookmark: any) => `
+      list.innerHTML = bookmarks.map((bookmark) => `
         <li class="bookmark-item">
           <a href="/blog/${lang}/${bookmark.slug}/" class="bookmark-link">
             <span class="bookmark-title">${bookmark.title}</span>
@@ -68,7 +68,7 @@ const { lang = 'en' } = Astro.props;
           if (!slug) return;
 
           const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
-          const filtered = bookmarks.filter((b: any) => b.slug !== slug);
+          const filtered = bookmarks.filter((b) => b.slug !== slug);
           localStorage.setItem(storageKey, JSON.stringify(filtered));
           
           renderBookmarks();
@@ -84,7 +84,7 @@ const { lang = 'en' } = Astro.props;
       });
     }
 
-    function formatDate(timestamp: number): string {
+    function formatDate(timestamp) {
       const date = new Date(timestamp);
       return date.toLocaleDateString(lang, { month: 'short', day: 'numeric' });
     }

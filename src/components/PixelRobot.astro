@@ -2,21 +2,40 @@
 /**
  * Pixel the Robot - BitLingo's friendly mascot companion!
  * A CSS-based animated robot that reacts to user actions and provides encouragement.
+ * Now with 200+ phrases in 16 languages!
  */
+import { phrases, type SupportedLang } from '../data/pixelPhrases';
 
 interface Props {
   initialMood?: 'idle' | 'happy' | 'excited' | 'celebrating' | 'thinking' | 'sleeping' | 'encouraging' | 'proud' | 'wave';
   showOnLoad?: boolean;
   position?: 'bottom-right' | 'bottom-left' | 'inline';
+  lang?: SupportedLang;
 }
 
-const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right' } = Astro.props;
+const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right', lang } = Astro.props;
+
+// Detect language from URL if not provided
+function detectLang(): SupportedLang {
+  if (lang) return lang;
+  const url = Astro.url.pathname;
+  const langMatch = url.match(/\/blog\/([a-z]{2})\//);
+  if (langMatch && langMatch[1] in phrases) {
+    return langMatch[1] as SupportedLang;
+  }
+  return 'en';
+}
+
+const currentLang = detectLang();
+const currentPhrases = phrases[currentLang];
 ---
 
 <div 
   class={`pixel-container ${position}`} 
   data-initial-mood={initialMood}
   data-show-on-load={showOnLoad}
+  data-lang={currentLang}
+  data-phrases={JSON.stringify(currentPhrases)}
   id="pixel-robot-container"
 >
   <!-- Speech Bubble -->
@@ -88,81 +107,36 @@ const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right' } = A
 </div>
 
 <script>
-  interface PixelState {
-    mood: string;
-    isAwake: boolean;
-    sleepTimer: ReturnType<typeof setTimeout> | null;
-    messageTimer: ReturnType<typeof setTimeout> | null;
-    moodResetTimer: ReturnType<typeof setTimeout> | null;
-  }
-
-  const greetings: Record<string, string[]> = {
-    night: ["Night owl learning! 🦉", "Burning the midnight oil? 🌙", "Late night study session! 📚"],
-    morning: ["Good morning! ☀️", "Rise and shine! 🌅", "Ready to learn? ☕"],
-    afternoon: ["Good afternoon! 🌤️", "Afternoon learning! 📖", "Keep going! 💪"],
-    evening: ["Good evening! 🌙", "Evening study time! 🌆", "Winding down with words! 📝"],
-    lateNight: ["Late night study! 📚", "Night study hero! 🦸", "Dedication! 🌟"]
-  };
-
-  const reactions: Record<string, string[]> = {
-    happy: ["Great job! 👏", "You're doing amazing!", "Keep it up! 💪", "Wonderful! ✨", "Nice work! 🎯"],
-    excited: ["WOW! Amazing! 🤩", "You're on fire! 🔥", "Incredible! 💥", "Superstar! ⭐", "Fantastic! 🚀"],
-    celebrating: ["🎉 CONGRATULATIONS!", "You did it! 🏆", "Achievement unlocked! 🔓", "Level up! ⬆️", "Victory! 🎊"],
-    encouraging: ["You can do it! 💪", "Don't give up! 🌟", "Almost there! 🎯", "I believe in you! ❤️", "Try again! 🔄"],
-    proud: ["I'm so proud! 🥹", "Look at you go! 🌟", "You're the best! 🏅", "Amazing progress! 📈"],
-    sleeping: ["Zzz... 💤", "*beep boop* 🤖", "Recharging... 🔋", "Sweet dreams... 😴"],
-    idle: ["Click me! 👆", "Let's learn! 📚", "Hi there! 👋", "Ready when you are! ✨"],
-    thinking: ["Hmm... 🤔", "Processing... ⚙️", "Let me think... 💭", "Calculating... 🧮"]
-  };
-
-  const funFacts: string[] = [
-    "Did you know? 🧠 Reading for 15 mins/day = 1M+ words/year!",
-    "Fun fact: Your brain creates new pathways when learning! 🧩",
-    "Tip: Spaced repetition boosts memory by 200%! 📈",
-    "Cool: Bilingual brains have more gray matter! 🧠",
-    "Wow: You can learn 3,000 words in 3 months! 📚",
-    "Amazing: Music helps language learning! 🎵",
-    "Pro tip: Practice before sleep for better retention! 😴",
-    "Secret: Speaking aloud improves memory 10x! 🗣️"
-  ];
-
   class PixelRobot {
-    private container: HTMLElement;
-    private robot: HTMLElement;
-    private speech: HTMLElement;
-    private speechText: HTMLElement;
-    private particles: HTMLElement;
-    private arm: HTMLElement;
-    private eyeLeft: HTMLElement;
-    private eyeRight: HTMLElement;
-    private mouth: HTMLElement;
-    private antennaLed: HTMLElement;
-    private state: PixelState;
+    constructor(containerId) {
+      this.container = document.getElementById(containerId);
+      this.robot = document.getElementById('pixel-robot');
+      this.speech = document.getElementById('pixel-speech');
+      this.speechText = document.getElementById('pixel-speech-text');
+      this.particles = document.getElementById('pixel-particles');
+      this.arm = document.getElementById('pixel-arm');
+      this.eyeLeft = document.getElementById('eye-left');
+      this.eyeRight = document.getElementById('eye-right');
+      this.mouth = document.getElementById('pixel-mouth');
+      this.antennaLed = document.getElementById('antenna-led');
 
-    constructor(containerId: string) {
-      this.container = document.getElementById(containerId) as HTMLElement;
-      this.robot = document.getElementById('pixel-robot') as HTMLElement;
-      this.speech = document.getElementById('pixel-speech') as HTMLElement;
-      this.speechText = document.getElementById('pixel-speech-text') as HTMLElement;
-      this.particles = document.getElementById('pixel-particles') as HTMLElement;
-      this.arm = document.getElementById('pixel-arm') as HTMLElement;
-      this.eyeLeft = document.getElementById('eye-left') as HTMLElement;
-      this.eyeRight = document.getElementById('eye-right') as HTMLElement;
-      this.mouth = document.getElementById('pixel-mouth') as HTMLElement;
-      this.antennaLed = document.getElementById('antenna-led') as HTMLElement;
+      // Parse phrases from data attribute
+      this.phrases = JSON.parse(this.container.dataset.phrases || '{}');
+      this.lang = this.container.dataset.lang || 'en';
 
       this.state = {
         mood: this.container.dataset.initialMood || 'idle',
         isAwake: true,
         sleepTimer: null,
         messageTimer: null,
-        moodResetTimer: null
+        moodResetTimer: null,
+        phraseHistory: new Set()
       };
 
       this.init();
     }
 
-    private init() {
+    init() {
       // Click interaction
       this.robot.addEventListener('click', () => this.handleClick());
       
@@ -173,10 +147,10 @@ const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right' } = A
       document.addEventListener('touchstart', () => this.resetSleepTimer());
 
       // Listen for game events
-      window.addEventListener('game:complete', ((e: CustomEvent) => this.handleGameComplete(e)) as EventListener);
-      window.addEventListener('achievement:unlocked', ((e: CustomEvent) => this.handleAchievement(e)) as EventListener);
-      window.addEventListener('xp:gained', ((e: CustomEvent) => this.handleXpGain(e)) as EventListener);
-      window.addEventListener('level:up', ((e: CustomEvent) => this.handleLevelUp(e)) as EventListener);
+      window.addEventListener('game:complete', (e) => this.handleGameComplete(e));
+      window.addEventListener('achievement:unlocked', (e) => this.handleAchievement(e));
+      window.addEventListener('xp:gained', (e) => this.handleXpGain(e));
+      window.addEventListener('level:up', (e) => this.handleLevelUp(e));
 
       // Initial greeting
       if (this.container.dataset.showOnLoad === 'true') {
@@ -188,30 +162,86 @@ const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right' } = A
       }
     }
 
-    private getTimeBasedGreeting(): string {
+    getTimeBasedGreeting() {
       const hour = new Date().getHours();
-      let period: string;
+      const greetings = this.phrases.greeting || [];
       
-      if (hour >= 0 && hour < 6) period = 'night';
-      else if (hour >= 6 && hour < 12) period = 'morning';
-      else if (hour >= 12 && hour < 17) period = 'afternoon';
-      else if (hour >= 17 && hour < 21) period = 'evening';
-      else period = 'lateNight';
-
-      const messages = greetings[period];
-      return messages[Math.floor(Math.random() * messages.length)];
+      // Morning (5-11) - first 3 greetings
+      if (hour >= 5 && hour < 12) {
+        return greetings.slice(0, 3)[Math.floor(Math.random() * 3)] || greetings[0] || "Hello! 👋";
+      }
+      // Afternoon (12-17) - next 3 greetings
+      if (hour >= 12 && hour < 18) {
+        return greetings.slice(3, 6)[Math.floor(Math.random() * 3)] || greetings[0] || "Hello! 👋";
+      }
+      // Evening (18-22) - next 3 greetings
+      if (hour >= 18 && hour < 23) {
+        return greetings.slice(6, 9)[Math.floor(Math.random() * 3)] || greetings[0] || "Hello! 👋";
+      }
+      // Night (23-4) - remaining greetings
+      return greetings.slice(9, 12)[Math.floor(Math.random() * 3)] || greetings[0] || "Hello! 👋";
     }
 
-    private getRandomMessage(mood: string): string {
-      const messages = reactions[mood] || reactions.idle;
-      return messages[Math.floor(Math.random() * messages.length)];
+    getUniqueRandomPhrase(category) {
+      const phrases = this.phrases[category] || [];
+      if (phrases.length === 0) return "Hi! 👋";
+      
+      // Filter out recently used phrases
+      const available = phrases.filter(p => !this.state.phraseHistory.has(p));
+      
+      // If all phrases used, reset history
+      if (available.length === 0) {
+        this.state.phraseHistory.clear();
+        return phrases[Math.floor(Math.random() * phrases.length)];
+      }
+      
+      const phrase = available[Math.floor(Math.random() * available.length)];
+      this.state.phraseHistory.add(phrase);
+      
+      // Keep history manageable (last 20 phrases)
+      if (this.state.phraseHistory.size > 20) {
+        const arr = Array.from(this.state.phraseHistory);
+        this.state.phraseHistory = new Set(arr.slice(-20));
+      }
+      
+      return phrase;
     }
 
-    private getRandomFunFact(): string {
-      return funFacts[Math.floor(Math.random() * funFacts.length)];
+    getRandomMessage(mood) {
+      // Map moods to phrase categories
+      const moodToCategory = {
+        happy: 'encourage',
+        excited: 'celebrate',
+        celebrating: 'celebrate',
+        encouraging: 'motivate',
+        proud: 'encourage',
+        sleeping: 'idle',
+        idle: 'prompt',
+        thinking: 'fact',
+        wave: 'greeting'
+      };
+      
+      const category = moodToCategory[mood] || 'prompt';
+      return this.getUniqueRandomPhrase(category);
     }
 
-    setMood(mood: string) {
+    getRandomFunFact() {
+      return this.getUniqueRandomPhrase('fact');
+    }
+
+    getRandomTip() {
+      return this.getUniqueRandomPhrase('tip');
+    }
+
+    getRandomQuiz() {
+      return this.getUniqueRandomPhrase('quiz');
+    }
+
+    getRandomFeature() {
+      return this.getUniqueRandomPhrase('feature');
+    }
+
+    setMood(mood) {
       this.state.mood = mood;
       this.robot.dataset.mood = mood;
       this.state.isAwake = mood !== 'sleeping';
@@ -229,7 +259,7 @@ const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right' } = A
       }
     }
 
-    showMessage(message: string, duration: number = 4000) {
+    showMessage(message, duration = 4000) {
       // Clear any existing message timer
       if (this.state.messageTimer) {
         clearTimeout(this.state.messageTimer);
@@ -257,35 +287,47 @@ const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right' } = A
       }, 1500);
     }
 
-    private handleClick() {
+    handleClick() {
       if (!this.state.isAwake) {
         // Wake up!
         this.setMood('happy');
-        this.showMessage("I'm awake! 🌟 Ready to learn?");
+        this.showMessage(this.getUniqueRandomPhrase('greeting'));
         return;
       }
 
-      // Random interaction
+      // Random interaction - each click shows a new random phrase from different categories
       const interactions = [
         () => {
           this.setMood('happy');
-          this.showMessage(this.getRandomMessage('happy'));
+          this.showMessage(this.getUniqueRandomPhrase('encourage'));
         },
         () => {
           this.setMood('excited');
-          this.showMessage(this.getRandomMessage('excited'));
+          this.showMessage(this.getUniqueRandomPhrase('motivate'));
         },
         () => {
           this.setMood('thinking');
           this.showMessage(this.getRandomFunFact(), 5000);
         },
         () => {
+          this.setMood('thinking');
+          this.showMessage(this.getRandomTip(), 5000);
+        },
+        () => {
           this.setMood('proud');
-          this.showMessage(this.getRandomMessage('proud'));
+          this.showMessage(this.getRandomFeature(), 5000);
+        },
+        () => {
+          this.setMood('excited');
+          this.showMessage(this.getRandomQuiz(), 5000);
         },
         () => {
           this.setMood('wave');
-          this.showMessage("Hi! Let's practice! 📚");
+          this.showMessage(this.getUniqueRandomPhrase('prompt'));
+        },
+        () => {
+          this.setMood('happy');
+          this.showMessage(this.getUniqueRandomPhrase('idle'));
         }
       ];
 
@@ -294,52 +336,50 @@ const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right' } = A
       this.resetSleepTimer();
     }
 
-    private handleGameComplete(event: CustomEvent) {
+    handleGameComplete(event) {
       const { game, score, total } = event.detail;
       const percentage = total ? (score / total) * 100 : 100;
 
       if (percentage === 100) {
         this.setMood('celebrating');
-        this.showMessage("PERFECT SCORE! 🎉🏆");
+        this.showMessage(this.getUniqueRandomPhrase('celebrate'));
         this.showParticles();
       } else if (percentage >= 80) {
         this.setMood('excited');
-        this.showMessage(`Amazing! ${score}/${total}! 🔥`);
+        this.showMessage(this.getUniqueRandomPhrase('celebrate'));
       } else if (percentage >= 50) {
         this.setMood('happy');
-        this.showMessage(`Good job! ${score}/${total}! 👏`);
+        this.showMessage(this.getUniqueRandomPhrase('encourage'));
       } else {
         this.setMood('encouraging');
-        this.showMessage("Keep practicing! You got this! 💪");
+        this.showMessage(this.getUniqueRandomPhrase('motivate'));
       }
     }
 
-    private handleAchievement(event: CustomEvent) {
-      const { badge } = event.detail;
+    handleAchievement(event) {
       this.setMood('celebrating');
-      this.showMessage(`🏅 Achievement: ${badge}!`);
+      this.showMessage(this.getUniqueRandomPhrase('celebrate'));
       this.showParticles();
     }
 
-    private handleXpGain(event: CustomEvent) {
+    handleXpGain(event) {
       const { amount } = event.detail;
       if (amount >= 50) {
         this.setMood('excited');
-        this.showMessage(`+${amount} XP! Amazing! ⭐`);
+        this.showMessage(this.getUniqueRandomPhrase('celebrate'));
       } else {
         this.setMood('happy');
-        this.showMessage(`+${amount} XP! 📈`);
+        this.showMessage(this.getUniqueRandomPhrase('encourage'));
       }
     }
 
-    private handleLevelUp(event: CustomEvent) {
-      const { level } = event.detail;
+    handleLevelUp(event) {
       this.setMood('celebrating');
-      this.showMessage(`🎊 LEVEL ${level}! 🎊`);
+      this.showMessage(this.getUniqueRandomPhrase('celebrate'));
       this.showParticles();
     }
 
-    private resetSleepTimer() {
+    resetSleepTimer() {
       if (this.state.sleepTimer) {
         clearTimeout(this.state.sleepTimer);
       }
@@ -357,7 +397,7 @@ const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right' } = A
     }
 
     // Public method to trigger moods externally
-    public trigger(mood: string, message?: string) {
+    trigger(mood, message) {
       this.setMood(mood);
       if (message) {
         this.showMessage(message);
@@ -374,7 +414,7 @@ const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right' } = A
   document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('pixel-robot-container');
     if (container) {
-      (window as any).pixelRobot = new PixelRobot('pixel-robot-container');
+      window.pixelRobot = new PixelRobot('pixel-robot-container');
     }
   });
 </script>

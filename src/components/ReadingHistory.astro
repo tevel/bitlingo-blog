@@ -53,7 +53,7 @@ const postsMap = new Map(posts.map(post => {
     // Render history items (most recent first, limited)
     const recentHistory = history.slice(0, limit);
     
-    list.innerHTML = recentHistory.map((item: any) => {
+    list.innerHTML = recentHistory.map((item) => {
       const progressPercent = Math.round((item.scrollPosition || 0) * 100);
       const isComplete = progressPercent >= 90;
       
@@ -85,7 +85,7 @@ const postsMap = new Map(posts.map(post => {
       `;
     }).join('');
 
-    function formatDate(timestamp: number): string {
+    function formatDate(timestamp) {
       const date = new Date(timestamp);
       const now = new Date();
       const diffMs = now.getTime() - date.getTime();
@@ -114,7 +114,7 @@ const postsMap = new Map(posts.map(post => {
     let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
     
     // Remove existing entry for this article
-    history = history.filter((item: any) => item.slug !== currentSlug);
+    history = history.filter((item) => item.slug !== currentSlug);
     
     // Add/update entry
     const entry = {
@@ -140,7 +140,7 @@ const postsMap = new Map(posts.map(post => {
           
           // Update the entry's scroll position
           const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
-          const entryIndex = history.findIndex((item: any) => item.slug === currentSlug);
+          const entryIndex = history.findIndex((item) => item.slug === currentSlug);
           
           if (entryIndex !== -1 && scrollPercent > (history[entryIndex].scrollPosition || 0)) {
             history[entryIndex].scrollPosition = scrollPercent;

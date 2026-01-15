@@ -128,16 +128,16 @@ const words = targetData.words;
       let correctCount = 0;
       let currentStreak = 0;
       let bestStreak = 0;
-      let timer: number | null = null;
-      let currentWord: typeof words[number] | null = null;
+      let timer = null;
+      let currentWord = null;
 
       const elements = {
-        gameStart: game.querySelector('.game-start') as HTMLElement,
-        gamePlaying: game.querySelector('.game-playing') as HTMLElement,
-        gameOver: game.querySelector('.game-over') as HTMLElement,
+        gameStart: game.querySelector('.game-start'),
+        gamePlaying: game.querySelector('.game-playing'),
+        gameOver: game.querySelector('.game-over'),
         btnStart: game.querySelector('.btn-start'),
         btnRestart: game.querySelector('.btn-restart'),
-        timerFill: game.querySelector('.timer-fill') as HTMLElement,
+        timerFill: game.querySelector('.timer-fill'),
         timeRemaining: game.querySelector('.time-remaining'),
         correctCount: game.querySelector('.correct-count'),
         streakCount: game.querySelector('.streak-count'),
@@ -231,12 +231,12 @@ const words = targetData.words;
           
           // Add click handlers
           elements.answerOptions.querySelectorAll('.speed-option').forEach(btn => {
-            btn.addEventListener('click', () => handleAnswer(btn as HTMLElement));
+            btn.addEventListener('click', () => handleAnswer(btn));
           });
         }
       }
 
-      function handleAnswer(btn: HTMLElement) {
+      function handleAnswer(btn) {
         const isCorrect = btn.dataset.answer === currentWord?.translation;
         
         if (isCorrect) {
@@ -250,7 +250,7 @@ const words = targetData.words;
           
           // Show correct answer
           elements.answerOptions?.querySelectorAll('.speed-option').forEach(b => {
-            if ((b as HTMLElement).dataset.answer === currentWord?.translation) {
+            if (b.dataset.answer === currentWord?.translation) {
               b.classList.add('correct');
             }
           });
