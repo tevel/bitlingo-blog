@@ -1,0 +1,291 @@
+---
+/**
+ * Language Learning Poll Widget
+ * Interactive poll asking what language users are learning
+ */
+import { LANGUAGE_DATA, UI_TRANSLATIONS } from '../../data/vocabulary';
+
+interface Props {
+  lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
+
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
+
+// Languages to show in the poll (most popular)
+const pollLanguages = ['es', 'fr', 'de', 'ja', 'zh', 'it', 'pt', 'ko'];
+const languages = pollLanguages.map(code => ({
+  code,
+  ...LANGUAGE_DATA[code]
+}));
+---
+
+<div class="language-poll" data-lang={lang}>
+  <div class="poll-header">
+    <span class="poll-icon">📊</span>
+    <h4>{uiStrings.poll_title}</h4>
+  </div>
+
+  <div class="poll-options">
+    {languages.map(language => (
+      <button class="poll-option" data-language={language.code}>
+        <span class="option-flag">{language.flag}</span>
+        <span class="option-name">{language.nativeName}</span>
+        <div class="option-bar">
+          <div class="bar-fill" style="width: 0%"></div>
+        </div>
+        <span class="option-percent">0%</span>
+      </button>
+    ))}
+  </div>
+
+  <div class="poll-footer">
+    <span class="total-votes">
+      <span class="vote-count">0</span> {uiStrings.poll_total_votes}
+    </span>
+  </div>
+
+  <div class="voted-message" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+    <span>Thanks for voting!</span>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const polls = document.querySelectorAll('.language-poll');
+    
+    polls.forEach(poll => {
+      const storageKey = 'bitlingo-poll-vote';
+      const votesKey = 'bitlingo-poll-votes';
+      
+      // Get or initialize votes from localStorage (simulated voting)
+      let votes = JSON.parse(localStorage.getItem(votesKey) || '{}');
+      const hasVoted = localStorage.getItem(storageKey);
+      
+      // Initialize with some base votes for visual appeal
+      const baseVotes: Record<string, number> = {
+        es: 142, fr: 98, de: 67, ja: 89, zh: 76, it: 54, pt: 45, ko: 63
+      };
+      
+      Object.entries(baseVotes).forEach(([lang, count]) => {
+        if (!votes[lang]) votes[lang] = count;
+      });
+
+      const elements = {
+        options: poll.querySelectorAll('.poll-option') as NodeListOf<HTMLElement>,
+        voteCount: poll.querySelector('.vote-count'),
+        votedMessage: poll.querySelector('.voted-message') as HTMLElement,
+      };
+
+      function getTotalVotes(): number {
+        return Object.values(votes).reduce((sum: number, v) => sum + (v as number), 0);
+      }
+
+      function updateDisplay() {
+        const total = getTotalVotes();
+        if (elements.voteCount) {
+          elements.voteCount.textContent = total.toString();
+        }
+
+        elements.options.forEach(option => {
+          const lang = option.dataset.language;
+          if (!lang) return;
+          
+          const count = votes[lang] || 0;
+          const percent = total > 0 ? Math.round((count / total) * 100) : 0;
+          
+          const bar = option.querySelector('.bar-fill') as HTMLElement;
+          const percentEl = option.querySelector('.option-percent');
+          
+          if (bar) bar.style.width = `${percent}%`;
+          if (percentEl) percentEl.textContent = `${percent}%`;
+        });
+      }
+
+      function vote(langCode: string) {
+        if (hasVoted) return;
+        
+        votes[langCode] = (votes[langCode] || 0) + 1;
+        localStorage.setItem(votesKey, JSON.stringify(votes));
+        localStorage.setItem(storageKey, langCode);
+        
+        // Mark as voted
+        elements.options.forEach(opt => {
+          opt.classList.add('voted');
+          if (opt.dataset.language === langCode) {
+            opt.classList.add('selected');
+          }
+        });
+        
+        elements.votedMessage.hidden = false;
+        updateDisplay();
+      }
+
+      // Event listeners
+      elements.options.forEach(option => {
+        option.addEventListener('click', () => {
+          const lang = option.dataset.language;
+          if (lang) vote(lang);
+        });
+      });
+
+      // Initialize
+      if (hasVoted) {
+        elements.options.forEach(opt => {
+          opt.classList.add('voted');
+          if (opt.dataset.language === hasVoted) {
+            opt.classList.add('selected');
+          }
+        });
+        elements.votedMessage.hidden = false;
+      }
+      
+      updateDisplay();
+    });
+  });
+</script>
+
+<style>
+  .language-poll {
+    background: linear-gradient(145deg, rgba(26, 54, 93, 0.95), rgba(17, 34, 61, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.25rem;
+    max-width: 350px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .poll-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .poll-icon {
+    font-size: 1.25rem;
+  }
+
+  .poll-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: white;
+    font-weight: 600;
+  }
+
+  .poll-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .poll-option {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 0.6rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    color: white;
+  }
+
+  .poll-option:hover:not(.voted) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(245, 166, 35, 0.3);
+  }
+
+  .poll-option.voted {
+    cursor: default;
+  }
+
+  .poll-option.selected {
+    background: rgba(245, 166, 35, 0.15);
+    border-color: rgba(245, 166, 35, 0.4);
+  }
+
+  .option-flag {
+    font-size: 1.25rem;
+  }
+
+  .option-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .option-bar {
+    width: 60px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f5a623, #e09a00);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+
+  .option-percent {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    min-width: 32px;
+    text-align: right;
+  }
+
+  .poll-footer {
+    text-align: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .total-votes {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .vote-count {
+    color: #f5a623;
+    font-weight: 600;
+  }
+
+  .voted-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 8px;
+    color: #22c55e;
+    font-size: 0.85rem;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .voted-message svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

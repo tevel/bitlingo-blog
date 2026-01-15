@@ -1,0 +1,458 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import VocabQuiz from '../components/interactive/VocabQuiz.astro';
+import Flashcard from '../components/interactive/Flashcard.astro';
+import MatchingGame from '../components/interactive/MatchingGame.astro';
+import MemoryGame from '../components/interactive/MemoryGame.astro';
+import SpeedRound from '../components/interactive/SpeedRound.astro';
+import DailyWord from '../components/interactive/DailyWord.astro';
+import LanguagePoll from '../components/interactive/LanguagePoll.astro';
+import { LANGUAGE_DATA } from '../data/vocabulary';
+import { SITE_TITLE } from '../consts';
+
+const pageTitle = `Interactive Games | ${SITE_TITLE}`;
+const pageDescription = 'Practice vocabulary with fun interactive games. Quiz yourself, flip flashcards, match words, and challenge your memory in 16+ languages!';
+
+// Available target languages
+const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
+  code,
+  flag: data.flag,
+  name: data.nativeName,
+}));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead 
+      title={pageTitle} 
+      description={pageDescription}
+      keywords={['language games', 'vocabulary quiz', 'flashcards', 'memory game', 'learn languages', 'BitLingo']}
+    />
+  </head>
+  <body>
+    <Header />
+    
+    <main class="games-page">
+      <section class="hero">
+        <div class="hero-content">
+          <h1>
+            <span class="hero-icon">🎮</span>
+            Interactive <span class="gradient-text">Language Games</span>
+          </h1>
+          <p class="hero-subtitle">
+            Practice vocabulary the fun way! Challenge yourself with quizzes, flashcards, 
+            memory games, and more in <strong>16+ languages</strong>.
+          </p>
+          
+          <div class="language-picker">
+            <label for="global-lang">Choose a language to practice:</label>
+            <select id="global-lang" class="lang-select">
+              {targetLanguages.map(lang => (
+                <option value={lang.code} selected={lang.code === 'es'}>
+                  {lang.flag} {lang.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="games-grid">
+        <div class="game-section" id="quiz-section">
+          <div class="section-header">
+            <span class="section-number">01</span>
+            <div>
+              <h2>Vocabulary Quiz</h2>
+              <p>Test your knowledge with multiple choice questions</p>
+            </div>
+          </div>
+          <div class="game-container" data-game="quiz">
+            <VocabQuiz targetLang="es" questionCount={5} />
+          </div>
+        </div>
+
+        <div class="game-section" id="flashcard-section">
+          <div class="section-header">
+            <span class="section-number">02</span>
+            <div>
+              <h2>Flashcards</h2>
+              <p>Flip cards to reveal translations and pronunciations</p>
+            </div>
+          </div>
+          <div class="game-container" data-game="flashcard">
+            <Flashcard targetLang="fr" cardCount={5} />
+          </div>
+        </div>
+
+        <div class="game-section" id="matching-section">
+          <div class="section-header">
+            <span class="section-number">03</span>
+            <div>
+              <h2>Word Matching</h2>
+              <p>Connect words with their correct translations</p>
+            </div>
+          </div>
+          <div class="game-container" data-game="matching">
+            <MatchingGame targetLang="de" pairCount={6} />
+          </div>
+        </div>
+
+        <div class="game-section" id="memory-section">
+          <div class="section-header">
+            <span class="section-number">04</span>
+            <div>
+              <h2>Memory Game</h2>
+              <p>Find matching word-translation pairs</p>
+            </div>
+          </div>
+          <div class="game-container" data-game="memory">
+            <MemoryGame targetLang="it" pairCount={6} />
+          </div>
+        </div>
+
+        <div class="game-section" id="speed-section">
+          <div class="section-header">
+            <span class="section-number">05</span>
+            <div>
+              <h2>Speed Round</h2>
+              <p>How many can you answer in 60 seconds?</p>
+            </div>
+          </div>
+          <div class="game-container" data-game="speed">
+            <SpeedRound targetLang="ja" duration={60} />
+          </div>
+        </div>
+      </section>
+
+      <section class="sidebar-widgets">
+        <h2 class="widgets-title">Quick Widgets</h2>
+        <p class="widgets-subtitle">Perfect for embedding in your daily routine</p>
+        
+        <div class="widgets-grid">
+          <div class="widget-card">
+            <DailyWord targetLang="es" />
+          </div>
+          <div class="widget-card">
+            <LanguagePoll />
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-section">
+        <div class="cta-content">
+          <h2>Want More Practice?</h2>
+          <p>Get the full BitLingo experience with thousands of words, custom decks, and audio-first learning.</p>
+          <a href="https://bitlingo.app" target="_blank" rel="noopener" class="cta-button">
+            <span>Try BitLingo Free</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14"/>
+              <path d="M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .games-page {
+    min-height: 100vh;
+    padding-top: 80px;
+  }
+
+  /* Hero Section */
+  .hero {
+    padding: 4rem 1.5rem;
+    text-align: center;
+    background: linear-gradient(180deg, transparent, rgba(245, 166, 35, 0.05));
+  }
+
+  .hero-content {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .hero-icon {
+    display: inline-block;
+    margin-right: 0.5rem;
+    animation: bounce 2s infinite;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #f5a623, #e09a00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .language-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .language-picker label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .lang-select {
+    appearance: none;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 0.75rem 2.5rem 0.75rem 1.25rem;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 18px;
+    transition: all 0.2s ease;
+  }
+
+  .lang-select:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(245, 166, 35, 0.5);
+  }
+
+  .lang-select:focus {
+    outline: none;
+    border-color: #f5a623;
+    box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.2);
+  }
+
+  .lang-select option {
+    background: #1a365d;
+    color: white;
+  }
+
+  /* Games Grid */
+  .games-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .game-section {
+    margin-bottom: 4rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+  }
+
+  .section-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, rgba(245, 166, 35, 0.3), rgba(245, 166, 35, 0.1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .section-header h2 {
+    font-size: 1.5rem;
+    color: white;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .section-header p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+  }
+
+  .game-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Sidebar Widgets Section */
+  .sidebar-widgets {
+    background: linear-gradient(145deg, rgba(74, 144, 226, 0.05), rgba(245, 166, 35, 0.05));
+    padding: 4rem 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .widgets-title {
+    text-align: center;
+    font-size: 1.75rem;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .widgets-subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 2rem;
+  }
+
+  .widgets-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .widget-card {
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    padding: 4rem 1.5rem;
+    text-align: center;
+  }
+
+  .cta-content {
+    max-width: 500px;
+    margin: 0 auto;
+    background: linear-gradient(145deg, rgba(245, 166, 35, 0.1), rgba(224, 154, 0, 0.05));
+    border: 1px solid rgba(245, 166, 35, 0.2);
+    border-radius: 20px;
+    padding: 2.5rem;
+  }
+
+  .cta-content h2 {
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 0.75rem;
+  }
+
+  .cta-content p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #f5a623, #e09a00);
+    color: white;
+    text-decoration: none;
+    padding: 0.875rem 1.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 166, 35, 0.4);
+  }
+
+  .cta-button svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+  }
+
+  .cta-button:hover svg {
+    transform: translateX(3px);
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 1.75rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+
+    .section-header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.5rem;
+    }
+
+    .section-number {
+      font-size: 2rem;
+    }
+
+    .widgets-grid {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .widget-card {
+      width: 100%;
+      max-width: 320px;
+    }
+  }
+</style>
+
+<script>
+  // Global language selector functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const globalSelect = document.getElementById('global-lang') as HTMLSelectElement;
+    
+    if (globalSelect) {
+      globalSelect.addEventListener('change', () => {
+        const newLang = globalSelect.value;
+        
+        // Show a message that page reload is needed for language change
+        // In a more advanced implementation, we could dynamically reload components
+        const confirmed = confirm(`Switch all games to practice ${newLang.toUpperCase()}?\n\nThe page will reload to apply changes.`);
+        
+        if (confirmed) {
+          // Store the preference
+          localStorage.setItem('bitlingo-practice-lang', newLang);
+          // Reload to apply (in production, you'd want dynamic component updates)
+          window.location.reload();
+        } else {
+          // Reset to previous value
+          const stored = localStorage.getItem('bitlingo-practice-lang') || 'es';
+          globalSelect.value = stored;
+        }
+      });
+
+      // Set initial value from localStorage
+      const stored = localStorage.getItem('bitlingo-practice-lang');
+      if (stored) {
+        globalSelect.value = stored;
+      }
+    }
+  });
+</script>

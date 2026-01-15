@@ -1,0 +1,495 @@
+---
+/**
+ * Interactive Word Matching Game
+ * Click to match words with their translations
+ */
+import { LANGUAGE_DATA, UI_TRANSLATIONS } from '../../data/vocabulary';
+
+interface Props {
+  lang?: string;
+  targetLang?: string;
+  pairCount?: number;
+}
+
+const { lang = 'en', targetLang = 'de', pairCount = 6 } = Astro.props;
+
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
+const targetData = LANGUAGE_DATA[targetLang] || LANGUAGE_DATA.de;
+const words = targetData.words.slice(0, pairCount);
+---
+
+<div class="matching-game" data-lang={lang} data-target-lang={targetLang}>
+  <div class="game-header">
+    <div class="game-title">
+      <span class="game-icon">🔗</span>
+      <h3>{uiStrings.matching_title}</h3>
+    </div>
+    <div class="language-badge">
+      <span class="flag">{targetData.flag}</span>
+      <span class="lang-name">{targetData.nativeName}</span>
+    </div>
+  </div>
+
+  <p class="instructions">{uiStrings.matching_instructions}</p>
+
+  <div class="matching-container">
+    <div class="column words-column">
+      {words.map((word, i) => (
+        <button class="match-item word-item" data-id={word.id} data-type="word">
+          <span class="item-text">{word.word}</span>
+          <span class="item-pronunciation">{word.pronunciation}</span>
+        </button>
+      ))}
+    </div>
+    
+    <div class="match-lines">
+      <svg class="lines-svg" width="100%" height="100%"></svg>
+    </div>
+    
+    <div class="column translations-column">
+      {words.sort(() => Math.random() - 0.5).map((word, i) => (
+        <button class="match-item translation-item" data-id={word.id} data-type="translation">
+          <span class="item-text">{word.translation}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="game-footer">
+    <div class="score-display">
+      <span class="matches-count">0</span> / <span class="total-pairs">{pairCount}</span>
+      <span class="matches-label">matched</span>
+    </div>
+    <button class="btn-restart" hidden>{uiStrings.matching_restart}</button>
+  </div>
+
+  <div class="game-complete" hidden>
+    <div class="complete-icon">🎉</div>
+    <h3>{uiStrings.matching_complete}</h3>
+    <button class="btn-restart-complete">{uiStrings.matching_restart}</button>
+    <a href="https://bitlingo.app" target="_blank" rel="noopener" class="btn-cta">
+      {uiStrings.try_bitlingo} →
+    </a>
+  </div>
+</div>
+
+<script define:vars={{ words: words, pairCount }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const games = document.querySelectorAll('.matching-game');
+    
+    games.forEach(game => {
+      let selected = null;
+      let matchedPairs = 0;
+      const connections = [];
+
+      const elements = {
+        wordItems: game.querySelectorAll('.word-item'),
+        translationItems: game.querySelectorAll('.translation-item'),
+        linesSvg: game.querySelector('.lines-svg'),
+        matchesCount: game.querySelector('.matches-count'),
+        btnRestart: game.querySelector('.btn-restart'),
+        btnRestartComplete: game.querySelector('.btn-restart-complete'),
+        gameComplete: game.querySelector('.game-complete'),
+        matchingContainer: game.querySelector('.matching-container'),
+      };
+
+      function selectItem(item) {
+        if (item.classList.contains('matched')) return;
+        
+        const type = item.dataset.type;
+        const id = item.dataset.id;
+
+        if (selected === null) {
+          // First selection
+          selected = { item, type, id };
+          item.classList.add('selected');
+        } else if (selected.type === type) {
+          // Same type - switch selection
+          selected.item.classList.remove('selected');
+          selected = { item, type, id };
+          item.classList.add('selected');
+        } else {
+          // Different type - check for match
+          if (selected.id === id) {
+            // Correct match!
+            selected.item.classList.remove('selected');
+            selected.item.classList.add('matched');
+            item.classList.add('matched');
+            
+            // Draw connection line
+            drawLine(
+              type === 'word' ? item : selected.item,
+              type === 'translation' ? item : selected.item
+            );
+            
+            matchedPairs++;
+            elements.matchesCount.textContent = matchedPairs;
+            
+            if (matchedPairs === pairCount) {
+              setTimeout(showComplete, 500);
+            }
+          } else {
+            // Wrong match - flash red
+            selected.item.classList.add('wrong');
+            item.classList.add('wrong');
+            
+            setTimeout(() => {
+              selected.item.classList.remove('wrong', 'selected');
+              item.classList.remove('wrong');
+              selected = null;
+            }, 500);
+            return;
+          }
+          selected = null;
+        }
+      }
+
+      function drawLine(wordItem, translationItem) {
+        const container = elements.matchingContainer;
+        const containerRect = container.getBoundingClientRect();
+        const wordRect = wordItem.getBoundingClientRect();
+        const transRect = translationItem.getBoundingClientRect();
+        
+        const x1 = wordRect.right - containerRect.left;
+        const y1 = wordRect.top + wordRect.height / 2 - containerRect.top;
+        const x2 = transRect.left - containerRect.left;
+        const y2 = transRect.top + transRect.height / 2 - containerRect.top;
+        
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.setAttribute('stroke', '#f5a623');
+        line.setAttribute('stroke-width', '2');
+        line.setAttribute('stroke-linecap', 'round');
+        line.classList.add('connection-line');
+        
+        elements.linesSvg.appendChild(line);
+        connections.push(line);
+        
+        // Animate
+        const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        line.style.strokeDasharray = length;
+        line.style.strokeDashoffset = length;
+        line.style.animation = 'drawLine 0.3s ease forwards';
+      }
+
+      function showComplete() {
+        elements.gameComplete.hidden = false;
+      }
+
+      function restart() {
+        // Reset state
+        selected = null;
+        matchedPairs = 0;
+        elements.matchesCount.textContent = 0;
+        elements.gameComplete.hidden = true;
+        
+        // Clear lines
+        connections.forEach(line => line.remove());
+        connections.length = 0;
+        
+        // Reset items
+        [...elements.wordItems, ...elements.translationItems].forEach(item => {
+          item.classList.remove('selected', 'matched', 'wrong');
+        });
+        
+        // Shuffle translations
+        const transColumn = game.querySelector('.translations-column');
+        const items = [...transColumn.children];
+        items.sort(() => Math.random() - 0.5);
+        items.forEach(item => transColumn.appendChild(item));
+      }
+
+      // Event listeners
+      [...elements.wordItems, ...elements.translationItems].forEach(item => {
+        item.addEventListener('click', () => selectItem(item));
+      });
+
+      elements.btnRestart?.addEventListener('click', restart);
+      elements.btnRestartComplete?.addEventListener('click', restart);
+
+      // Update lines on resize
+      window.addEventListener('resize', () => {
+        connections.forEach(line => line.remove());
+        connections.length = 0;
+        
+        // Redraw for matched pairs
+        elements.wordItems.forEach(wordItem => {
+          if (wordItem.classList.contains('matched')) {
+            const id = wordItem.dataset.id;
+            const transItem = [...elements.translationItems].find(t => t.dataset.id === id);
+            if (transItem) drawLine(wordItem, transItem);
+          }
+        });
+      });
+    });
+  });
+</script>
+
+<style>
+  .matching-game {
+    background: linear-gradient(145deg, rgba(26, 54, 93, 0.9), rgba(17, 34, 61, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+    max-width: 600px;
+    margin: 2rem auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 60px rgba(245, 166, 35, 0.1);
+  }
+
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .game-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .game-icon {
+    font-size: 1.5rem;
+  }
+
+  .game-title h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    background: linear-gradient(135deg, #f5a623, #e09a00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .language-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  .flag {
+    font-size: 1.2rem;
+  }
+
+  .lang-name {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .instructions {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .matching-container {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+    margin-bottom: 1.5rem;
+    position: relative;
+    min-height: 350px;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .match-lines {
+    position: relative;
+  }
+
+  .lines-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .match-item {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+  }
+
+  .match-item:hover:not(.matched) {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(245, 166, 35, 0.5);
+    transform: scale(1.02);
+  }
+
+  .match-item.selected {
+    background: rgba(245, 166, 35, 0.2);
+    border-color: #f5a623;
+    box-shadow: 0 0 15px rgba(245, 166, 35, 0.3);
+  }
+
+  .match-item.matched {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.5);
+    cursor: default;
+  }
+
+  .match-item.wrong {
+    background: rgba(239, 68, 68, 0.3);
+    border-color: rgba(239, 68, 68, 0.6);
+    animation: shake 0.3s ease;
+  }
+
+  .item-text {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .item-pronunciation {
+    display: block;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+    margin-top: 0.2rem;
+  }
+
+  .game-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .score-display {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 1rem;
+  }
+
+  .matches-count {
+    color: #f5a623;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  .total-pairs {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .matches-label {
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: 0.3rem;
+  }
+
+  .btn-restart, .btn-restart-complete {
+    background: linear-gradient(135deg, #f5a623, #e09a00);
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-restart:hover, .btn-restart-complete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(245, 166, 35, 0.4);
+  }
+
+  .game-complete {
+    text-align: center;
+    padding: 2rem;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .complete-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 0.5s ease;
+  }
+
+  .game-complete h3 {
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-cta {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 1px solid rgba(245, 166, 35, 0.5);
+    border-radius: 10px;
+    color: #f5a623;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .btn-cta:hover {
+    background: rgba(245, 166, 35, 0.1);
+    border-color: #f5a623;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  @keyframes drawLine {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  @media (max-width: 500px) {
+    .matching-game {
+      padding: 1rem;
+      margin: 1rem;
+    }
+
+    .matching-container {
+      grid-template-columns: 1fr 30px 1fr;
+    }
+
+    .match-item {
+      padding: 0.6rem 0.5rem;
+    }
+
+    .item-text {
+      font-size: 0.9rem;
+    }
+
+    .item-pronunciation {
+      display: none;
+    }
+  }
+</style>

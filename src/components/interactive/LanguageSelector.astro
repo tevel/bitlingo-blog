@@ -1,0 +1,134 @@
+---
+/**
+ * Language Selector Component
+ * Allows users to pick which language to practice
+ */
+import { LANGUAGE_DATA, UI_TRANSLATIONS } from '../../data/vocabulary';
+
+interface Props {
+  lang?: string;
+  selected?: string;
+  id?: string;
+}
+
+const { lang = 'en', selected = 'es', id = 'lang-select' } = Astro.props;
+
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
+
+// Get all available languages
+const languages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
+  code,
+  name: data.name,
+  nativeName: data.nativeName,
+  flag: data.flag,
+}));
+---
+
+<div class="language-selector" data-selector-id={id}>
+  <label class="selector-label" for={id}>
+    {uiStrings.select_language}
+  </label>
+  <div class="selector-wrapper">
+    <select id={id} class="language-select" data-selected={selected}>
+      {languages.map(language => (
+        <option 
+          value={language.code} 
+          selected={language.code === selected}
+        >
+          {language.flag} {language.nativeName}
+        </option>
+      ))}
+    </select>
+    <div class="select-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Export a function to get the current selection
+  document.addEventListener('DOMContentLoaded', () => {
+    const selectors = document.querySelectorAll('.language-selector');
+    
+    selectors.forEach(selector => {
+      const select = selector.querySelector('.language-select') as HTMLSelectElement;
+      
+      select?.addEventListener('change', () => {
+        // Dispatch a custom event that other components can listen to
+        const event = new CustomEvent('languageChange', {
+          detail: { 
+            language: select.value,
+            selectorId: selector.dataset.selectorId 
+          },
+          bubbles: true
+        });
+        selector.dispatchEvent(event);
+      });
+    });
+  });
+</script>
+
+<style>
+  .language-selector {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .selector-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+  }
+
+  .selector-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .language-select {
+    appearance: none;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 0.6rem 2.5rem 0.6rem 1rem;
+    color: white;
+    font-size: 0.95rem;
+    cursor: pointer;
+    min-width: 180px;
+    transition: all 0.2s ease;
+  }
+
+  .language-select:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(245, 166, 35, 0.4);
+  }
+
+  .language-select:focus {
+    outline: none;
+    border-color: #f5a623;
+    box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.2);
+  }
+
+  .language-select option {
+    background: #1a365d;
+    color: white;
+    padding: 0.5rem;
+  }
+
+  .select-arrow {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .select-arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+</style>

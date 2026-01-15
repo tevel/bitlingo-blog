@@ -1,0 +1,433 @@
+---
+/**
+ * Interactive Flashcard Component
+ * Flip cards to reveal translation with smooth animations
+ */
+import { LANGUAGE_DATA, UI_TRANSLATIONS } from '../../data/vocabulary';
+
+interface Props {
+  lang?: string;
+  targetLang?: string;
+  cardCount?: number;
+}
+
+const { lang = 'en', targetLang = 'fr', cardCount = 5 } = Astro.props;
+
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
+const targetData = LANGUAGE_DATA[targetLang] || LANGUAGE_DATA.fr;
+const words = targetData.words.slice(0, cardCount);
+---
+
+<div class="flashcard-deck" data-lang={lang} data-target-lang={targetLang}>
+  <div class="deck-header">
+    <div class="deck-title">
+      <span class="deck-icon">🎴</span>
+      <h3>Flashcards</h3>
+    </div>
+    <div class="language-badge">
+      <span class="flag">{targetData.flag}</span>
+      <span class="lang-name">{targetData.nativeName}</span>
+    </div>
+  </div>
+
+  <div class="card-container">
+    <div class="flashcard" data-flipped="false">
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="card-label">{uiStrings.flashcard_front}</div>
+          <div class="card-word"></div>
+          <div class="card-pronunciation"></div>
+          <div class="flip-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 1l4 4-4 4"/>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+              <path d="M7 23l-4-4 4-4"/>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+            <span>{uiStrings.flashcard_flip}</span>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-label">{uiStrings.flashcard_back}</div>
+          <div class="card-translation"></div>
+          <div class="card-category"></div>
+          <div class="flip-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 1l4 4-4 4"/>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+              <path d="M7 23l-4-4 4-4"/>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+            <span>{uiStrings.flashcard_flip}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="deck-controls">
+    <button class="btn-prev" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+      <span>{uiStrings.flashcard_prev}</span>
+    </button>
+    
+    <div class="card-counter">
+      <span class="current-card">1</span> / <span class="total-cards">{cardCount}</span>
+    </div>
+    
+    <button class="btn-next">
+      <span>{uiStrings.flashcard_next}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="progress-dots">
+    {words.map((_, i) => (
+      <button class={`dot ${i === 0 ? 'active' : ''}`} data-index={i}></button>
+    ))}
+  </div>
+</div>
+
+<script define:vars={{ words }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const decks = document.querySelectorAll('.flashcard-deck');
+    
+    decks.forEach(deck => {
+      let currentIndex = 0;
+      
+      const elements = {
+        flashcard: deck.querySelector('.flashcard'),
+        cardWord: deck.querySelector('.card-word'),
+        cardPronunciation: deck.querySelector('.card-pronunciation'),
+        cardTranslation: deck.querySelector('.card-translation'),
+        cardCategory: deck.querySelector('.card-category'),
+        currentCard: deck.querySelector('.current-card'),
+        btnPrev: deck.querySelector('.btn-prev'),
+        btnNext: deck.querySelector('.btn-next'),
+        dots: deck.querySelectorAll('.dot'),
+      };
+
+      function updateCard(index) {
+        const word = words[index];
+        elements.cardWord.textContent = word.word;
+        elements.cardPronunciation.textContent = word.pronunciation || '';
+        elements.cardTranslation.textContent = word.translation;
+        elements.cardCategory.textContent = word.category;
+        elements.currentCard.textContent = index + 1;
+        
+        // Reset flip state
+        elements.flashcard.dataset.flipped = 'false';
+        
+        // Update buttons
+        elements.btnPrev.disabled = index === 0;
+        elements.btnNext.disabled = index === words.length - 1;
+        
+        // Update dots
+        elements.dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === index);
+        });
+      }
+
+      function flipCard() {
+        const isFlipped = elements.flashcard.dataset.flipped === 'true';
+        elements.flashcard.dataset.flipped = (!isFlipped).toString();
+      }
+
+      function prevCard() {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateCard(currentIndex);
+        }
+      }
+
+      function nextCard() {
+        if (currentIndex < words.length - 1) {
+          currentIndex++;
+          updateCard(currentIndex);
+        }
+      }
+
+      // Event listeners
+      elements.flashcard.addEventListener('click', flipCard);
+      elements.btnPrev.addEventListener('click', prevCard);
+      elements.btnNext.addEventListener('click', nextCard);
+      
+      elements.dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          currentIndex = parseInt(dot.dataset.index);
+          updateCard(currentIndex);
+        });
+      });
+
+      // Keyboard navigation
+      deck.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') prevCard();
+        if (e.key === 'ArrowRight') nextCard();
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          flipCard();
+        }
+      });
+
+      // Initialize
+      updateCard(0);
+    });
+  });
+</script>
+
+<style>
+  .flashcard-deck {
+    background: linear-gradient(145deg, rgba(26, 54, 93, 0.9), rgba(17, 34, 61, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+    max-width: 450px;
+    margin: 2rem auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 60px rgba(74, 144, 226, 0.1);
+  }
+
+  .deck-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .deck-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .deck-icon {
+    font-size: 1.5rem;
+  }
+
+  .deck-title h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    background: linear-gradient(135deg, #4a90e2, #1a365d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .language-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  .flag {
+    font-size: 1.2rem;
+  }
+
+  .lang-name {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .card-container {
+    perspective: 1000px;
+    margin-bottom: 1.5rem;
+  }
+
+  .flashcard {
+    cursor: pointer;
+    height: 280px;
+    position: relative;
+  }
+
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  .flashcard[data-flipped="true"] .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+
+  .card-front {
+    background: linear-gradient(145deg, rgba(245, 166, 35, 0.2), rgba(224, 154, 0, 0.1));
+    border: 1px solid rgba(245, 166, 35, 0.3);
+  }
+
+  .card-back {
+    background: linear-gradient(145deg, rgba(74, 144, 226, 0.2), rgba(26, 54, 93, 0.3));
+    border: 1px solid rgba(74, 144, 226, 0.3);
+    transform: rotateY(180deg);
+  }
+
+  .card-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 1rem;
+  }
+
+  .card-word {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-pronunciation {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+  }
+
+  .card-translation {
+    font-size: 2rem;
+    font-weight: 600;
+    color: white;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-category {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: capitalize;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+  }
+
+  .flip-hint {
+    position: absolute;
+    bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8rem;
+  }
+
+  .flip-hint svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .deck-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .btn-prev, .btn-next {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-prev:hover:not(:disabled), .btn-next:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(245, 166, 35, 0.5);
+  }
+
+  .btn-prev:disabled, .btn-next:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btn-prev svg, .btn-next svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .card-counter {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .current-card {
+    color: #f5a623;
+    font-weight: 600;
+  }
+
+  .progress-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+  }
+
+  .dot:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .dot.active {
+    background: linear-gradient(135deg, #f5a623, #e09a00);
+    transform: scale(1.2);
+  }
+
+  @media (max-width: 480px) {
+    .flashcard-deck {
+      padding: 1rem;
+      margin: 1rem;
+    }
+
+    .flashcard {
+      height: 240px;
+    }
+
+    .card-word {
+      font-size: 2rem;
+    }
+
+    .card-translation {
+      font-size: 1.5rem;
+    }
+
+    .btn-prev span, .btn-next span {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,234 @@
+---
+/**
+ * Daily Word Widget
+ * Shows a word of the day based on date - same word for everyone each day
+ */
+import { LANGUAGE_DATA, UI_TRANSLATIONS, getDailyWord } from '../../data/vocabulary';
+
+interface Props {
+  lang?: string;
+  targetLang?: string;
+}
+
+const { lang = 'en', targetLang = 'es' } = Astro.props;
+
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
+const targetData = LANGUAGE_DATA[targetLang] || LANGUAGE_DATA.es;
+const word = getDailyWord(targetLang);
+
+// Get today's date formatted
+const today = new Date();
+const dateStr = today.toLocaleDateString(lang, { 
+  weekday: 'long', 
+  month: 'short', 
+  day: 'numeric' 
+});
+---
+
+<div class="daily-word" data-lang={lang} data-target-lang={targetLang}>
+  <div class="widget-header">
+    <div class="header-icon">📅</div>
+    <div class="header-text">
+      <h4>{uiStrings.daily_word}</h4>
+      <span class="date">{dateStr}</span>
+    </div>
+    <div class="language-flag" title={targetData.nativeName}>
+      {targetData.flag}
+    </div>
+  </div>
+
+  <div class="word-card">
+    <div class="main-word" dir={targetData.rtl ? 'rtl' : 'ltr'}>
+      {word.word}
+    </div>
+    <div class="pronunciation">
+      {word.pronunciation}
+    </div>
+    <div class="divider"></div>
+    <div class="translation">
+      {word.translation}
+    </div>
+  </div>
+
+  <div class="word-meta">
+    <span class="meta-item category">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 7V4h16v3"/>
+        <path d="M9 20h6"/>
+        <path d="M12 4v16"/>
+      </svg>
+      <span>{word.category}</span>
+    </span>
+    <span class="meta-item difficulty" data-level={word.difficulty}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+      <span>{uiStrings[word.difficulty] || word.difficulty}</span>
+    </span>
+  </div>
+
+  <a href="https://bitlingo.app" target="_blank" rel="noopener" class="cta-link">
+    <span>Practice more words</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M5 12h14"/>
+      <path d="M12 5l7 7-7 7"/>
+    </svg>
+  </a>
+</div>
+
+<style>
+  .daily-word {
+    background: linear-gradient(145deg, rgba(26, 54, 93, 0.95), rgba(17, 34, 61, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.25rem;
+    max-width: 320px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(245, 166, 35, 0.08);
+  }
+
+  .widget-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .header-icon {
+    font-size: 1.5rem;
+  }
+
+  .header-text {
+    flex: 1;
+  }
+
+  .header-text h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: white;
+    font-weight: 600;
+  }
+
+  .date {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: capitalize;
+  }
+
+  .language-flag {
+    font-size: 1.5rem;
+    cursor: help;
+  }
+
+  .word-card {
+    background: linear-gradient(145deg, rgba(245, 166, 35, 0.15), rgba(224, 154, 0, 0.08));
+    border: 1px solid rgba(245, 166, 35, 0.2);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .main-word {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.25rem;
+  }
+
+  .pronunciation {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+    margin-bottom: 0.75rem;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    margin: 0.75rem 0;
+  }
+
+  .translation {
+    font-size: 1.1rem;
+    color: #f5a623;
+    font-weight: 500;
+  }
+
+  .word-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: capitalize;
+  }
+
+  .meta-item svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+  }
+
+  .difficulty[data-level="beginner"] {
+    color: #22c55e;
+  }
+
+  .difficulty[data-level="intermediate"] {
+    color: #f5a623;
+  }
+
+  .difficulty[data-level="advanced"] {
+    color: #ef4444;
+  }
+
+  .cta-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .cta-link:hover {
+    background: rgba(245, 166, 35, 0.1);
+    border-color: rgba(245, 166, 35, 0.3);
+    color: #f5a623;
+  }
+
+  .cta-link svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+  }
+
+  .cta-link:hover svg {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 360px) {
+    .daily-word {
+      padding: 1rem;
+    }
+
+    .main-word {
+      font-size: 1.5rem;
+    }
+  }
+</style>

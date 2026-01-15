@@ -1,0 +1,477 @@
+---
+/**
+ * Memory Card Game Component
+ * Find matching word-translation pairs
+ */
+import { LANGUAGE_DATA, UI_TRANSLATIONS } from '../../data/vocabulary';
+
+interface Props {
+  lang?: string;
+  targetLang?: string;
+  pairCount?: number;
+}
+
+const { lang = 'en', targetLang = 'it', pairCount = 6 } = Astro.props;
+
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
+const targetData = LANGUAGE_DATA[targetLang] || LANGUAGE_DATA.it;
+const words = targetData.words.slice(0, pairCount);
+
+// Create pairs (word and translation cards)
+const cards = words.flatMap(word => [
+  { id: word.id, type: 'word', text: word.word, pairId: word.id },
+  { id: `${word.id}-trans`, type: 'translation', text: word.translation, pairId: word.id }
+]);
+---
+
+<div class="memory-game" data-lang={lang} data-target-lang={targetLang} data-pair-count={pairCount}>
+  <div class="game-header">
+    <div class="game-title">
+      <span class="game-icon">🧠</span>
+      <h3>{uiStrings.memory_title}</h3>
+    </div>
+    <div class="language-badge">
+      <span class="flag">{targetData.flag}</span>
+      <span class="lang-name">{targetData.nativeName}</span>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-value moves-count">0</span>
+      <span class="stat-label">{uiStrings.memory_moves}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value pairs-count">0</span>
+      <span class="stat-label">/ {pairCount} {uiStrings.memory_pairs}</span>
+    </div>
+  </div>
+
+  <div class="cards-grid" data-cards={JSON.stringify(cards)}>
+    {cards.map((card, i) => (
+      <button class="memory-card" data-index={i} data-pair-id={card.pairId} data-type={card.type}>
+        <div class="card-inner">
+          <div class="card-front">
+            <span class="card-symbol">?</span>
+          </div>
+          <div class="card-back">
+            <span class="card-text">{card.text}</span>
+            <span class={`card-type ${card.type}`}>{card.type === 'word' ? targetData.flag : '🔤'}</span>
+          </div>
+        </div>
+      </button>
+    ))}
+  </div>
+
+  <div class="game-footer">
+    <button class="btn-restart">{uiStrings.memory_restart}</button>
+  </div>
+
+  <div class="game-complete" hidden>
+    <div class="complete-icon">🏆</div>
+    <h3>{uiStrings.memory_complete}</h3>
+    <div class="final-stats">
+      <span class="stat-highlight"><span class="moves-final">0</span> {uiStrings.memory_moves}</span>
+    </div>
+    <button class="btn-restart-complete">{uiStrings.memory_restart}</button>
+    <a href="https://bitlingo.app" target="_blank" rel="noopener" class="btn-cta">
+      {uiStrings.try_bitlingo} →
+    </a>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const games = document.querySelectorAll('.memory-game');
+    
+    games.forEach(game => {
+      const pairCount = parseInt(game.dataset.pairCount) || 6;
+      let moves = 0;
+      let pairsFound = 0;
+      let flippedCards: HTMLElement[] = [];
+      let canFlip = true;
+
+      const elements = {
+        grid: game.querySelector('.cards-grid') as HTMLElement,
+        cards: game.querySelectorAll('.memory-card') as NodeListOf<HTMLElement>,
+        movesCount: game.querySelectorAll('.moves-count'),
+        pairsCount: game.querySelector('.pairs-count'),
+        movesFinal: game.querySelector('.moves-final'),
+        btnRestart: game.querySelector('.btn-restart'),
+        btnRestartComplete: game.querySelector('.btn-restart-complete'),
+        gameComplete: game.querySelector('.game-complete'),
+        gameFooter: game.querySelector('.game-footer'),
+      };
+
+      function shuffle() {
+        const cards = [...elements.cards];
+        cards.sort(() => Math.random() - 0.5);
+        cards.forEach(card => elements.grid.appendChild(card));
+      }
+
+      function flipCard(card: HTMLElement) {
+        if (!canFlip || card.classList.contains('flipped') || card.classList.contains('matched')) {
+          return;
+        }
+
+        card.classList.add('flipped');
+        flippedCards.push(card);
+
+        if (flippedCards.length === 2) {
+          moves++;
+          elements.movesCount.forEach(el => el.textContent = moves.toString());
+          checkMatch();
+        }
+      }
+
+      function checkMatch() {
+        canFlip = false;
+        const [card1, card2] = flippedCards;
+        
+        const pairId1 = card1.dataset.pairId;
+        const pairId2 = card2.dataset.pairId;
+        const type1 = card1.dataset.type;
+        const type2 = card2.dataset.type;
+
+        // Match if same pairId but different types (word vs translation)
+        if (pairId1 === pairId2 && type1 !== type2) {
+          // Match!
+          setTimeout(() => {
+            card1.classList.add('matched');
+            card2.classList.add('matched');
+            pairsFound++;
+            if (elements.pairsCount) elements.pairsCount.textContent = pairsFound.toString();
+            
+            flippedCards = [];
+            canFlip = true;
+
+            if (pairsFound === pairCount) {
+              setTimeout(showComplete, 500);
+            }
+          }, 300);
+        } else {
+          // No match
+          setTimeout(() => {
+            card1.classList.remove('flipped');
+            card2.classList.remove('flipped');
+            flippedCards = [];
+            canFlip = true;
+          }, 800);
+        }
+      }
+
+      function showComplete() {
+        if (elements.gameComplete instanceof HTMLElement) {
+          elements.gameComplete.hidden = false;
+        }
+        if (elements.gameFooter instanceof HTMLElement) {
+          elements.gameFooter.hidden = true;
+        }
+        if (elements.movesFinal) {
+          elements.movesFinal.textContent = moves.toString();
+        }
+      }
+
+      function restart() {
+        moves = 0;
+        pairsFound = 0;
+        flippedCards = [];
+        canFlip = true;
+        
+        elements.movesCount.forEach(el => el.textContent = '0');
+        if (elements.pairsCount) elements.pairsCount.textContent = '0';
+        if (elements.gameComplete instanceof HTMLElement) {
+          elements.gameComplete.hidden = true;
+        }
+        if (elements.gameFooter instanceof HTMLElement) {
+          elements.gameFooter.hidden = false;
+        }
+        
+        elements.cards.forEach(card => {
+          card.classList.remove('flipped', 'matched');
+        });
+        
+        setTimeout(shuffle, 300);
+      }
+
+      // Event listeners
+      elements.cards.forEach(card => {
+        card.addEventListener('click', () => flipCard(card));
+      });
+
+      elements.btnRestart?.addEventListener('click', restart);
+      elements.btnRestartComplete?.addEventListener('click', restart);
+
+      // Initialize with shuffle
+      shuffle();
+    });
+  });
+</script>
+
+<style>
+  .memory-game {
+    background: linear-gradient(145deg, rgba(26, 54, 93, 0.9), rgba(17, 34, 61, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+    max-width: 550px;
+    margin: 2rem auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 60px rgba(74, 144, 226, 0.1);
+  }
+
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .game-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .game-icon {
+    font-size: 1.5rem;
+  }
+
+  .game-title h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    background: linear-gradient(135deg, #f5a623, #e09a00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .language-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  .flag {
+    font-size: 1.2rem;
+  }
+
+  .lang-name {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #f5a623;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .memory-card {
+    aspect-ratio: 1;
+    perspective: 1000px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  .memory-card.flipped .card-inner,
+  .memory-card.matched .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-front {
+    background: linear-gradient(145deg, rgba(74, 144, 226, 0.3), rgba(26, 54, 93, 0.5));
+    border: 1px solid rgba(74, 144, 226, 0.3);
+  }
+
+  .card-symbol {
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .card-back {
+    background: linear-gradient(145deg, rgba(245, 166, 35, 0.2), rgba(224, 154, 0, 0.1));
+    border: 1px solid rgba(245, 166, 35, 0.3);
+    transform: rotateY(180deg);
+    padding: 0.5rem;
+  }
+
+  .card-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  .card-type {
+    position: absolute;
+    bottom: 0.3rem;
+    font-size: 0.7rem;
+  }
+
+  .memory-card.matched .card-back {
+    background: linear-gradient(145deg, rgba(34, 197, 94, 0.3), rgba(34, 197, 94, 0.1));
+    border-color: rgba(34, 197, 94, 0.5);
+  }
+
+  .memory-card:hover:not(.flipped):not(.matched) .card-inner {
+    transform: scale(1.05);
+  }
+
+  .game-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-restart, .btn-restart-complete {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-restart:hover, .btn-restart-complete:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(245, 166, 35, 0.5);
+  }
+
+  .game-complete {
+    text-align: center;
+    padding: 2rem;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .complete-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 0.5s ease;
+  }
+
+  .game-complete h3 {
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 1rem;
+  }
+
+  .final-stats {
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-highlight {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .moves-final {
+    color: #f5a623;
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+
+  .btn-cta {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 1px solid rgba(245, 166, 35, 0.5);
+    border-radius: 10px;
+    color: #f5a623;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .btn-cta:hover {
+    background: rgba(245, 166, 35, 0.1);
+    border-color: #f5a623;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  @media (max-width: 480px) {
+    .memory-game {
+      padding: 1rem;
+      margin: 1rem;
+    }
+
+    .cards-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+
+    .card-text {
+      font-size: 0.75rem;
+    }
+
+    .card-symbol {
+      font-size: 1.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,505 @@
+---
+/**
+ * Interactive Vocabulary Quiz Component
+ * Multiple choice quiz with instant feedback
+ */
+import { LANGUAGE_DATA, UI_TRANSLATIONS } from '../../data/vocabulary';
+
+interface Props {
+  lang?: string;
+  targetLang?: string;
+  questionCount?: number;
+}
+
+const { lang = 'en', targetLang = 'es', questionCount = 5 } = Astro.props;
+
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
+const targetData = LANGUAGE_DATA[targetLang] || LANGUAGE_DATA.es;
+const words = targetData.words;
+---
+
+<div class="vocab-quiz" data-lang={lang} data-target-lang={targetLang} data-question-count={questionCount}>
+  <div class="quiz-header">
+    <div class="quiz-title">
+      <span class="quiz-icon">🎯</span>
+      <h3>{uiStrings.quiz_title}</h3>
+    </div>
+    <div class="language-badge">
+      <span class="flag">{targetData.flag}</span>
+      <span class="lang-name">{targetData.nativeName}</span>
+    </div>
+  </div>
+
+  <div class="quiz-progress">
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: 0%"></div>
+    </div>
+    <div class="progress-text">
+      <span class="current-question">1</span> / <span class="total-questions">{questionCount}</span>
+    </div>
+  </div>
+
+  <div class="quiz-content">
+    <div class="question-card">
+      <div class="question-label">{uiStrings.quiz_question}</div>
+      <div class="question-word"></div>
+      <div class="question-pronunciation"></div>
+    </div>
+
+    <div class="options-grid">
+      <!-- Options will be populated by JavaScript -->
+    </div>
+
+    <div class="feedback" hidden>
+      <div class="feedback-icon"></div>
+      <div class="feedback-text"></div>
+    </div>
+  </div>
+
+  <div class="quiz-footer">
+    <div class="score-display">
+      <span class="score-label">{uiStrings.quiz_score}:</span>
+      <span class="score-value">0</span>
+    </div>
+    <button class="btn-next" hidden>{uiStrings.quiz_next}</button>
+  </div>
+
+  <div class="quiz-complete" hidden>
+    <div class="complete-icon">🏆</div>
+    <h3>{uiStrings.quiz_complete}</h3>
+    <div class="final-score">
+      <span class="score-value">0</span> / <span class="total-questions">{questionCount}</span>
+    </div>
+    <button class="btn-restart">{uiStrings.quiz_restart}</button>
+    <a href="https://bitlingo.app" target="_blank" rel="noopener" class="btn-cta">
+      {uiStrings.try_bitlingo} →
+    </a>
+  </div>
+</div>
+
+<script define:vars={{ words, uiStrings }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const quizzes = document.querySelectorAll('.vocab-quiz');
+    
+    quizzes.forEach(quiz => {
+      const questionCount = parseInt(quiz.dataset.questionCount) || 5;
+      let currentQuestion = 0;
+      let score = 0;
+      let shuffledWords = [...words].sort(() => Math.random() - 0.5).slice(0, questionCount);
+      let answered = false;
+
+      const elements = {
+        progressFill: quiz.querySelector('.progress-fill'),
+        currentQ: quiz.querySelector('.current-question'),
+        questionWord: quiz.querySelector('.question-word'),
+        questionPron: quiz.querySelector('.question-pronunciation'),
+        optionsGrid: quiz.querySelector('.options-grid'),
+        feedback: quiz.querySelector('.feedback'),
+        feedbackIcon: quiz.querySelector('.feedback-icon'),
+        feedbackText: quiz.querySelector('.feedback-text'),
+        scoreValue: quiz.querySelectorAll('.score-value'),
+        btnNext: quiz.querySelector('.btn-next'),
+        btnRestart: quiz.querySelector('.btn-restart'),
+        quizContent: quiz.querySelector('.quiz-content'),
+        quizFooter: quiz.querySelector('.quiz-footer'),
+        quizComplete: quiz.querySelector('.quiz-complete'),
+      };
+
+      function generateOptions(correctAnswer) {
+        const options = [correctAnswer];
+        const otherWords = words.filter(w => w.translation !== correctAnswer);
+        const shuffled = otherWords.sort(() => Math.random() - 0.5);
+        
+        for (let i = 0; i < 3 && i < shuffled.length; i++) {
+          options.push(shuffled[i].translation);
+        }
+        
+        return options.sort(() => Math.random() - 0.5);
+      }
+
+      function showQuestion() {
+        if (currentQuestion >= shuffledWords.length) {
+          showComplete();
+          return;
+        }
+
+        answered = false;
+        const word = shuffledWords[currentQuestion];
+        const options = generateOptions(word.translation);
+
+        elements.currentQ.textContent = currentQuestion + 1;
+        elements.progressFill.style.width = `${((currentQuestion) / questionCount) * 100}%`;
+        elements.questionWord.textContent = word.word;
+        elements.questionPron.textContent = word.pronunciation || '';
+        elements.feedback.hidden = true;
+        elements.btnNext.hidden = true;
+
+        elements.optionsGrid.innerHTML = options.map(opt => `
+          <button class="option-btn" data-answer="${opt}">
+            ${opt}
+          </button>
+        `).join('');
+
+        // Add click handlers
+        elements.optionsGrid.querySelectorAll('.option-btn').forEach(btn => {
+          btn.addEventListener('click', () => handleAnswer(btn, word.translation));
+        });
+      }
+
+      function handleAnswer(btn, correctAnswer) {
+        if (answered) return;
+        answered = true;
+
+        const isCorrect = btn.dataset.answer === correctAnswer;
+        
+        elements.optionsGrid.querySelectorAll('.option-btn').forEach(b => {
+          b.disabled = true;
+          if (b.dataset.answer === correctAnswer) {
+            b.classList.add('correct');
+          } else if (b === btn && !isCorrect) {
+            b.classList.add('incorrect');
+          }
+        });
+
+        if (isCorrect) {
+          score++;
+          elements.feedbackIcon.textContent = '✓';
+          elements.feedbackText.textContent = uiStrings.quiz_correct;
+          elements.feedback.classList.remove('incorrect');
+          elements.feedback.classList.add('correct');
+        } else {
+          elements.feedbackIcon.textContent = '✗';
+          elements.feedbackText.textContent = uiStrings.quiz_incorrect;
+          elements.feedback.classList.remove('correct');
+          elements.feedback.classList.add('incorrect');
+        }
+
+        elements.scoreValue.forEach(el => el.textContent = score);
+        elements.feedback.hidden = false;
+        elements.btnNext.hidden = false;
+      }
+
+      function showComplete() {
+        elements.quizContent.hidden = true;
+        elements.quizFooter.hidden = true;
+        elements.quizComplete.hidden = false;
+        elements.progressFill.style.width = '100%';
+      }
+
+      function restart() {
+        currentQuestion = 0;
+        score = 0;
+        shuffledWords = [...words].sort(() => Math.random() - 0.5).slice(0, questionCount);
+        elements.scoreValue.forEach(el => el.textContent = 0);
+        elements.quizContent.hidden = false;
+        elements.quizFooter.hidden = false;
+        elements.quizComplete.hidden = true;
+        showQuestion();
+      }
+
+      elements.btnNext.addEventListener('click', () => {
+        currentQuestion++;
+        showQuestion();
+      });
+
+      elements.btnRestart.addEventListener('click', restart);
+
+      // Initialize
+      showQuestion();
+    });
+  });
+</script>
+
+<style>
+  .vocab-quiz {
+    background: linear-gradient(145deg, rgba(26, 54, 93, 0.9), rgba(17, 34, 61, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+    max-width: 500px;
+    margin: 2rem auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 60px rgba(245, 166, 35, 0.1);
+  }
+
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .quiz-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .quiz-icon {
+    font-size: 1.5rem;
+  }
+
+  .quiz-title h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    background: linear-gradient(135deg, #f5a623, #e09a00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .language-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  .flag {
+    font-size: 1.2rem;
+  }
+
+  .lang-name {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .quiz-progress {
+    margin-bottom: 1.5rem;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f5a623, #e09a00);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-text {
+    text-align: right;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .question-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .question-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1rem;
+  }
+
+  .question-word {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .question-pronunciation {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .option-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 1rem;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(245, 166, 35, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .option-btn:disabled {
+    cursor: default;
+  }
+
+  .option-btn.correct {
+    background: rgba(34, 197, 94, 0.3);
+    border-color: rgba(34, 197, 94, 0.6);
+  }
+
+  .option-btn.incorrect {
+    background: rgba(239, 68, 68, 0.3);
+    border-color: rgba(239, 68, 68, 0.6);
+  }
+
+  .feedback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .feedback.correct {
+    background: rgba(34, 197, 94, 0.2);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+  }
+
+  .feedback.incorrect {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+  }
+
+  .feedback-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .feedback.correct .feedback-icon {
+    color: #22c55e;
+  }
+
+  .feedback.incorrect .feedback-icon {
+    color: #ef4444;
+  }
+
+  .feedback-text {
+    font-size: 1rem;
+    color: white;
+  }
+
+  .quiz-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .score-display {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .score-label {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .score-value {
+    color: #f5a623;
+    font-weight: 700;
+  }
+
+  .btn-next, .btn-restart {
+    background: linear-gradient(135deg, #f5a623, #e09a00);
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-next:hover, .btn-restart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(245, 166, 35, 0.4);
+  }
+
+  .quiz-complete {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .complete-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 0.5s ease;
+  }
+
+  .quiz-complete h3 {
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 1rem;
+  }
+
+  .final-score {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .final-score .score-value {
+    font-size: 3rem;
+  }
+
+  .btn-cta {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 1px solid rgba(245, 166, 35, 0.5);
+    border-radius: 10px;
+    color: #f5a623;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .btn-cta:hover {
+    background: rgba(245, 166, 35, 0.1);
+    border-color: #f5a623;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  @media (max-width: 480px) {
+    .vocab-quiz {
+      padding: 1rem;
+      margin: 1rem;
+    }
+
+    .options-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .question-word {
+      font-size: 1.5rem;
+    }
+  }
+</style>
