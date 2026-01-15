@@ -1,0 +1,49 @@
+---
+/**
+ * Reading Time Component
+ * Displays estimated reading time with a clock icon
+ */
+import { formatReadingTime } from '../utils/readingTime';
+
+interface Props {
+  minutes: number;
+  lang?: string;
+  size?: 'small' | 'default';
+}
+
+const { minutes, lang = 'en', size = 'default' } = Astro.props;
+const displayText = formatReadingTime(minutes, lang);
+---
+
+<span class={`reading-time ${size}`}>
+  <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
+  </svg>
+  <span class="time-text">{displayText}</span>
+</span>
+
+<style>
+  .reading-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.875rem;
+  }
+
+  .reading-time.small {
+    font-size: 0.75rem;
+    gap: 0.3rem;
+  }
+
+  .clock-icon {
+    width: 1em;
+    height: 1em;
+    opacity: 0.8;
+  }
+
+  .time-text {
+    white-space: nowrap;
+  }
+</style>

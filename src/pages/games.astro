@@ -166,6 +166,54 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
     </main>
 
     <Footer />
+    
+    <!-- Confetti Script for Game Celebrations -->
+    <script>
+      // Lightweight confetti effect
+      const defaultColors = ['#f5a623', '#ffb940', '#22c55e', '#3b82f6', '#ec4899', '#8b5cf6'];
+      
+      function triggerConfetti(options = {}) {
+        const { particleCount = 50, duration = 3000, colors = defaultColors } = options;
+        
+        let container = document.getElementById('confetti-container');
+        if (!container) {
+          container = document.createElement('div');
+          container.id = 'confetti-container';
+          container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99999;overflow:hidden;';
+          document.body.appendChild(container);
+        }
+        
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement('div');
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          const size = Math.random() * 10 + 5;
+          const startX = 50 + (Math.random() - 0.5) * 70;
+          const rotation = Math.random() * 720 - 360;
+          const delay = Math.random() * 200;
+          const shapes = ['0', '50%', '0'];
+          const borderRadius = shapes[Math.floor(Math.random() * shapes.length)];
+          
+          particle.style.cssText = `
+            position:absolute;left:${startX}%;top:-10%;width:${size}px;height:${size * (borderRadius === '0' ? 0.4 : 1)}px;
+            background:${color};border-radius:${borderRadius};opacity:1;
+            animation:confetti-fall ${duration}ms ease-out ${delay}ms forwards;
+          `;
+          container.appendChild(particle);
+          setTimeout(() => particle.remove(), duration + delay + 100);
+        }
+        
+        if (!document.getElementById('confetti-keyframes')) {
+          const style = document.createElement('style');
+          style.id = 'confetti-keyframes';
+          style.textContent = '@keyframes confetti-fall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}';
+          document.head.appendChild(style);
+        }
+        
+        setTimeout(() => { if (container?.children.length === 0) container.remove(); }, duration + 500);
+      }
+      
+      window.triggerConfetti = triggerConfetti;
+    </script>
   </body>
 </html>
 

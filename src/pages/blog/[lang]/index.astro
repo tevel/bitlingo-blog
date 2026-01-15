@@ -5,7 +5,9 @@ import BaseHead from '../../../components/BaseHead.astro';
 import Footer from '../../../components/Footer.astro';
 import FormattedDate from '../../../components/FormattedDate.astro';
 import Header from '../../../components/Header.astro';
+import ReadingTime from '../../../components/ReadingTime.astro';
 import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE, SUPPORTED_LANGS } from '../../../consts';
+import { calculateReadingTime } from '../../../utils/readingTime';
 
 export function getStaticPaths() {
 	return SUPPORTED_LANGS.map((lang) => ({ params: { lang } }));
@@ -96,6 +98,8 @@ const otherPosts = posts.slice(1);
 						<div class="featured-content">
 							<div class="post-meta">
 								<FormattedDate date={featuredPost.data.pubDate} />
+								<span class="meta-separator">•</span>
+								<ReadingTime minutes={calculateReadingTime(featuredPost.body || '')} lang={lang} size="small" />
 							</div>
 							<h2>{featuredPost.data.title}</h2>
 							<p>{featuredPost.data.description}</p>
@@ -130,6 +134,8 @@ const otherPosts = posts.slice(1);
 							<div class="post-content">
 								<div class="post-meta">
 									<FormattedDate date={post.data.pubDate} />
+									<span class="meta-separator">•</span>
+									<ReadingTime minutes={calculateReadingTime(post.body || '')} lang={lang} size="small" />
 								</div>
 								<h3>{post.data.title}</h3>
 								<p>{post.data.description}</p>
@@ -266,9 +272,16 @@ const otherPosts = posts.slice(1);
 	}
 
 	.post-meta {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
 		font-size: 0.85rem;
 		color: var(--text-muted);
 		font-weight: 500;
+	}
+
+	.meta-separator {
+		opacity: 0.5;
 	}
 
 	.read-more {

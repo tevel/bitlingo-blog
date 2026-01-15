@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import BlogPost from '../../../layouts/BlogPost.astro';
 import { DEFAULT_LANG, SUPPORTED_LANGS } from '../../../consts';
+import { calculateReadingTime } from '../../../utils/readingTime';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
@@ -50,8 +51,9 @@ if (!post) {
 }
 
 const { Content } = await render(post);
+const readingTime = calculateReadingTime(post.body || '');
 ---
 
-<BlogPost {...post.data}>
+<BlogPost {...post.data} readingTime={readingTime}>
 	<Content />
 </BlogPost>

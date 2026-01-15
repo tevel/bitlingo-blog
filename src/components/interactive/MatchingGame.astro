@@ -196,6 +196,11 @@ const words = targetData.words.slice(0, pairCount);
       function showComplete() {
         elements.gameComplete.hidden = false;
         
+        // Trigger confetti celebration!
+        if (typeof window !== 'undefined' && (window as any).triggerConfetti) {
+          (window as any).triggerConfetti({ particleCount: 70 });
+        }
+        
         // Setup share buttons
         const shareText = `I matched all ${pairCount} word pairs in the BitLingo matching game! 🔗 Try it yourself:`;
         const shareUrl = window.location.href;

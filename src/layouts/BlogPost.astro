@@ -5,11 +5,13 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import ReadingTime from '../components/ReadingTime.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
 import VocabQuiz from '../components/interactive/VocabQuiz.astro';
 import DailyWord from '../components/interactive/DailyWord.astro';
 import { DEFAULT_LANG } from '../consts';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & { readingTime?: number };
 
 const {
 	title,
@@ -22,6 +24,7 @@ const {
 	seoTitle,
 	seoDescription,
 	ogImageAlt,
+	readingTime,
 } = Astro.props;
 const heroAlt = ogImageAlt || `${title} hero image`;
 const pageUrl = new URL(Astro.url, Astro.site);
@@ -75,6 +78,7 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 	</head>
 
 	<body>
+		<ReadingProgress />
 		<Header />
 		<main>
 			<article>
@@ -97,6 +101,11 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 							</svg>
 							<FormattedDate date={pubDate} />
 						</div>
+						{readingTime && (
+							<div class="meta-item reading">
+								<ReadingTime minutes={readingTime} lang={lang} />
+							</div>
+						)}
 						{updatedDate && (
 							<div class="meta-item updated">
 								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -193,6 +202,41 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 			</article>
 		</main>
 		<Footer />
+		
+		<!-- Confetti Script for Game Celebrations -->
+		<script is:inline>
+			const defaultColors = ['#f5a623', '#ffb940', '#22c55e', '#3b82f6', '#ec4899', '#8b5cf6'];
+			function triggerConfetti(options = {}) {
+				const { particleCount = 50, duration = 3000, colors = defaultColors } = options;
+				let container = document.getElementById('confetti-container');
+				if (!container) {
+					container = document.createElement('div');
+					container.id = 'confetti-container';
+					container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99999;overflow:hidden;';
+					document.body.appendChild(container);
+				}
+				for (let i = 0; i < particleCount; i++) {
+					const particle = document.createElement('div');
+					const color = colors[Math.floor(Math.random() * colors.length)];
+					const size = Math.random() * 10 + 5;
+					const startX = 50 + (Math.random() - 0.5) * 70;
+					const delay = Math.random() * 200;
+					const shapes = ['0', '50%', '0'];
+					const borderRadius = shapes[Math.floor(Math.random() * shapes.length)];
+					particle.style.cssText = `position:absolute;left:${startX}%;top:-10%;width:${size}px;height:${size * (borderRadius === '0' ? 0.4 : 1)}px;background:${color};border-radius:${borderRadius};opacity:1;animation:confetti-fall ${duration}ms ease-out ${delay}ms forwards;`;
+					container.appendChild(particle);
+					setTimeout(() => particle.remove(), duration + delay + 100);
+				}
+				if (!document.getElementById('confetti-keyframes')) {
+					const style = document.createElement('style');
+					style.id = 'confetti-keyframes';
+					style.textContent = '@keyframes confetti-fall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}';
+					document.head.appendChild(style);
+				}
+				setTimeout(() => { if (container?.children.length === 0) container.remove(); }, duration + 500);
+			}
+			window.triggerConfetti = triggerConfetti;
+		</script>
 	</body>
 </html>
 

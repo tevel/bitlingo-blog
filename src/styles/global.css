@@ -50,6 +50,42 @@
 	--radius-xl: 28px;
 }
 
+/* Light Theme */
+[data-theme="light"] {
+	/* Core palette - light mode */
+	--bg-deep: #f8fafc;
+	--bg-primary: #ffffff;
+	--bg-secondary: #f1f5f9;
+	--bg-card: #ffffff;
+	--bg-elevated: #f8fafc;
+	
+	/* Accent colors remain the same */
+	--accent-primary: #e8930c;
+	--accent-light: #f5a623;
+	--accent-dark: #d17f00;
+	--accent-glow: rgba(232, 147, 12, 0.3);
+	
+	/* Text colors - darker for light bg */
+	--text-primary: #1a365d;
+	--text-secondary: #475569;
+	--text-muted: #94a3b8;
+	
+	/* Gradients for light mode */
+	--gradient-bg: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #f8fafc 100%);
+	--gradient-card: linear-gradient(145deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0) 100%);
+	
+	/* Effects for light mode */
+	--glow-orange: 0 0 20px rgba(232, 147, 12, 0.2);
+	--glow-strong: 0 0 30px rgba(232, 147, 12, 0.3);
+	--shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08), 0 0 40px rgba(232, 147, 12, 0.05);
+	--shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.1);
+	
+	/* Borders for light mode */
+	--border-subtle: rgba(0, 0, 0, 0.06);
+	--border-accent: rgba(232, 147, 12, 0.3);
+	--border-gold: rgba(232, 147, 12, 0.5);
+}
+
 /* Import Google Fonts for modern typography */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
