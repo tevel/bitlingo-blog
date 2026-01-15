@@ -1,0 +1,216 @@
+---
+/**
+ * Related Posts Component
+ * Shows similar articles based on keywords/tags
+ */
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+  currentSlug: string;
+  lang: string;
+  keywords?: string[];
+  limit?: number;
+}
+
+const { currentSlug, lang, keywords = [], limit = 3 } = Astro.props;
+
+// Get all posts in the same language
+const allPosts = await getCollection('blog');
+const sameLangPosts = allPosts.filter(post => post.data.lang === lang && post.slug !== currentSlug);
+
+// Score posts by keyword matches
+const scoredPosts = sameLangPosts.map(post => {
+  const postKeywords = post.data.keywords || [];
+  const titleWords = post.data.title.toLowerCase().split(/\s+/);
+  let score = 0;
+  
+  // Score based on keyword matches
+  keywords.forEach(keyword => {
+    const kw = keyword.toLowerCase();
+    if (postKeywords.some(pk => pk.toLowerCase().includes(kw))) score += 3;
+    if (titleWords.some(tw => tw.includes(kw))) score += 2;
+    if (post.data.description?.toLowerCase().includes(kw)) score += 1;
+  });
+  
+  return { post, score };
+});
+
+// Sort by score and take top N
+const relatedPosts = scoredPosts
+  .filter(sp => sp.score > 0)
+  .sort((a, b) => b.score - a.score)
+  .slice(0, limit)
+  .map(sp => sp.post);
+
+// If not enough related posts, add recent ones
+if (relatedPosts.length < limit) {
+  const recentPosts = sameLangPosts
+    .filter(p => !relatedPosts.some(rp => rp.slug === p.slug))
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .slice(0, limit - relatedPosts.length);
+  relatedPosts.push(...recentPosts);
+}
+
+// Get path slug helper
+const getPathSlug = (post: typeof relatedPosts[number]) => {
+  if (post.data.path) return post.data.path;
+  if (post.data.slug?.startsWith(`${post.data.lang}-`)) {
+    return post.data.slug.slice(post.data.lang.length + 1);
+  }
+  return post.data.slug ?? post.slug ?? post.id;
+};
+
+const labels: Record<string, string> = {
+  en: 'You might also like',
+  es: 'También te puede gustar',
+  fr: 'Vous aimerez aussi',
+  de: 'Das könnte dir auch gefallen',
+  it: 'Potrebbe piacerti anche',
+  pt: 'Você também pode gostar',
+  ru: 'Вам также может понравиться',
+  zh: '你可能也会喜欢',
+  ja: 'こちらもおすすめ',
+  ko: '관심 있을만한 글',
+  ar: 'قد يعجبك أيضاً',
+  hi: 'आपको यह भी पसंद आ सकता है',
+  tr: 'Bunlar da ilginizi çekebilir',
+  pl: 'Może ci się też spodobać',
+  uk: 'Вам також може сподобатися',
+  he: 'אולי יעניין אותך גם',
+};
+
+const label = labels[lang] || labels.en;
+---
+
+{relatedPosts.length > 0 && (
+  <section class="related-posts">
+    <h3 class="related-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      {label}
+    </h3>
+    <div class="related-grid">
+      {relatedPosts.map((post) => (
+        <a href={`/blog/${lang}/${getPathSlug(post)}/`} class="related-card">
+          {post.data.heroImage && (
+            <div class="related-image">
+              <Image 
+                src={post.data.heroImage} 
+                alt={post.data.title}
+                width={300}
+                height={150}
+              />
+            </div>
+          )}
+          <div class="related-content">
+            <span class="related-date">
+              <FormattedDate date={post.data.pubDate} />
+            </span>
+            <h4>{post.data.title}</h4>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .related-posts {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+  }
+
+  .related-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    margin: 0 0 1.5rem;
+    color: var(--text-primary);
+  }
+
+  .related-title svg {
+    width: 24px;
+    height: 24px;
+    color: var(--accent-primary);
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .related-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .related-card:hover {
+    border-color: var(--border-accent);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .related-image {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+
+  .related-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .related-card:hover .related-image img {
+    transform: scale(1.05);
+  }
+
+  .related-content {
+    padding: 1rem;
+  }
+
+  .related-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .related-content h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    line-height: 1.4;
+    transition: color 0.3s ease;
+  }
+
+  .related-card:hover h4 {
+    color: var(--accent-primary);
+  }
+
+  @media (max-width: 600px) {
+    .related-posts {
+      padding: 1.5rem;
+    }
+    
+    .related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

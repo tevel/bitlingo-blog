@@ -50,10 +50,10 @@ if (!post) {
 	return new Response(null, { status: 404 });
 }
 
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const readingTime = calculateReadingTime(post.body || '');
 ---
 
-<BlogPost {...post.data} readingTime={readingTime}>
+<BlogPost {...post.data} readingTime={readingTime} headings={headings} currentSlug={post.slug}>
 	<Content />
 </BlogPost>

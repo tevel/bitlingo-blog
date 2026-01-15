@@ -1,0 +1,251 @@
+---
+/**
+ * Reaction Buttons Component
+ * Let users react to articles with emojis
+ * Stores reactions in localStorage per article
+ */
+
+interface Props {
+  slug: string;
+  lang?: string;
+}
+
+const { slug, lang = 'en' } = Astro.props;
+
+const reactions = [
+  { emoji: '👍', label: 'Like', key: 'like' },
+  { emoji: '❤️', label: 'Love', key: 'love' },
+  { emoji: '🔥', label: 'Fire', key: 'fire' },
+  { emoji: '💡', label: 'Insightful', key: 'insight' },
+  { emoji: '🎉', label: 'Celebrate', key: 'celebrate' },
+];
+
+const labels: Record<string, string> = {
+  en: 'Was this helpful?',
+  es: '¿Te fue útil?',
+  fr: 'Cela vous a-t-il été utile?',
+  de: 'War das hilfreich?',
+  it: 'Ti è stato utile?',
+  pt: 'Isso foi útil?',
+  ru: 'Было ли это полезно?',
+  zh: '这篇文章对你有帮助吗？',
+  ja: '役に立ちましたか？',
+  ko: '도움이 되셨나요?',
+  ar: 'هل كان هذا مفيداً؟',
+  hi: 'क्या यह मददगार था?',
+  tr: 'Bu faydalı oldu mu?',
+  pl: 'Czy to było pomocne?',
+  uk: 'Чи було це корисним?',
+  he: 'האם זה היה מועיל?',
+};
+
+const label = labels[lang] || labels.en;
+---
+
+<div class="reactions" data-slug={slug}>
+  <span class="reactions-label">{label}</span>
+  <div class="reaction-buttons">
+    {reactions.map((reaction) => (
+      <button 
+        class="reaction-btn" 
+        data-reaction={reaction.key}
+        aria-label={reaction.label}
+        title={reaction.label}
+      >
+        <span class="reaction-emoji">{reaction.emoji}</span>
+        <span class="reaction-count">0</span>
+      </button>
+    ))}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const containers = document.querySelectorAll('.reactions');
+    
+    containers.forEach((container) => {
+      const slug = container.getAttribute('data-slug');
+      if (!slug) return;
+      
+      const storageKey = `reactions-${slug}`;
+      const userKey = `user-reaction-${slug}`;
+      
+      // Load reactions from localStorage
+      const loadReactions = (): Record<string, number> => {
+        try {
+          return JSON.parse(localStorage.getItem(storageKey) || '{}');
+        } catch {
+          return {};
+        }
+      };
+      
+      // Save reactions to localStorage
+      const saveReactions = (reactions: Record<string, number>) => {
+        localStorage.setItem(storageKey, JSON.stringify(reactions));
+      };
+      
+      // Get user's previous reaction
+      const getUserReaction = (): string | null => {
+        return localStorage.getItem(userKey);
+      };
+      
+      // Set user's reaction
+      const setUserReaction = (reaction: string | null) => {
+        if (reaction) {
+          localStorage.setItem(userKey, reaction);
+        } else {
+          localStorage.removeItem(userKey);
+        }
+      };
+      
+      // Update button displays
+      const updateDisplay = () => {
+        const reactions = loadReactions();
+        const userReaction = getUserReaction();
+        
+        container.querySelectorAll('.reaction-btn').forEach((btn) => {
+          const key = btn.getAttribute('data-reaction');
+          if (!key) return;
+          
+          const count = reactions[key] || 0;
+          const countEl = btn.querySelector('.reaction-count');
+          if (countEl) countEl.textContent = count.toString();
+          
+          // Mark user's selected reaction
+          btn.classList.toggle('selected', key === userReaction);
+        });
+      };
+      
+      // Handle click
+      container.querySelectorAll('.reaction-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const key = btn.getAttribute('data-reaction');
+          if (!key) return;
+          
+          const reactions = loadReactions();
+          const currentUserReaction = getUserReaction();
+          
+          if (currentUserReaction === key) {
+            // Remove reaction if clicking same one
+            reactions[key] = Math.max(0, (reactions[key] || 0) - 1);
+            setUserReaction(null);
+          } else {
+            // Remove previous reaction
+            if (currentUserReaction) {
+              reactions[currentUserReaction] = Math.max(0, (reactions[currentUserReaction] || 0) - 1);
+            }
+            // Add new reaction
+            reactions[key] = (reactions[key] || 0) + 1;
+            setUserReaction(key);
+            
+            // Add animation
+            btn.classList.add('pulse');
+            setTimeout(() => btn.classList.remove('pulse'), 300);
+          }
+          
+          saveReactions(reactions);
+          updateDisplay();
+        });
+      });
+      
+      // Initial display
+      updateDisplay();
+    });
+  });
+</script>
+
+<style>
+  .reactions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    margin: 2rem 0;
+  }
+
+  .reactions-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .reaction-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .reaction-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 60px;
+  }
+
+  .reaction-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-accent);
+    transform: translateY(-2px);
+  }
+
+  .reaction-btn.selected {
+    background: rgba(245, 166, 35, 0.15);
+    border-color: var(--accent-primary);
+  }
+
+  .reaction-btn.pulse {
+    animation: pulse 0.3s ease;
+  }
+
+  .reaction-emoji {
+    font-size: 1.5rem;
+    transition: transform 0.2s ease;
+  }
+
+  .reaction-btn:hover .reaction-emoji {
+    transform: scale(1.2);
+  }
+
+  .reaction-btn.selected .reaction-emoji {
+    transform: scale(1.1);
+  }
+
+  .reaction-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .reaction-btn.selected .reaction-count {
+    color: var(--accent-primary);
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+
+  @media (max-width: 480px) {
+    .reaction-btn {
+      padding: 0.5rem 0.75rem;
+      min-width: 50px;
+    }
+    
+    .reaction-emoji {
+      font-size: 1.25rem;
+    }
+  }
+</style>
