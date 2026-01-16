@@ -208,7 +208,7 @@ This document outlines the design system, visual style, and mascot behavior spec
 
 #### Dimensions
 ```css
-.pixel-robot {
+.bit-robot {
   width: 80px;
   height: 110px;
 }
@@ -389,6 +389,22 @@ const greetings = {
   evening: "Good evening! 🌙",           // 17:00-20:59
   lateNight: "Late night study! 📚"      // 21:00-23:59
 }
+```
+
+#### Introduction Messages (Bit introduces itself)
+```javascript
+const introductions = [
+  "Hi! I'm Bit! Your learning buddy! 🤖❤️",
+  "My name is Bit! How's it going? 😊",
+  "Bit here! Ready to learn together? 🚀",
+  "I'm Bit! Part of BitLingo! Get it? 😉",
+  "Call me Bit! Your tiny robot friend! 🤖💙",
+  "Bit's the name, learning's the game! 🎮",
+  "Hey! Bit here to help you learn! 📚🤖",
+  "Nice to meet you! I'm Bit! 🤝🤖",
+  "Bit at your service! Let's learn! 🎓",
+  "Just a little robot named Bit! 🤖✨",
+]
 ```
 
 #### Reaction Messages
