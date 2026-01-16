@@ -9,11 +9,11 @@ import { phrases, type SupportedLang } from '../data/pixelPhrases';
 interface Props {
   initialMood?: 'idle' | 'happy' | 'excited' | 'celebrating' | 'thinking' | 'sleeping' | 'encouraging' | 'proud' | 'wave';
   showOnLoad?: boolean;
-  position?: 'bottom-right' | 'bottom-left' | 'inline';
+  position?: 'bottom-right' | 'bottom-left' | 'top-left' | 'inline';
   lang?: SupportedLang;
 }
 
-const { initialMood = 'wave', showOnLoad = true, position = 'bottom-right', lang } = Astro.props;
+const { initialMood = 'wave', showOnLoad = true, position = 'top-left', lang } = Astro.props;
 
 // Detect language from URL if not provided
 function detectLang(): SupportedLang {
@@ -709,6 +709,12 @@ const currentPhrases = phrases[currentLang];
     left: 20px;
   }
 
+  .bit-container.top-left {
+    position: fixed;
+    top: 80px; /* Below header */
+    left: 20px;
+  }
+
   .bit-container.inline {
     position: relative;
     display: inline-block;
@@ -718,6 +724,11 @@ const currentPhrases = phrases[currentLang];
     .bit-container.bottom-right,
     .bit-container.bottom-left {
       bottom: 80px; /* Above mobile nav */
+    }
+
+    .bit-container.top-left {
+      top: 70px; /* Below mobile header */
+      left: 10px;
     }
 
     .bit-container.bottom-right {
@@ -737,6 +748,10 @@ const currentPhrases = phrases[currentLang];
       transform-origin: bottom left;
     }
 
+    .bit-container.top-left .bit-robot {
+      transform-origin: top left;
+    }
+
     .speech-bubble {
       max-width: 180px;
       min-width: 100px;
@@ -745,6 +760,11 @@ const currentPhrases = phrases[currentLang];
   }
 
   @media (max-width: 480px) {
+    .bit-container.top-left {
+      top: 65px;
+      left: 8px;
+    }
+
     .bit-container.bottom-right {
       right: 8px;
     }
@@ -757,11 +777,20 @@ const currentPhrases = phrases[currentLang];
       transform: scale(0.75);
     }
 
+    .bit-container.top-left .bit-robot {
+      transform-origin: top left;
+    }
+
     .speech-bubble {
       max-width: 150px;
       min-width: 80px;
       font-size: 0.8rem;
       padding: 8px 12px;
+    }
+
+    .bit-container.top-left .speech-bubble {
+      max-width: 180px;
+      min-width: 100px;
     }
   }
 
@@ -781,6 +810,19 @@ const currentPhrases = phrases[currentLang];
     opacity: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 215, 0, 0.2);
+  }
+
+  /* Speech bubble for top-left position - appears to the right */
+  .bit-container.top-left .speech-bubble {
+    bottom: auto;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%) translateX(10px);
+    text-align: left;
+  }
+
+  .bit-container.top-left .speech-bubble.visible {
+    transform: translateY(-50%) translateX(15px);
   }
 
   .speech-bubble.visible {
@@ -811,6 +853,17 @@ const currentPhrases = phrases[currentLang];
     border-top: 10px solid #ffd700;
   }
 
+  /* Speech tail for top-left position - points left towards robot */
+  .bit-container.top-left .speech-tail {
+    bottom: auto;
+    top: 50%;
+    left: -10px;
+    transform: translateY(-50%);
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #ffd700;
+  }
+
   .speech-tail::before {
     content: '';
     position: absolute;
@@ -821,6 +874,17 @@ const currentPhrases = phrases[currentLang];
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-top: 8px solid #0f3555;
+  }
+
+  /* Speech tail inner border for top-left position */
+  .bit-container.top-left .speech-tail::before {
+    bottom: auto;
+    top: 50%;
+    left: 2px;
+    transform: translateY(-50%);
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid #0f3555;
   }
 
   /* Robot Base */
