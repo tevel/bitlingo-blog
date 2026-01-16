@@ -16,13 +16,22 @@ const { lang = 'en', placeholder = 'Search articles...' } = Astro.props;
 const allPosts = await getCollection('blog');
 const posts = allPosts.filter(post => post.data.lang === lang);
 
+// Helper function to get the correct slug (matches getPathSlug from index.astro)
+function getPathSlug(post: typeof posts[number]) {
+  if (post.data.path) return post.data.path;
+  if (post.data.slug?.startsWith(`${post.data.lang}-`)) {
+    return post.data.slug.slice(post.data.lang.length + 1);
+  }
+  return post.data.slug ?? post.slug ?? post.id;
+}
+
 // Create search index
 const searchIndex = posts.map(post => ({
   title: post.data.title,
   description: post.data.description,
-  slug: post.data.path || post.data.slug || post.slug || post.id,
+  slug: getPathSlug(post),
   keywords: post.data.keywords || [],
-  pubDate: post.data.pubDate,
+  pubDate: post.data.pubDate ? post.data.pubDate.toISOString() : null,
 }));
 ---
 
