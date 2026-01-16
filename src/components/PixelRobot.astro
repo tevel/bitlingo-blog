@@ -404,15 +404,24 @@ try {
     init() {
       // Click interaction - make entire robot clickable
       this.robot.style.cursor = 'pointer';
+      this.robot.style.pointerEvents = 'auto';
+      
+      // Add click handler to robot
       this.robot.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         this.handleClick();
       });
       
-      // Also make container clickable for better UX
+      // Also make container clickable for better UX, but only if clicking on robot or empty space
       this.container.style.cursor = 'pointer';
       this.container.addEventListener('click', (e) => {
-        if (e.target === this.container || e.target === this.robot) {
+        // Only handle if clicking on robot or container itself (not speech bubble)
+        const target = e.target;
+        if (target === this.robot || 
+            target === this.container || 
+            target.closest('#bit-robot')) {
+          e.preventDefault();
           e.stopPropagation();
           this.handleClick();
         }
@@ -636,6 +645,11 @@ try {
     // EVENT HANDLERS
     // ============================================
     handleClick() {
+      console.log('Bit Robot clicked!', {
+        allPhrases: this.allPhrases?.length || 0,
+        lang: this.lang
+      });
+      
       this.sounds.playBeep();
       
       if (!this.state.isAwake) {
@@ -648,6 +662,7 @@ try {
 
       // Get a completely random phrase from all available phrases
       const randomPhrase = this.getRandomPhraseFromAll();
+      console.log('Selected phrase:', randomPhrase);
       
       // Determine mood based on phrase content or random
       const moods = ['happy', 'excited', 'thinking', 'proud', 'wave', 'encouraging'];
@@ -776,6 +791,14 @@ try {
     const container = document.getElementById('bit-robot-container');
     if (container) {
       window.bitRobot = new BitRobot('bit-robot-container');
+    } else {
+      // Fallback: try again after a short delay
+      setTimeout(() => {
+        const container = document.getElementById('bit-robot-container');
+        if (container) {
+          window.bitRobot = new BitRobot('bit-robot-container');
+        }
+      }, 100);
     }
   });
 </script>
@@ -907,6 +930,7 @@ try {
     max-width: 400px;
     text-align: left;
     z-index: 10;
+    pointer-events: none; /* Don't block clicks on robot */
     box-shadow: var(--shadow-3d-sm, 0 4px 20px rgba(0, 0, 0, 0.3));
   }
 
