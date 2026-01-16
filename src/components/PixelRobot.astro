@@ -2,9 +2,10 @@
 /**
  * Bit the Robot - BitLingo's friendly mascot companion!
  * A CSS-based animated robot that reacts to user actions and provides encouragement.
- * Now with 200+ phrases in 16 languages, 18 idle activities, and sound effects!
+ * Now with 200+ phrases from the BitLingo app in 16 languages, 18 idle activities, and sound effects!
  */
-import { phrases, type SupportedLang } from '../data/pixelPhrases';
+
+type SupportedLang = 'en' | 'es' | 'fr' | 'de' | 'it' | 'pt' | 'ru' | 'zh' | 'ja' | 'ko' | 'ar' | 'he' | 'hi' | 'tr' | 'pl' | 'uk';
 
 interface Props {
   initialMood?: 'idle' | 'happy' | 'excited' | 'celebrating' | 'thinking' | 'sleeping' | 'encouraging' | 'proud' | 'wave';
@@ -20,14 +21,64 @@ function detectLang(): SupportedLang {
   if (lang) return lang;
   const url = Astro.url.pathname;
   const langMatch = url.match(/\/blog\/([a-z]{2})\//);
-  if (langMatch && langMatch[1] in phrases) {
+  const supportedLangs: SupportedLang[] = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'zh', 'ja', 'ko', 'ar', 'he', 'hi', 'tr', 'pl', 'uk'];
+  if (langMatch && supportedLangs.includes(langMatch[1] as SupportedLang)) {
     return langMatch[1] as SupportedLang;
   }
   return 'en';
 }
 
 const currentLang = detectLang();
-const currentPhrases = phrases[currentLang];
+
+// Import phrases at build time - using dynamic import in frontmatter
+// We'll load the phrases for the current language
+let allPhrasesForLang: string[] = [];
+let phrasesData: any = {};
+
+try {
+  // Use dynamic import to load phrases
+  const phraseModules: Record<SupportedLang, () => Promise<any>> = {
+    en: () => import('../data/mascotPhrases/en.js'),
+    es: () => import('../data/mascotPhrases/es.js'),
+    fr: () => import('../data/mascotPhrases/fr.js'),
+    de: () => import('../data/mascotPhrases/de.js'),
+    it: () => import('../data/mascotPhrases/it.js'),
+    pt: () => import('../data/mascotPhrases/pt.js'),
+    ru: () => import('../data/mascotPhrases/ru.js'),
+    zh: () => import('../data/mascotPhrases/zh.js'),
+    ja: () => import('../data/mascotPhrases/ja.js'),
+    ko: () => import('../data/mascotPhrases/ko.js'),
+    ar: () => import('../data/mascotPhrases/ar.js'),
+    he: () => import('../data/mascotPhrases/he.js'),
+    hi: () => import('../data/mascotPhrases/hi.js'),
+    tr: () => import('../data/mascotPhrases/tr.js'),
+    pl: () => import('../data/mascotPhrases/pl.js'),
+    uk: () => import('../data/mascotPhrases/uk.js'),
+  };
+  
+  const loader = phraseModules[currentLang] || phraseModules.en;
+  const phraseModule = await loader();
+  phrasesData = phraseModule.default || phraseModule;
+  
+  // Extract all phrases into a flat array
+  function extractAllPhrases(obj: any): string[] {
+    const allPhrases: string[] = [];
+    function extract(obj: any): void {
+      if (Array.isArray(obj)) {
+        allPhrases.push(...obj);
+      } else if (typeof obj === 'object' && obj !== null) {
+        Object.values(obj).forEach(value => extract(value));
+      }
+    }
+    extract(obj);
+    return allPhrases;
+  }
+  
+  allPhrasesForLang = extractAllPhrases(phrasesData);
+} catch (e) {
+  console.error(`Failed to load phrases for ${currentLang}:`, e);
+  allPhrasesForLang = ["Hi! I'm Bit! 🤖"];
+}
 ---
 
 <div 
@@ -35,7 +86,7 @@ const currentPhrases = phrases[currentLang];
   data-initial-mood={initialMood}
   data-show-on-load={showOnLoad}
   data-lang={currentLang}
-  data-phrases={JSON.stringify(currentPhrases)}
+  data-all-phrases={JSON.stringify(allPhrasesForLang)}
   id="bit-robot-container"
 >
   <!-- Speech Bubble -->
@@ -293,9 +344,15 @@ const currentPhrases = phrases[currentLang];
       this.legLeft = document.getElementById('leg-left');
       this.legRight = document.getElementById('leg-right');
 
-      // Parse phrases from data attribute
-      this.phrases = JSON.parse(this.container.dataset.phrases || '{}');
       this.lang = this.container.dataset.lang || 'en';
+      // Load phrases from data attribute (set at build time)
+      this.allPhrases = JSON.parse(this.container.dataset.allPhrases || '[]');
+      this.phrases = {};
+      
+      // If phrases not loaded, try to load them dynamically as fallback
+      if (this.allPhrases.length === 0) {
+        this.loadPhrases();
+      }
 
       // Sound effects
       this.sounds = new BitSounds();
@@ -324,9 +381,42 @@ const currentPhrases = phrases[currentLang];
       this.init();
     }
 
+    async loadPhrases() {
+      // Fallback: if phrases weren't loaded at build time, use a default
+      if (this.allPhrases.length === 0) {
+        this.allPhrases = ["Hi! I'm Bit! 🤖", "Click me for a surprise! 🎁", "Ready to learn? 🚀"];
+      }
+    }
+
+    extractAllPhrases(obj) {
+      const allPhrases = [];
+      function extract(obj) {
+        if (Array.isArray(obj)) {
+          allPhrases.push(...obj);
+        } else if (typeof obj === 'object' && obj !== null) {
+          Object.values(obj).forEach(value => extract(value));
+        }
+      }
+      extract(obj);
+      return allPhrases;
+    }
+
     init() {
-      // Click interaction
-      this.robot.addEventListener('click', () => this.handleClick());
+      // Click interaction - make entire robot clickable
+      this.robot.style.cursor = 'pointer';
+      this.robot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.handleClick();
+      });
+      
+      // Also make container clickable for better UX
+      this.container.style.cursor = 'pointer';
+      this.container.addEventListener('click', (e) => {
+        if (e.target === this.container || e.target === this.robot) {
+          e.stopPropagation();
+          this.handleClick();
+        }
+      });
       
       // Reset sleep timer on any page interaction
       document.addEventListener('mousemove', () => this.resetSleepTimer());
@@ -340,18 +430,20 @@ const currentPhrases = phrases[currentLang];
       window.addEventListener('xp:gained', (e) => this.handleXpGain(e));
       window.addEventListener('level:up', (e) => this.handleLevelUp(e));
 
-      // Initial greeting
+      // Initial greeting - wait for phrases to load
       if (this.container.dataset.showOnLoad === 'true') {
+          // Wait a bit for phrases to load, then show greeting
         setTimeout(() => {
           // First time, show introduction
           if (!localStorage.getItem('bit_introduced')) {
             this.setMood('wave');
-            const introPhrase = this.getUniqueRandomPhrase('introduction');
+            const introPhrase = this.getRandomPhraseFromAll();
             this.showMessage(introPhrase, 'introduction');
             localStorage.setItem('bit_introduced', 'true');
           } else {
             this.setMood('wave');
-            this.showMessage(this.getTimeBasedGreeting(), 'greeting');
+            const greeting = this.getRandomPhraseFromAll();
+            this.showMessage(greeting, 'greeting');
           }
           this.resetSleepTimer();
           this.scheduleIdleActivity();
@@ -549,52 +641,50 @@ const currentPhrases = phrases[currentLang];
       if (!this.state.isAwake) {
         // Wake up!
         this.setMood('happy');
-        this.showMessage(this.getUniqueRandomPhrase('greeting'), 'greeting');
+        const wakePhrase = this.getRandomPhraseFromAll();
+        this.showMessage(wakePhrase, 'greeting');
         return;
       }
 
-      // Randomly show introduction sometimes
-      if (Math.random() < 0.15) {
-        this.setMood('wave');
-        this.showMessage(this.getUniqueRandomPhrase('introduction'), 'introduction');
-        return;
-      }
+      // Get a completely random phrase from all available phrases
+      const randomPhrase = this.getRandomPhraseFromAll();
+      
+      // Determine mood based on phrase content or random
+      const moods = ['happy', 'excited', 'thinking', 'proud', 'wave', 'encouraging'];
+      const randomMood = moods[Math.floor(Math.random() * moods.length)];
+      this.setMood(randomMood);
+      
+      // Show the random phrase
+      this.showMessage(randomPhrase, 'prompt', 5000);
+    }
 
-      // Random interaction - each click shows a new random phrase from different categories
-      const interactions = [
-        () => {
-          this.setMood('happy');
-          this.showMessage(this.getUniqueRandomPhrase('encourage'), 'encourage');
-        },
-        () => {
-          this.setMood('excited');
-          this.showMessage(this.getUniqueRandomPhrase('motivate'), 'motivate');
-        },
-        () => {
-          this.setMood('thinking');
-          this.showMessage(this.getUniqueRandomPhrase('fact'), 'fact', 5000);
-        },
-        () => {
-          this.setMood('thinking');
-          this.showMessage(this.getUniqueRandomPhrase('tip'), 'tip', 5000);
-        },
-        () => {
-          this.setMood('proud');
-          this.showMessage(this.getUniqueRandomPhrase('feature'), 'feature', 5000);
-        },
-        () => {
-          this.setMood('excited');
-          this.showMessage(this.getUniqueRandomPhrase('quiz'), 'quiz', 5000);
-        },
-        () => {
-          this.setMood('wave');
-          this.showMessage(this.getUniqueRandomPhrase('prompt'), 'prompt');
-        },
-        () => {
-          this.setMood('happy');
-          this.showMessage(this.getUniqueRandomPhrase('idle'), 'idle');
+    getRandomPhraseFromAll() {
+      if (this.allPhrases && this.allPhrases.length > 0) {
+        // Filter out recently used phrases
+        const available = this.allPhrases.filter(p => !this.state.phraseHistory.has(p));
+        
+        // If all phrases used, reset history
+        if (available.length === 0) {
+          this.state.phraseHistory.clear();
+          const phrase = this.allPhrases[Math.floor(Math.random() * this.allPhrases.length)];
+          this.state.phraseHistory.add(phrase);
+          return phrase;
         }
-      ];
+        
+        const phrase = available[Math.floor(Math.random() * available.length)];
+        this.state.phraseHistory.add(phrase);
+        
+        // Keep history manageable (last 20 phrases)
+        if (this.state.phraseHistory.size > 20) {
+          const arr = Array.from(this.state.phraseHistory);
+          this.state.phraseHistory = new Set(arr.slice(-20));
+        }
+        
+        return phrase;
+      }
+      
+      // Fallback to old method if allPhrases not available
+      return this.getUniqueRandomPhrase('greeting') || "Hi! I'm Bit! 🤖";
 
       const randomInteraction = interactions[Math.floor(Math.random() * interactions.length)];
       randomInteraction();
@@ -789,45 +879,40 @@ const currentPhrases = phrases[currentLang];
     }
 
     .bit-container.top-left .speech-bubble {
-      max-width: 180px;
-      min-width: 100px;
+      padding: 12px 16px;
+      min-width: 160px;
+      max-width: 220px;
+    }
+    
+    .speech-text {
+      font-size: 1rem;
     }
   }
 
-  /* Speech Bubble */
+  /* Speech Bubble - Matching BitLingo app style */
   .speech-bubble {
     position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-10px);
-    background: linear-gradient(180deg, #1a4a6e 0%, #0f3555 100%);
-    border: 2px solid #ffd700;
-    border-radius: 16px;
-    padding: 10px 16px;
-    min-width: 120px;
-    max-width: 220px;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 215, 0, 0.2);
-  }
-
-  /* Speech bubble for top-left position - appears to the right */
-  .bit-container.top-left .speech-bubble {
-    bottom: auto;
-    top: 50%;
+    top: 35%;
     left: 100%;
     transform: translateY(-50%) translateX(10px);
+    background: var(--bg-card, #1a1a2e);
+    border: 3px solid var(--accent-primary, #f5a623);
+    border-radius: 18px;
+    padding: 14px 20px;
+    margin-left: 12px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    white-space: normal;
+    min-width: 240px;
+    max-width: 400px;
     text-align: left;
-  }
-
-  .bit-container.top-left .speech-bubble.visible {
-    transform: translateY(-50%) translateX(15px);
+    z-index: 10;
+    box-shadow: var(--shadow-3d-sm, 0 4px 20px rgba(0, 0, 0, 0.3));
   }
 
   .speech-bubble.visible {
     opacity: 1;
-    transform: translateX(-50%) translateY(-15px);
+    transform: translateY(-50%) translateX(0);
   }
 
   .speech-bubble[hidden] {
@@ -835,56 +920,52 @@ const currentPhrases = phrases[currentLang];
   }
 
   .speech-text {
-    color: #f0f4f8;
-    font-size: 0.85rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    line-height: 1.4;
+    color: var(--text-primary, #f0f4f8);
+    line-height: 1.5;
   }
 
   .speech-tail {
     position: absolute;
+    top: 30%;
+    left: -10px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid var(--accent-primary, #f5a623);
+  }
+
+  /* For bottom positions, keep original styling */
+  .bit-container.bottom-right .speech-bubble,
+  .bit-container.bottom-left .speech-bubble {
+    top: auto;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    text-align: center;
+    min-width: 120px;
+    max-width: 220px;
+    padding: 10px 16px;
+  }
+
+  .bit-container.bottom-right .speech-bubble.visible,
+  .bit-container.bottom-left .speech-bubble.visible {
+    transform: translateX(-50%) translateY(-15px);
+  }
+
+  .bit-container.bottom-right .speech-tail,
+  .bit-container.bottom-left .speech-tail {
+    top: auto;
     bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 0;
-    height: 0;
+    border-top: 10px solid var(--accent-primary, #f5a623);
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-top: 10px solid #ffd700;
-  }
-
-  /* Speech tail for top-left position - points left towards robot */
-  .bit-container.top-left .speech-tail {
-    bottom: auto;
-    top: 50%;
-    left: -10px;
-    transform: translateY(-50%);
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-right: 10px solid #ffd700;
-  }
-
-  .speech-tail::before {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    left: -8px;
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid #0f3555;
-  }
-
-  /* Speech tail inner border for top-left position */
-  .bit-container.top-left .speech-tail::before {
-    bottom: auto;
-    top: 50%;
-    left: 2px;
-    transform: translateY(-50%);
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-right: 8px solid #0f3555;
+    border-bottom: none;
   }
 
   /* Robot Base */
