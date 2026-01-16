@@ -674,6 +674,21 @@ try {
     }
 
     getRandomPhraseFromAll() {
+      // Ensure phrases are loaded - reload from data attribute if needed
+      if (!this.allPhrases || this.allPhrases.length === 0) {
+        const phrasesData = this.container.dataset.allPhrases;
+        if (phrasesData) {
+          try {
+            this.allPhrases = JSON.parse(phrasesData);
+          } catch (e) {
+            console.warn('Bit Robot: Failed to parse phrases', e);
+            this.allPhrases = ["Hi! I'm Bit! 🤖", "Click me for a surprise! 🎁", "Ready to learn? 🚀"];
+          }
+        } else {
+          this.allPhrases = ["Hi! I'm Bit! 🤖", "Click me for a surprise! 🎁", "Ready to learn? 🚀"];
+        }
+      }
+      
       if (this.allPhrases && this.allPhrases.length > 0) {
         // Filter out recently used phrases
         const available = this.allPhrases.filter(p => !this.state.phraseHistory.has(p));
@@ -698,11 +713,8 @@ try {
         return phrase;
       }
       
-      // Fallback to old method if allPhrases not available
-      return this.getUniqueRandomPhrase('greeting') || "Hi! I'm Bit! 🤖";
-
-      const randomInteraction = interactions[Math.floor(Math.random() * interactions.length)];
-      randomInteraction();
+      return "Hi! I'm Bit! 🤖"; // Fallback phrase
+    }
       this.resetSleepTimer();
     }
 
