@@ -1,0 +1,528 @@
+---
+/**
+ * Learning Dashboard Page
+ * Personal progress tracking with stats and achievements.
+ */
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PixelRobot from '../components/PixelRobot.astro';
+import LanguageMap from '../components/LanguageMap.astro';
+
+const title = 'My Dashboard | BitLingo Blog';
+const description = 'Track your language learning progress, view your stats, and see your achievements.';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <Header />
+    <main class="dashboard-page">
+      <section class="dashboard-hero">
+        <h1 class="page-title">
+          <span class="icon">📊</span>
+          My Learning Dashboard
+        </h1>
+        <p class="page-description">Track your progress and celebrate your achievements!</p>
+      </section>
+      
+      <div class="dashboard-grid">
+        <!-- Stats Overview -->
+        <div class="stats-card">
+          <h2 class="card-title">📈 Your Stats</h2>
+          <div class="stats-grid" id="stats-grid">
+            <div class="stat-item">
+              <div class="stat-icon">⭐</div>
+              <div class="stat-value" id="total-xp">0</div>
+              <div class="stat-label">Total XP</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">🔥</div>
+              <div class="stat-value" id="current-streak">0</div>
+              <div class="stat-label">Day Streak</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">📖</div>
+              <div class="stat-value" id="articles-read">0</div>
+              <div class="stat-label">Articles Read</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">🎮</div>
+              <div class="stat-value" id="games-played">0</div>
+              <div class="stat-label">Games Played</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">📚</div>
+              <div class="stat-value" id="words-saved">0</div>
+              <div class="stat-label">Words Saved</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">🏆</div>
+              <div class="stat-value" id="badges-earned">0</div>
+              <div class="stat-label">Badges</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Level Progress -->
+        <div class="level-card">
+          <h2 class="card-title">🎯 Level Progress</h2>
+          <div class="level-display">
+            <div class="level-badge" id="level-badge">1</div>
+            <div class="level-info">
+              <div class="level-name" id="level-name">Beginner</div>
+              <div class="xp-bar">
+                <div class="xp-fill" id="xp-fill" style="width: 0%"></div>
+              </div>
+              <div class="xp-text" id="xp-text">0 / 100 XP</div>
+            </div>
+          </div>
+          <div class="next-level">
+            <span>Next level:</span>
+            <strong id="next-level-name">Explorer</strong>
+          </div>
+        </div>
+        
+        <!-- Achievements -->
+        <div class="achievements-card">
+          <h2 class="card-title">🏅 Achievements</h2>
+          <div class="achievements-grid" id="achievements-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="activity-card">
+          <h2 class="card-title">📜 Recent Activity</h2>
+          <div class="activity-list" id="activity-list">
+            <p class="empty-message">Start reading articles and playing games to see your activity here!</p>
+          </div>
+        </div>
+        
+        <!-- Vocabulary Bank -->
+        <div class="vocab-card">
+          <h2 class="card-title">📚 Vocabulary Bank</h2>
+          <div class="vocab-list" id="vocab-list">
+            <p class="empty-message">Save words from the Word of the Day widget to build your vocabulary!</p>
+          </div>
+        </div>
+        
+        <!-- Language Map -->
+        <div class="map-card">
+          <LanguageMap />
+        </div>
+      </div>
+    </main>
+    <Footer />
+    <PixelRobot initialMood="proud" />
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Level definitions
+        const levels = [
+          { level: 1, name: 'Beginner', minXp: 0 },
+          { level: 2, name: 'Explorer', minXp: 100 },
+          { level: 3, name: 'Learner', minXp: 250 },
+          { level: 4, name: 'Scholar', minXp: 500 },
+          { level: 5, name: 'Expert', minXp: 1000 },
+          { level: 6, name: 'Master', minXp: 2000 },
+          { level: 7, name: 'Guru', minXp: 5000 },
+          { level: 8, name: 'Legend', minXp: 10000 },
+        ];
+        
+        // Achievement definitions
+        const achievementDefs = [
+          { id: 'first_article', name: 'First Steps', desc: 'Read your first article', icon: '📖', requirement: (data) => (data.articlesRead || 0) >= 1 },
+          { id: 'streak_3', name: 'Committed', desc: '3-day streak', icon: '🔥', requirement: (data) => (data.streak || 0) >= 3 },
+          { id: 'streak_7', name: 'Weekly Warrior', desc: '7-day streak', icon: '🔥', requirement: (data) => (data.streak || 0) >= 7 },
+          { id: 'streak_30', name: 'Monthly Master', desc: '30-day streak', icon: '👑', requirement: (data) => (data.streak || 0) >= 30 },
+          { id: 'words_10', name: 'Word Collector', desc: 'Save 10 words', icon: '📚', requirement: (data) => (data.wordsSaved || 0) >= 10 },
+          { id: 'words_50', name: 'Vocab Builder', desc: 'Save 50 words', icon: '📚', requirement: (data) => (data.wordsSaved || 0) >= 50 },
+          { id: 'games_5', name: 'Game On', desc: 'Play 5 games', icon: '🎮', requirement: (data) => (data.gamesPlayed || 0) >= 5 },
+          { id: 'games_25', name: 'Game Master', desc: 'Play 25 games', icon: '🎮', requirement: (data) => (data.gamesPlayed || 0) >= 25 },
+          { id: 'xp_500', name: 'Rising Star', desc: 'Earn 500 XP', icon: '⭐', requirement: (data) => (data.xp || 0) >= 500 },
+          { id: 'xp_2000', name: 'XP Champion', desc: 'Earn 2000 XP', icon: '⭐', requirement: (data) => (data.xp || 0) >= 2000 },
+          { id: 'articles_10', name: 'Bookworm', desc: 'Read 10 articles', icon: '📖', requirement: (data) => (data.articlesRead || 0) >= 10 },
+          { id: 'early_bird', name: 'Early Bird', desc: 'Visit before 7am', icon: '🌅', requirement: (data) => data.earlyBird },
+        ];
+        
+        // Get user data
+        const gamificationData = JSON.parse(localStorage.getItem('gamification_data') || '{}');
+        const streak = parseInt(localStorage.getItem('login_streak') || '0', 10);
+        const allVocab = [];
+        
+        // Count words across all languages
+        const supportedLangs = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr', 'pl', 'uk', 'he'];
+        supportedLangs.forEach(lang => {
+          const vocab = JSON.parse(localStorage.getItem(`vocabulary_bank_${lang}`) || '[]');
+          allVocab.push(...vocab);
+        });
+        
+        const userData = {
+          xp: gamificationData.xp || 0,
+          streak: streak,
+          articlesRead: gamificationData.articlesRead || 0,
+          gamesPlayed: gamificationData.gamesPlayed || 0,
+          wordsSaved: allVocab.length,
+          badges: gamificationData.badges || [],
+          earlyBird: new Date().getHours() < 7,
+        };
+        
+        // Calculate level
+        let currentLevel = levels[0];
+        let nextLevel = levels[1];
+        for (let i = levels.length - 1; i >= 0; i--) {
+          if (userData.xp >= levels[i].minXp) {
+            currentLevel = levels[i];
+            nextLevel = levels[i + 1] || levels[i];
+            break;
+          }
+        }
+        
+        // Update stats
+        document.getElementById('total-xp').textContent = userData.xp.toLocaleString();
+        document.getElementById('current-streak').textContent = userData.streak;
+        document.getElementById('articles-read').textContent = userData.articlesRead;
+        document.getElementById('games-played').textContent = userData.gamesPlayed;
+        document.getElementById('words-saved').textContent = userData.wordsSaved;
+        
+        // Count earned badges
+        const earnedBadges = achievementDefs.filter(a => a.requirement(userData));
+        document.getElementById('badges-earned').textContent = earnedBadges.length;
+        
+        // Update level display
+        document.getElementById('level-badge').textContent = currentLevel.level;
+        document.getElementById('level-name').textContent = currentLevel.name;
+        document.getElementById('next-level-name').textContent = nextLevel.name;
+        
+        const xpInLevel = userData.xp - currentLevel.minXp;
+        const xpForNextLevel = nextLevel.minXp - currentLevel.minXp;
+        const progress = xpForNextLevel > 0 ? (xpInLevel / xpForNextLevel) * 100 : 100;
+        
+        document.getElementById('xp-fill').style.width = `${Math.min(progress, 100)}%`;
+        document.getElementById('xp-text').textContent = `${xpInLevel} / ${xpForNextLevel} XP`;
+        
+        // Render achievements
+        const achievementsGrid = document.getElementById('achievements-grid');
+        if (achievementsGrid) {
+          achievementsGrid.innerHTML = achievementDefs.map(achievement => {
+            const earned = achievement.requirement(userData);
+            return `
+              <div class="achievement ${earned ? 'earned' : 'locked'}">
+                <div class="achievement-icon">${earned ? achievement.icon : '🔒'}</div>
+                <div class="achievement-info">
+                  <div class="achievement-name">${achievement.name}</div>
+                  <div class="achievement-desc">${achievement.desc}</div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+        
+        // Render vocabulary
+        const vocabList = document.getElementById('vocab-list');
+        if (vocabList && allVocab.length > 0) {
+          const recentVocab = allVocab.slice(0, 10);
+          vocabList.innerHTML = recentVocab.map(word => `
+            <div class="vocab-item">
+              <div class="vocab-word">${word.word}</div>
+              <div class="vocab-definition">${word.definition}</div>
+            </div>
+          `).join('');
+        }
+        
+        // Render activity
+        const activityList = document.getElementById('activity-list');
+        const readingHistory = JSON.parse(localStorage.getItem('reading_history_en') || '[]');
+        if (activityList && readingHistory.length > 0) {
+          const recentActivity = readingHistory.slice(0, 5);
+          activityList.innerHTML = recentActivity.map(item => `
+            <div class="activity-item">
+              <div class="activity-icon">📖</div>
+              <div class="activity-info">
+                <div class="activity-title">${item.title}</div>
+                <div class="activity-time">${formatTimeAgo(item.lastRead)}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+        
+        function formatTimeAgo(timestamp) {
+          const diff = Date.now() - timestamp;
+          const minutes = Math.floor(diff / 60000);
+          const hours = Math.floor(diff / 3600000);
+          const days = Math.floor(diff / 86400000);
+          
+          if (days > 0) return `${days}d ago`;
+          if (hours > 0) return `${hours}h ago`;
+          if (minutes > 0) return `${minutes}m ago`;
+          return 'Just now';
+        }
+        
+        // Pixel reaction
+        setTimeout(() => {
+          if (window.pixelRobot) {
+            if (userData.streak >= 7) {
+              window.pixelRobot.trigger('celebrating', `Wow! ${userData.streak}-day streak! You're amazing! 🔥`);
+            } else if (userData.xp >= 500) {
+              window.pixelRobot.trigger('proud', `${userData.xp} XP! You're doing great! ⭐`);
+            } else {
+              window.pixelRobot.trigger('encouraging', 'Keep learning! Every day counts! 💪');
+            }
+          }
+        }, 1000);
+      });
+    </script>
+    
+    <style>
+      .dashboard-page {
+        min-height: 100vh;
+        padding: 2rem;
+      }
+      
+      .dashboard-hero {
+        text-align: center;
+        padding: 2rem 0 3rem;
+      }
+      
+      .page-title {
+        font-size: 2.5rem;
+        color: var(--text-primary);
+        margin: 0 0 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+      
+      .icon {
+        font-size: 2.5rem;
+      }
+      
+      .page-description {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+      
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      
+      .dashboard-grid > div {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 1.5rem;
+      }
+      
+      .card-title {
+        font-size: 1.25rem;
+        margin: 0 0 1.5rem;
+        color: var(--text-primary);
+      }
+      
+      /* Stats Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+      
+      .stat-item {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 15px;
+      }
+      
+      .stat-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--accent-primary);
+      }
+      
+      .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+      }
+      
+      /* Level Display */
+      .level-display {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .level-badge {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--accent-primary), #e8930c);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--bg-deep);
+      }
+      
+      .level-info {
+        flex: 1;
+      }
+      
+      .level-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+      }
+      
+      .xp-bar {
+        height: 12px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        overflow: hidden;
+        margin-bottom: 0.25rem;
+      }
+      
+      .xp-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent-primary), #ffb940);
+        border-radius: 6px;
+        transition: width 0.5s ease;
+      }
+      
+      .xp-text {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+      
+      .next-level {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+      
+      .next-level strong {
+        color: var(--accent-primary);
+      }
+      
+      /* Achievements */
+      .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+      
+      .achievement {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        transition: all 0.2s ease;
+      }
+      
+      .achievement.locked {
+        opacity: 0.5;
+      }
+      
+      .achievement.earned {
+        background: rgba(245, 166, 35, 0.1);
+        border: 1px solid rgba(245, 166, 35, 0.3);
+      }
+      
+      .achievement-icon {
+        font-size: 1.5rem;
+      }
+      
+      .achievement-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+      }
+      
+      .achievement-desc {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+      
+      /* Activity & Vocab Lists */
+      .activity-item,
+      .vocab-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      
+      .activity-item:last-child,
+      .vocab-item:last-child {
+        border-bottom: none;
+      }
+      
+      .activity-icon {
+        font-size: 1.25rem;
+      }
+      
+      .activity-title,
+      .vocab-word {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+      }
+      
+      .activity-time,
+      .vocab-definition {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      
+      .empty-message {
+        color: var(--text-muted);
+        text-align: center;
+        padding: 2rem;
+        font-size: 0.95rem;
+      }
+      
+      /* Map Card */
+      .map-card {
+        grid-column: 1 / -1;
+      }
+      
+      @media (max-width: 768px) {
+        .page-title {
+          font-size: 1.75rem;
+        }
+        
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .achievements-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </body>
+</html>

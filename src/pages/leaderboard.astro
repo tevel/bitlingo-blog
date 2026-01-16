@@ -1,0 +1,620 @@
+---
+/**
+ * Leaderboard Page
+ * Shows top learners by XP, games completed, and streak length.
+ */
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PixelRobot from '../components/PixelRobot.astro';
+
+const title = 'Leaderboard | BitLingo Blog';
+const description = 'See the top language learners on BitLingo. Compete for XP, streaks, and achievements!';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <Header />
+    <main class="leaderboard-page">
+      <section class="leaderboard-hero">
+        <h1 class="page-title">
+          <span class="trophy">🏆</span>
+          Leaderboard
+        </h1>
+        <p class="page-description">Compete with fellow language learners!</p>
+      </section>
+      
+      <div class="leaderboard-content">
+        <!-- Time Period Tabs -->
+        <div class="period-tabs">
+          <button class="period-tab active" data-period="weekly">This Week</button>
+          <button class="period-tab" data-period="monthly">This Month</button>
+          <button class="period-tab" data-period="alltime">All Time</button>
+        </div>
+        
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+          <button class="category-tab active" data-category="xp">
+            <span class="tab-icon">⭐</span>
+            <span class="tab-label">XP Points</span>
+          </button>
+          <button class="category-tab" data-category="streak">
+            <span class="tab-icon">🔥</span>
+            <span class="tab-label">Streak</span>
+          </button>
+          <button class="category-tab" data-category="games">
+            <span class="tab-icon">🎮</span>
+            <span class="tab-label">Games</span>
+          </button>
+          <button class="category-tab" data-category="articles">
+            <span class="tab-icon">📖</span>
+            <span class="tab-label">Articles</span>
+          </button>
+        </div>
+        
+        <!-- Your Position -->
+        <div class="your-position" id="your-position">
+          <div class="position-badge">YOU</div>
+          <div class="position-info">
+            <span class="position-rank" id="your-rank">#--</span>
+            <span class="position-name">Anonymous Learner</span>
+          </div>
+          <div class="position-score" id="your-score">0</div>
+        </div>
+        
+        <!-- Top 3 Podium -->
+        <div class="podium">
+          <div class="podium-place second" id="place-2">
+            <div class="place-avatar">🥈</div>
+            <div class="place-name">---</div>
+            <div class="place-score">0</div>
+            <div class="place-stand">2</div>
+          </div>
+          <div class="podium-place first" id="place-1">
+            <div class="place-crown">👑</div>
+            <div class="place-avatar">🥇</div>
+            <div class="place-name">---</div>
+            <div class="place-score">0</div>
+            <div class="place-stand">1</div>
+          </div>
+          <div class="podium-place third" id="place-3">
+            <div class="place-avatar">🥉</div>
+            <div class="place-name">---</div>
+            <div class="place-score">0</div>
+            <div class="place-stand">3</div>
+          </div>
+        </div>
+        
+        <!-- Leaderboard List -->
+        <div class="leaderboard-list" id="leaderboard-list">
+          <!-- Populated by JS -->
+        </div>
+        
+        <!-- Info Box -->
+        <div class="info-box">
+          <div class="info-icon">ℹ️</div>
+          <div class="info-text">
+            <strong>How to climb the leaderboard:</strong>
+            <ul>
+              <li>Read articles to earn XP</li>
+              <li>Complete games and quizzes</li>
+              <li>Maintain your daily streak</li>
+              <li>Save words to your vocabulary bank</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+    <Footer />
+    <PixelRobot />
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const periodTabs = document.querySelectorAll('.period-tab');
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        const leaderboardList = document.getElementById('leaderboard-list');
+        const yourRank = document.getElementById('your-rank');
+        const yourScore = document.getElementById('your-score');
+        
+        let currentPeriod = 'weekly';
+        let currentCategory = 'xp';
+        
+        // Sample leaderboard data (in production, this would come from a backend)
+        // For now, we generate realistic-looking data mixed with local user data
+        const sampleNames = [
+          'PolyglotPro', 'WordWizard', 'LinguaLearner', 'VocabViper', 
+          'FlashcardFan', 'StreakSeeker', 'GrammarGuru', 'AccentAce',
+          'DictDiver', 'PhrasePhenom', 'SyntaxStar', 'LexiconLion',
+          'TongueTwister', 'IdiomExpert', 'CognateKing', 'RootRanger'
+        ];
+        
+        function generateLeaderboard(category, period) {
+          // Get user's actual data
+          const userData = JSON.parse(localStorage.getItem('gamification_data') || '{}');
+          const userXp = userData.xp || 0;
+          const userStreak = parseInt(localStorage.getItem('login_streak') || '0', 10);
+          const userGames = userData.gamesPlayed || 0;
+          const userArticles = userData.articlesRead || 0;
+          
+          let userValue = 0;
+          let maxValue = 0;
+          let suffix = '';
+          
+          switch (category) {
+            case 'xp':
+              userValue = userXp;
+              maxValue = period === 'weekly' ? 500 : period === 'monthly' ? 2000 : 10000;
+              suffix = ' XP';
+              break;
+            case 'streak':
+              userValue = userStreak;
+              maxValue = period === 'weekly' ? 7 : period === 'monthly' ? 30 : 365;
+              suffix = ' days';
+              break;
+            case 'games':
+              userValue = userGames;
+              maxValue = period === 'weekly' ? 20 : period === 'monthly' ? 80 : 500;
+              suffix = ' games';
+              break;
+            case 'articles':
+              userValue = userArticles;
+              maxValue = period === 'weekly' ? 10 : period === 'monthly' ? 40 : 200;
+              suffix = ' read';
+              break;
+          }
+          
+          // Generate sample entries
+          const entries = sampleNames.map((name, i) => {
+            const baseScore = maxValue - (i * (maxValue / 20));
+            const variance = Math.random() * (maxValue / 10);
+            return {
+              name,
+              score: Math.max(0, Math.floor(baseScore + variance)),
+              isUser: false
+            };
+          });
+          
+          // Add user
+          entries.push({
+            name: 'You',
+            score: userValue,
+            isUser: true
+          });
+          
+          // Sort by score
+          entries.sort((a, b) => b.score - a.score);
+          
+          // Add ranks
+          entries.forEach((entry, i) => {
+            entry.rank = i + 1;
+          });
+          
+          return { entries, suffix, userValue };
+        }
+        
+        function renderLeaderboard() {
+          const { entries, suffix, userValue } = generateLeaderboard(currentCategory, currentPeriod);
+          
+          // Update podium
+          const top3 = entries.slice(0, 3);
+          top3.forEach((entry, i) => {
+            const placeEl = document.getElementById(`place-${i + 1}`);
+            if (placeEl) {
+              const nameEl = placeEl.querySelector('.place-name');
+              const scoreEl = placeEl.querySelector('.place-score');
+              if (nameEl) nameEl.textContent = entry.name;
+              if (scoreEl) scoreEl.textContent = entry.score + suffix;
+              if (entry.isUser) placeEl.classList.add('is-you');
+              else placeEl.classList.remove('is-you');
+            }
+          });
+          
+          // Find user rank
+          const userEntry = entries.find(e => e.isUser);
+          if (yourRank) yourRank.textContent = `#${userEntry?.rank || '--'}`;
+          if (yourScore) yourScore.textContent = userValue + suffix;
+          
+          // Render list (4-20)
+          if (leaderboardList) {
+            const listEntries = entries.slice(3, 20);
+            leaderboardList.innerHTML = listEntries.map(entry => `
+              <div class="leaderboard-item ${entry.isUser ? 'is-you' : ''}">
+                <span class="item-rank">#${entry.rank}</span>
+                <span class="item-name">${entry.name}</span>
+                <span class="item-score">${entry.score}${suffix}</span>
+              </div>
+            `).join('');
+          }
+        }
+        
+        // Tab handlers
+        periodTabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            periodTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentPeriod = tab.dataset.period || 'weekly';
+            renderLeaderboard();
+          });
+        });
+        
+        categoryTabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            categoryTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentCategory = tab.dataset.category || 'xp';
+            renderLeaderboard();
+          });
+        });
+        
+        // Initial render
+        renderLeaderboard();
+        
+        // Pixel reaction
+        setTimeout(() => {
+          if (window.pixelRobot) {
+            window.pixelRobot.trigger('excited', 'Ready to climb the leaderboard? 🚀');
+          }
+        }, 1000);
+      });
+    </script>
+    
+    <style>
+      .leaderboard-page {
+        min-height: 100vh;
+        padding: 2rem;
+      }
+      
+      .leaderboard-hero {
+        text-align: center;
+        padding: 3rem 0;
+      }
+      
+      .page-title {
+        font-size: 3rem;
+        color: var(--text-primary);
+        margin: 0 0 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .trophy {
+        font-size: 3.5rem;
+        animation: trophy-bounce 2s ease infinite;
+      }
+      
+      @keyframes trophy-bounce {
+        0%, 100% { transform: translateY(0) rotate(-5deg); }
+        50% { transform: translateY(-10px) rotate(5deg); }
+      }
+      
+      .page-description {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+      
+      .leaderboard-content {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .period-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .period-tab {
+        padding: 0.5rem 1.5rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 50px;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      
+      .period-tab:hover {
+        border-color: var(--accent-primary);
+      }
+      
+      .period-tab.active {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: var(--bg-deep);
+      }
+      
+      .category-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .category-tab {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      
+      .category-tab:hover {
+        border-color: var(--accent-primary);
+        transform: translateY(-2px);
+      }
+      
+      .category-tab.active {
+        background: linear-gradient(145deg, rgba(245, 166, 35, 0.2), rgba(245, 166, 35, 0.1));
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+      }
+      
+      .tab-icon {
+        font-size: 1.25rem;
+      }
+      
+      .tab-label {
+        font-weight: 500;
+      }
+      
+      .your-position {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.5rem;
+        background: linear-gradient(145deg, rgba(245, 166, 35, 0.15), rgba(245, 166, 35, 0.05));
+        border: 2px solid var(--accent-primary);
+        border-radius: 15px;
+        margin-bottom: 2rem;
+      }
+      
+      .position-badge {
+        background: var(--accent-primary);
+        color: var(--bg-deep);
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+      }
+      
+      .position-info {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      
+      .position-rank {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent-primary);
+      }
+      
+      .position-name {
+        font-size: 1rem;
+        color: var(--text-primary);
+      }
+      
+      .position-score {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      
+      .podium {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding: 1rem;
+      }
+      
+      .podium-place {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 120px;
+      }
+      
+      .podium-place.is-you {
+        animation: glow-you 2s ease infinite;
+      }
+      
+      @keyframes glow-you {
+        0%, 100% { filter: drop-shadow(0 0 10px rgba(245, 166, 35, 0.5)); }
+        50% { filter: drop-shadow(0 0 20px rgba(245, 166, 35, 0.8)); }
+      }
+      
+      .place-crown {
+        font-size: 2rem;
+        margin-bottom: -0.5rem;
+        animation: crown-float 2s ease infinite;
+      }
+      
+      @keyframes crown-float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+      }
+      
+      .place-avatar {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .place-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+      
+      .place-score {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+      }
+      
+      .place-stand {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--bg-deep);
+        border-radius: 10px 10px 0 0;
+      }
+      
+      .first .place-stand {
+        background: linear-gradient(180deg, #ffd700, #b8860b);
+        height: 80px;
+      }
+      
+      .second .place-stand {
+        background: linear-gradient(180deg, #c0c0c0, #808080);
+        height: 60px;
+      }
+      
+      .third .place-stand {
+        background: linear-gradient(180deg, #cd7f32, #8b4513);
+        height: 45px;
+      }
+      
+      .leaderboard-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+      }
+      
+      .leaderboard-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.875rem 1.25rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        transition: all 0.2s ease;
+      }
+      
+      .leaderboard-item:hover {
+        border-color: var(--accent-primary);
+        transform: translateX(5px);
+      }
+      
+      .leaderboard-item.is-you {
+        background: linear-gradient(145deg, rgba(245, 166, 35, 0.1), rgba(245, 166, 35, 0.05));
+        border-color: var(--accent-primary);
+      }
+      
+      .item-rank {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        width: 40px;
+      }
+      
+      .item-name {
+        flex: 1;
+        font-size: 1rem;
+        color: var(--text-primary);
+      }
+      
+      .leaderboard-item.is-you .item-name {
+        color: var(--accent-primary);
+        font-weight: 600;
+      }
+      
+      .item-score {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+      
+      .info-box {
+        display: flex;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 15px;
+      }
+      
+      .info-icon {
+        font-size: 1.5rem;
+      }
+      
+      .info-text {
+        flex: 1;
+      }
+      
+      .info-text strong {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+      }
+      
+      .info-text ul {
+        margin: 0;
+        padding-left: 1.25rem;
+        color: var(--text-secondary);
+      }
+      
+      .info-text li {
+        margin-bottom: 0.25rem;
+      }
+      
+      @media (max-width: 600px) {
+        .page-title {
+          font-size: 2rem;
+        }
+        
+        .trophy {
+          font-size: 2.5rem;
+        }
+        
+        .category-tabs {
+          gap: 0.5rem;
+        }
+        
+        .category-tab {
+          padding: 0.5rem 0.75rem;
+        }
+        
+        .tab-label {
+          display: none;
+        }
+        
+        .podium-place {
+          width: 90px;
+        }
+        
+        .place-avatar {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </body>
+</html>

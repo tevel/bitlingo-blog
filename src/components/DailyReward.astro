@@ -1,0 +1,364 @@
+---
+/**
+ * Daily Login Reward Component
+ * Awards bonus XP for consecutive daily visits with milestone rewards.
+ */
+---
+
+<div class="daily-reward-trigger" id="daily-reward-trigger" hidden>
+  <div class="reward-modal" id="daily-reward-modal">
+    <div class="reward-content">
+      <div class="reward-icon" id="reward-icon">🎁</div>
+      <h2 class="reward-title" id="reward-title">Daily Reward!</h2>
+      <p class="reward-message" id="reward-message">You earned bonus XP for visiting today!</p>
+      
+      <div class="reward-xp" id="reward-xp">
+        <span class="xp-amount">+10 XP</span>
+      </div>
+      
+      <div class="streak-display" id="streak-display">
+        <div class="streak-flames">
+          <span class="flame" data-day="1">🔥</span>
+          <span class="flame" data-day="2">🔥</span>
+          <span class="flame" data-day="3">🔥</span>
+          <span class="flame" data-day="4">🔥</span>
+          <span class="flame" data-day="5">🔥</span>
+          <span class="flame" data-day="6">🔥</span>
+          <span class="flame" data-day="7">🔥</span>
+        </div>
+        <p class="streak-text" id="streak-text">Day 1 streak!</p>
+      </div>
+      
+      <div class="milestone-badge" id="milestone-badge" hidden>
+        <div class="badge-icon">🏆</div>
+        <p class="badge-text" id="badge-text">7-Day Streak Master!</p>
+      </div>
+      
+      <button class="claim-btn" id="claim-reward-btn">
+        <span>Claim Reward</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const trigger = document.getElementById('daily-reward-trigger');
+    const modal = document.getElementById('daily-reward-modal');
+    const claimBtn = document.getElementById('claim-reward-btn');
+    const rewardIcon = document.getElementById('reward-icon');
+    const rewardTitle = document.getElementById('reward-title');
+    const rewardMessage = document.getElementById('reward-message');
+    const rewardXp = document.getElementById('reward-xp');
+    const streakDisplay = document.getElementById('streak-display');
+    const streakText = document.getElementById('streak-text');
+    const milestoneBadge = document.getElementById('milestone-badge');
+    const badgeText = document.getElementById('badge-text');
+    
+    if (!trigger || !modal || !claimBtn) return;
+    
+    // Check if user has claimed today's reward
+    const today = new Date().toDateString();
+    const lastClaim = localStorage.getItem('last_daily_claim');
+    const streak = parseInt(localStorage.getItem('login_streak') || '0', 10);
+    const lastVisit = localStorage.getItem('last_visit_date');
+    
+    // Calculate new streak
+    let newStreak = 1;
+    if (lastVisit) {
+      const lastDate = new Date(lastVisit);
+      const todayDate = new Date(today);
+      const diffDays = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 1) {
+        // Consecutive day
+        newStreak = streak + 1;
+      } else if (diffDays === 0) {
+        // Same day
+        newStreak = streak;
+      } else {
+        // Streak broken
+        newStreak = 1;
+      }
+    }
+    
+    // Update last visit
+    localStorage.setItem('last_visit_date', today);
+    localStorage.setItem('login_streak', newStreak.toString());
+    
+    // If already claimed today, don't show
+    if (lastClaim === today) {
+      return;
+    }
+    
+    // Calculate reward based on streak
+    let xpReward = 10;
+    let isMilestone = false;
+    let milestoneText = '';
+    let icon = '🎁';
+    
+    if (newStreak >= 30) {
+      xpReward = 100;
+      icon = '👑';
+      if (newStreak === 30 || newStreak % 30 === 0) {
+        isMilestone = true;
+        milestoneText = `${newStreak}-Day Legend! 👑`;
+      }
+    } else if (newStreak >= 7) {
+      xpReward = 50;
+      icon = '🏆';
+      if (newStreak === 7 || newStreak === 14 || newStreak === 21) {
+        isMilestone = true;
+        milestoneText = `${newStreak}-Day Streak Master!`;
+      }
+    } else if (newStreak >= 3) {
+      xpReward = 25;
+      icon = '⭐';
+      if (newStreak === 3) {
+        isMilestone = true;
+        milestoneText = '3-Day Streak Started!';
+      }
+    }
+    
+    // Update UI
+    if (rewardIcon) rewardIcon.textContent = icon;
+    if (rewardTitle) rewardTitle.textContent = newStreak > 1 ? `Day ${newStreak} Reward!` : 'Welcome Back!';
+    if (rewardMessage) rewardMessage.textContent = newStreak > 1 
+      ? `You're on a ${newStreak}-day streak! Keep it up!`
+      : 'You earned bonus XP for visiting today!';
+    
+    const xpAmountEl = rewardXp?.querySelector('.xp-amount');
+    if (xpAmountEl) xpAmountEl.textContent = `+${xpReward} XP`;
+    
+    // Update streak flames
+    const flames = streakDisplay?.querySelectorAll('.flame');
+    flames?.forEach((flame, index) => {
+      if (index < Math.min(newStreak, 7)) {
+        flame.classList.add('active');
+      }
+    });
+    
+    if (streakText) {
+      streakText.textContent = newStreak === 1 
+        ? 'Start your streak!' 
+        : `${Math.min(newStreak, 7)}/7 days this week`;
+    }
+    
+    // Show milestone if applicable
+    if (isMilestone && milestoneBadge && badgeText) {
+      milestoneBadge.hidden = false;
+      badgeText.textContent = milestoneText;
+    }
+    
+    // Show the reward modal
+    setTimeout(() => {
+      trigger.hidden = false;
+      trigger.classList.add('visible');
+    }, 1000);
+    
+    // Handle claim
+    claimBtn.addEventListener('click', () => {
+      // Mark as claimed
+      localStorage.setItem('last_daily_claim', today);
+      
+      // Award XP
+      window.dispatchEvent(new CustomEvent('xp:gained', { 
+        detail: { amount: xpReward, reason: 'Daily login reward' } 
+      }));
+      
+      // Award badge if milestone
+      if (isMilestone) {
+        window.dispatchEvent(new CustomEvent('achievement:unlocked', {
+          detail: { badge: milestoneText, icon: icon }
+        }));
+      }
+      
+      // Trigger Pixel reaction
+      if (window.pixelRobot) {
+        if (newStreak >= 7) {
+          window.pixelRobot.trigger('celebrating', `Amazing! ${newStreak}-day streak! 🔥🎉`);
+        } else {
+          window.pixelRobot.trigger('happy', `Welcome back! Day ${newStreak}! 🔥`);
+        }
+      }
+      
+      // Hide modal
+      trigger.classList.remove('visible');
+      setTimeout(() => {
+        trigger.hidden = true;
+      }, 300);
+    });
+    
+    // Close on backdrop click
+    trigger.addEventListener('click', (e) => {
+      if (e.target === trigger) {
+        claimBtn.click();
+      }
+    });
+  });
+</script>
+
+<style>
+  .daily-reward-trigger {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .daily-reward-trigger.visible {
+    opacity: 1;
+  }
+  
+  .reward-modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 24px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+  
+  .daily-reward-trigger.visible .reward-modal {
+    transform: scale(1);
+  }
+  
+  .reward-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 0.6s ease infinite;
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .reward-title {
+    font-size: 1.75rem;
+    color: var(--accent-primary);
+    margin: 0 0 0.5rem;
+  }
+  
+  .reward-message {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem;
+  }
+  
+  .reward-xp {
+    margin-bottom: 1.5rem;
+  }
+  
+  .xp-amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+    text-shadow: 0 0 20px rgba(245, 166, 35, 0.5);
+  }
+  
+  .streak-display {
+    margin-bottom: 1.5rem;
+  }
+  
+  .streak-flames {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .flame {
+    font-size: 1.5rem;
+    opacity: 0.3;
+    filter: grayscale(1);
+    transition: all 0.3s ease;
+  }
+  
+  .flame.active {
+    opacity: 1;
+    filter: grayscale(0);
+    animation: flame-pulse 0.5s ease;
+  }
+  
+  @keyframes flame-pulse {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+  
+  .streak-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+  
+  .milestone-badge {
+    background: linear-gradient(145deg, rgba(245, 166, 35, 0.2), rgba(245, 166, 35, 0.1));
+    border: 1px solid var(--accent-primary);
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    animation: shine 2s ease infinite;
+  }
+  
+  @keyframes shine {
+    0%, 100% { box-shadow: 0 0 10px rgba(245, 166, 35, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(245, 166, 35, 0.6); }
+  }
+  
+  .badge-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .badge-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    margin: 0;
+  }
+  
+  .claim-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: var(--accent-primary);
+    border: none;
+    border-radius: 50px;
+    color: var(--bg-deep);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .claim-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(245, 166, 35, 0.4);
+  }
+  
+  .claim-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+</style>

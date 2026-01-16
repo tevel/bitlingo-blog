@@ -1,6 +1,6 @@
 # BitLingo Blog - Feature Roadmap
 
-## ✅ All Features Completed!
+## ✅ Phase 1: Completed Features
 
 ### 🎮 Gamification & Progress
 - [x] Streak Counter - Track consecutive days visited, show fire 🔥 badges
@@ -49,16 +49,72 @@
 - [x] Offline Page - Friendly offline experience
 
 ### 🤖 Pixel the Robot (Mascot)
-- [x] Create PixelRobot.astro component with all mood states and animations
-- [x] Add speech bubble system with time-based greetings
-- [x] Implement interaction logic (click, hover, sleep timer)
-- [x] Connect Pixel to game events (quiz completion, achievements)
-- [x] Add Pixel to blog layout and key pages
-- [x] Test all moods and interactions
+- [x] Create PixelRobot.astro with all mood states and animations
+- [x] 200+ phrases in 16 languages
+- [x] Time-based greetings and random phrases on click
+- [x] Connect to game events (quiz completion, achievements)
 
 ---
 
-## 📋 New Components Created
+## 🚧 Phase 2: New Features (In Progress)
+
+### 📅 Daily Engagement
+- [ ] Word of the Day Widget - Featured word with audio, examples, translations
+- [ ] Daily Login Rewards - Bonus XP for consecutive visits
+- [ ] Mystery Word Challenge - Daily guess-the-word puzzle
+- [ ] Quote of the Day - Famous quotes in different languages
+
+### 🗺️ Visual Discovery
+- [ ] Interactive Language Map - Click countries to explore languages
+- [ ] Language Family Tree - Interactive visualization of language relationships
+- [ ] Difficulty Ratings - Tag articles by CEFR level (A1-C2)
+- [ ] Visual Vocabulary Cards - Image-based flashcards
+
+### 🏆 Extended Gamification
+- [ ] Public Leaderboard Page - Top learners by XP, games, streaks
+- [ ] Weekly Challenges - Time-limited goals with special badges
+- [ ] Seasonal Events - Holiday-themed challenges
+- [ ] Achievement Showcase - Display badges prominently
+
+### 📊 Learning Analytics
+- [ ] Learning Dashboard - Personal progress charts and stats
+- [ ] Vocabulary Bank - Personal dictionary with saved words
+- [ ] Spaced Repetition - Smart review reminders
+- [ ] Goal Setting - Set and track personal learning goals
+
+### 🎓 Learning Paths
+- [ ] Curated Article Sequences - "Travel Spanish", "Business Japanese"
+- [ ] Progress Tracking - Track completion through learning paths
+- [ ] Certificates - Completion certificates for paths
+
+### 🎧 Multimedia Content
+- [ ] Mini Podcast Episodes - 2-3 min audio lessons
+- [ ] Pronunciation Audio - Native speaker recordings
+- [ ] Conversation Simulations - Interactive dialogues
+
+---
+
+## 📋 Implementation Priority
+
+### Phase 2.1: Quick Wins ⚡ (Today)
+1. [ ] Word of the Day Widget
+2. [ ] Daily Login Rewards
+3. [ ] Difficulty Ratings (CEFR levels)
+4. [ ] Public Leaderboard Page
+
+### Phase 2.2: Visual Features 🎨
+5. [ ] Interactive Language Map
+6. [ ] Visual Vocabulary Cards
+7. [ ] Learning Dashboard
+
+### Phase 2.3: Extended Content 📚
+8. [ ] Learning Paths system
+9. [ ] Weekly Challenges
+10. [ ] Vocabulary Bank
+
+---
+
+## 📋 Components Reference
 
 | Component | Description |
 |-----------|-------------|
@@ -78,17 +134,10 @@
 | `MobileNav.astro` | Bottom navigation for mobile |
 | `PageTransition.astro` | Page transition animations |
 | `TextToSpeech.astro` | Listen to articles |
-| `PixelRobot.astro` | Interactive robot mascot with moods & speech bubbles |
+| `PixelRobot.astro` | Interactive robot mascot |
 
 ---
 
 ## 🚀 Deployment
 
-All features are ready for deployment. Run:
-
-```bash
-yarn build
-yarn deploy
-```
-
-Or push to `main` branch for automatic GitHub Actions deployment.
+Push to `main` branch for automatic GitHub Actions deployment to Cloudflare Pages.

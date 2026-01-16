@@ -57,6 +57,12 @@ import ProgressWidget from './ProgressWidget.astro';
 				</svg>
 				<span>Games</span>
 			</a>
+			<a href="/leaderboard" class="nav-link leaderboard-link">
+				<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+					<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+				</svg>
+				<span>Leaderboard</span>
+			</a>
 			<a href="/about" class="nav-link">
 				<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
 					<circle cx="12" cy="12" r="10"/>
@@ -207,14 +213,21 @@ import ProgressWidget from './ProgressWidget.astro';
 		width: 60%;
 	}
 	
-	.games-link {
+	.games-link,
+	.leaderboard-link {
 		background: linear-gradient(135deg, rgba(245, 166, 35, 0.1), rgba(245, 166, 35, 0.05));
 		border: 1px solid rgba(245, 166, 35, 0.2);
 	}
 	
-	.games-link:hover {
+	.games-link:hover,
+	.leaderboard-link:hover {
 		background: linear-gradient(135deg, rgba(245, 166, 35, 0.2), rgba(245, 166, 35, 0.1));
 		border-color: rgba(245, 166, 35, 0.4);
+	}
+	
+	.leaderboard-link .nav-icon {
+		fill: var(--accent-primary);
+		stroke: var(--accent-primary);
 	}
 	
 	/* CTA Button */

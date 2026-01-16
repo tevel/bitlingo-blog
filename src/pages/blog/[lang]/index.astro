@@ -11,6 +11,8 @@ import TagCloud from '../../../components/TagCloud.astro';
 import PopularPosts from '../../../components/PopularPosts.astro';
 import ScrollReveal from '../../../components/ScrollReveal.astro';
 import PixelRobot from '../../../components/PixelRobot.astro';
+import WordOfTheDay from '../../../components/WordOfTheDay.astro';
+import DailyReward from '../../../components/DailyReward.astro';
 import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE, SUPPORTED_LANGS } from '../../../consts';
 import { calculateReadingTime } from '../../../utils/readingTime';
 
@@ -197,6 +199,9 @@ const searchPlaceholders: Record<string, string> = {
 
 				<!-- Sidebar -->
 				<aside class="sidebar">
+					<ScrollReveal animation="fade-left" delay={100}>
+						<WordOfTheDay lang={lang} />
+					</ScrollReveal>
 					<ScrollReveal animation="fade-left" delay={200}>
 						<PopularPosts lang={lang} limit={5} />
 					</ScrollReveal>
@@ -207,6 +212,9 @@ const searchPlaceholders: Record<string, string> = {
 			</div>
 		</main>
 		<Footer />
+		
+		<!-- Daily Login Reward -->
+		<DailyReward />
 		
 		<!-- Pixel the Robot Mascot -->
 		<PixelRobot initialMood="happy" position="bottom-right" />

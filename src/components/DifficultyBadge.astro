@@ -1,0 +1,79 @@
+---
+/**
+ * Difficulty Badge Component
+ * Shows CEFR language proficiency level for articles.
+ */
+export type CEFRLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+
+interface Props {
+  level: CEFRLevel;
+  showLabel?: boolean;
+  size?: 'small' | 'medium' | 'large';
+}
+
+const { level, showLabel = true, size = 'medium' } = Astro.props;
+
+const levelInfo: Record<CEFRLevel, { label: string; color: string; description: string }> = {
+  'A1': { label: 'Beginner', color: '#10b981', description: 'Basic vocabulary and simple phrases' },
+  'A2': { label: 'Elementary', color: '#22c55e', description: 'Common expressions and basic communication' },
+  'B1': { label: 'Intermediate', color: '#f59e0b', description: 'Can handle most travel situations' },
+  'B2': { label: 'Upper Intermediate', color: '#f97316', description: 'Can interact with fluency and spontaneity' },
+  'C1': { label: 'Advanced', color: '#ef4444', description: 'Express ideas fluently and precisely' },
+  'C2': { label: 'Mastery', color: '#dc2626', description: 'Near-native level comprehension' },
+};
+
+const info = levelInfo[level];
+---
+
+<span 
+  class={`difficulty-badge ${size}`} 
+  style={`--badge-color: ${info.color}`}
+  title={info.description}
+>
+  <span class="badge-level">{level}</span>
+  {showLabel && <span class="badge-label">{info.label}</span>}
+</span>
+
+<style>
+  .difficulty-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: color-mix(in srgb, var(--badge-color) 15%, transparent);
+    border: 1px solid var(--badge-color);
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: help;
+    transition: all 0.2s ease;
+  }
+  
+  .difficulty-badge:hover {
+    background: color-mix(in srgb, var(--badge-color) 25%, transparent);
+    transform: scale(1.05);
+  }
+  
+  .badge-level {
+    color: var(--badge-color);
+  }
+  
+  .badge-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  
+  /* Size variants */
+  .difficulty-badge.small {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  
+  .difficulty-badge.medium {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .difficulty-badge.large {
+    padding: 0.35rem 1rem;
+    font-size: 0.9rem;
+  }
+</style>

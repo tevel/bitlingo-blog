@@ -1,0 +1,529 @@
+---
+/**
+ * Interactive Language Map Component
+ * Click on regions to explore languages from around the world.
+ */
+interface LanguageInfo {
+  code: string;
+  name: string;
+  nativeName: string;
+  speakers: string;
+  greeting: string;
+  funFact: string;
+  flag: string;
+}
+
+const languages: Record<string, LanguageInfo> = {
+  es: { code: 'es', name: 'Spanish', nativeName: 'Español', speakers: '500M+', greeting: '¡Hola!', funFact: 'Spanish is the 2nd most spoken native language', flag: '🇪🇸' },
+  fr: { code: 'fr', name: 'French', nativeName: 'Français', speakers: '300M+', greeting: 'Bonjour!', funFact: 'French is spoken on all 5 continents', flag: '🇫🇷' },
+  de: { code: 'de', name: 'German', nativeName: 'Deutsch', speakers: '130M+', greeting: 'Hallo!', funFact: 'German has the longest published word at 63 letters', flag: '🇩🇪' },
+  it: { code: 'it', name: 'Italian', nativeName: 'Italiano', speakers: '85M+', greeting: 'Ciao!', funFact: 'Italian is the language of music', flag: '🇮🇹' },
+  pt: { code: 'pt', name: 'Portuguese', nativeName: 'Português', speakers: '260M+', greeting: 'Olá!', funFact: 'Portuguese is the fastest growing European language', flag: '🇧🇷' },
+  ru: { code: 'ru', name: 'Russian', nativeName: 'Русский', speakers: '255M+', greeting: 'Привет!', funFact: 'Russian has 6 grammatical cases', flag: '🇷🇺' },
+  zh: { code: 'zh', name: 'Chinese', nativeName: '中文', speakers: '1.3B+', greeting: '你好!', funFact: 'Chinese has over 50,000 characters', flag: '🇨🇳' },
+  ja: { code: 'ja', name: 'Japanese', nativeName: '日本語', speakers: '125M+', greeting: 'こんにちは!', funFact: 'Japanese uses 3 writing systems', flag: '🇯🇵' },
+  ko: { code: 'ko', name: 'Korean', nativeName: '한국어', speakers: '80M+', greeting: '안녕하세요!', funFact: 'Korean alphabet was invented by a king', flag: '🇰🇷' },
+  ar: { code: 'ar', name: 'Arabic', nativeName: 'العربية', speakers: '420M+', greeting: 'مرحبا!', funFact: 'Arabic is written right to left', flag: '🇸🇦' },
+  hi: { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', speakers: '600M+', greeting: 'नमस्ते!', funFact: 'Hindi has no articles (a, an, the)', flag: '🇮🇳' },
+  tr: { code: 'tr', name: 'Turkish', nativeName: 'Türkçe', speakers: '80M+', greeting: 'Merhaba!', funFact: 'Turkish words can be entire sentences', flag: '🇹🇷' },
+  pl: { code: 'pl', name: 'Polish', nativeName: 'Polski', speakers: '45M+', greeting: 'Cześć!', funFact: 'Polish has 7 grammatical cases', flag: '🇵🇱' },
+  uk: { code: 'uk', name: 'Ukrainian', nativeName: 'Українська', speakers: '45M+', greeting: 'Привіт!', funFact: 'Ukrainian is one of the most melodic languages', flag: '🇺🇦' },
+  he: { code: 'he', name: 'Hebrew', nativeName: 'עברית', speakers: '9M+', greeting: 'שלום!', funFact: 'Hebrew was revived as a spoken language', flag: '🇮🇱' },
+};
+
+// Group languages by region for the map
+const regions = {
+  europe: ['es', 'fr', 'de', 'it', 'pt', 'pl', 'uk'],
+  eastAsia: ['zh', 'ja', 'ko'],
+  middleEast: ['ar', 'he', 'tr'],
+  southAsia: ['hi'],
+  eurasia: ['ru'],
+};
+---
+
+<div class="language-map-container" id="language-map">
+  <h2 class="map-title">
+    <span class="globe">🌍</span>
+    Explore Languages of the World
+  </h2>
+  
+  <div class="map-wrapper">
+    <!-- Simplified World Map with clickable regions -->
+    <svg viewBox="0 0 800 400" class="world-map">
+      <!-- Europe -->
+      <g class="region" data-region="europe">
+        <path d="M380 80 L420 70 L450 90 L440 130 L420 150 L380 140 L370 110 Z" class="region-path" />
+        <text x="405" y="115" class="region-label">Europe</text>
+      </g>
+      
+      <!-- East Asia -->
+      <g class="region" data-region="eastAsia">
+        <path d="M580 80 L660 70 L680 110 L670 160 L620 170 L580 140 L570 100 Z" class="region-path" />
+        <text x="625" y="120" class="region-label">Asia</text>
+      </g>
+      
+      <!-- Middle East -->
+      <g class="region" data-region="middleEast">
+        <path d="M450 150 L510 140 L530 180 L520 220 L470 230 L440 190 Z" class="region-path" />
+        <text x="480" y="185" class="region-label">Middle East</text>
+      </g>
+      
+      <!-- South Asia -->
+      <g class="region" data-region="southAsia">
+        <path d="M530 180 L580 170 L610 210 L590 260 L540 260 L520 220 Z" class="region-path" />
+        <text x="560" y="220" class="region-label">India</text>
+      </g>
+      
+      <!-- Russia/Eurasia -->
+      <g class="region" data-region="eurasia">
+        <path d="M450 50 L580 40 L680 60 L660 100 L580 80 L450 90 Z" class="region-path" />
+        <text x="560" y="70" class="region-label">Russia</text>
+      </g>
+      
+      <!-- Americas (decorative) -->
+      <g class="decorative-region">
+        <path d="M80 80 L150 70 L180 120 L170 200 L130 240 L100 200 L70 140 Z" fill="rgba(100, 100, 100, 0.2)" />
+        <path d="M130 240 L170 250 L180 320 L140 350 L100 330 L90 280 Z" fill="rgba(100, 100, 100, 0.2)" />
+      </g>
+      
+      <!-- Africa (decorative) -->
+      <g class="decorative-region">
+        <path d="M350 180 L420 170 L440 230 L420 300 L370 320 L340 280 L330 220 Z" fill="rgba(100, 100, 100, 0.2)" />
+      </g>
+      
+      <!-- Australia (decorative) -->
+      <g class="decorative-region">
+        <path d="M650 280 L720 270 L740 310 L710 350 L660 340 L640 300 Z" fill="rgba(100, 100, 100, 0.2)" />
+      </g>
+    </svg>
+    
+    <!-- Language flags orbiting the map -->
+    <div class="language-flags">
+      {Object.values(languages).map((lang, i) => (
+        <button 
+          class="language-flag" 
+          data-lang={lang.code}
+          style={`--delay: ${i * 0.1}s; --angle: ${i * 24}deg`}
+          aria-label={`Learn ${lang.name}`}
+        >
+          <span class="flag-emoji">{lang.flag}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+  
+  <!-- Language Info Panel -->
+  <div class="language-panel" id="language-panel" hidden>
+    <button class="panel-close" aria-label="Close panel">×</button>
+    <div class="panel-header">
+      <span class="panel-flag" id="panel-flag">🇪🇸</span>
+      <div class="panel-titles">
+        <h3 class="panel-name" id="panel-name">Spanish</h3>
+        <p class="panel-native" id="panel-native">Español</p>
+      </div>
+    </div>
+    <div class="panel-greeting" id="panel-greeting">¡Hola!</div>
+    <div class="panel-stats">
+      <div class="stat">
+        <span class="stat-label">Speakers</span>
+        <span class="stat-value" id="panel-speakers">500M+</span>
+      </div>
+    </div>
+    <p class="panel-fact" id="panel-fact">Spanish is the 2nd most spoken native language</p>
+    <a class="panel-cta" id="panel-cta" href="/blog/es/">
+      <span>Explore Spanish Content</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<script define:vars={{ languages, regions }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const mapContainer = document.getElementById('language-map');
+    const panel = document.getElementById('language-panel');
+    const panelClose = panel?.querySelector('.panel-close');
+    const regionPaths = document.querySelectorAll('.region');
+    const flagButtons = document.querySelectorAll('.language-flag');
+    
+    function showLanguage(langCode) {
+      const lang = languages[langCode];
+      if (!lang || !panel) return;
+      
+      document.getElementById('panel-flag').textContent = lang.flag;
+      document.getElementById('panel-name').textContent = lang.name;
+      document.getElementById('panel-native').textContent = lang.nativeName;
+      document.getElementById('panel-greeting').textContent = lang.greeting;
+      document.getElementById('panel-speakers').textContent = lang.speakers;
+      document.getElementById('panel-fact').textContent = lang.funFact;
+      document.getElementById('panel-cta').href = `/blog/${langCode}/`;
+      document.getElementById('panel-cta').querySelector('span').textContent = `Explore ${lang.name} Content`;
+      
+      panel.hidden = false;
+      panel.classList.add('visible');
+      
+      // Highlight the flag
+      flagButtons.forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.language-flag[data-lang="${langCode}"]`)?.classList.add('active');
+      
+      // Speak the greeting
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(lang.greeting);
+        utterance.lang = langCode === 'zh' ? 'zh-CN' : 
+                        langCode === 'ja' ? 'ja-JP' : 
+                        langCode === 'ko' ? 'ko-KR' : 
+                        `${langCode}-${langCode.toUpperCase()}`;
+        utterance.rate = 0.8;
+        speechSynthesis.speak(utterance);
+      }
+    }
+    
+    // Region click handlers
+    regionPaths.forEach(region => {
+      region.addEventListener('click', () => {
+        const regionName = region.dataset.region;
+        const regionLangs = regions[regionName];
+        if (regionLangs && regionLangs.length > 0) {
+          // Show first language of the region
+          showLanguage(regionLangs[0]);
+        }
+      });
+    });
+    
+    // Flag click handlers
+    flagButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const langCode = btn.dataset.lang;
+        showLanguage(langCode);
+      });
+    });
+    
+    // Close panel
+    panelClose?.addEventListener('click', () => {
+      panel.classList.remove('visible');
+      setTimeout(() => {
+        panel.hidden = true;
+      }, 300);
+      flagButtons.forEach(btn => btn.classList.remove('active'));
+    });
+  });
+</script>
+
+<style>
+  .language-map-container {
+    padding: 2rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+    border: 1px solid var(--border-subtle);
+    border-radius: 24px;
+    position: relative;
+  }
+  
+  .map-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 1.75rem;
+    margin: 0 0 2rem;
+    color: var(--text-primary);
+  }
+  
+  .globe {
+    font-size: 2rem;
+    animation: spin-slow 20s linear infinite;
+  }
+  
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  .map-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .world-map {
+    width: 100%;
+    height: auto;
+  }
+  
+  .region {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .region-path {
+    fill: rgba(245, 166, 35, 0.2);
+    stroke: var(--accent-primary);
+    stroke-width: 1;
+    transition: all 0.3s ease;
+  }
+  
+  .region:hover .region-path {
+    fill: rgba(245, 166, 35, 0.4);
+    stroke-width: 2;
+  }
+  
+  .region-label {
+    font-size: 10px;
+    fill: var(--text-secondary);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+  
+  .decorative-region path {
+    stroke: var(--border-subtle);
+    stroke-width: 0.5;
+  }
+  
+  .language-flags {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  
+  .language-flag {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border-subtle);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+    animation: float 3s ease-in-out infinite;
+    animation-delay: var(--delay);
+    
+    /* Position flags around the map */
+    top: calc(50% + sin(var(--angle)) * 45%);
+    left: calc(50% + cos(var(--angle)) * 45%);
+    transform: translate(-50%, -50%);
+  }
+  
+  .language-flag:nth-child(1) { top: 15%; left: 20%; }
+  .language-flag:nth-child(2) { top: 10%; left: 35%; }
+  .language-flag:nth-child(3) { top: 20%; left: 50%; }
+  .language-flag:nth-child(4) { top: 15%; left: 65%; }
+  .language-flag:nth-child(5) { top: 30%; left: 80%; }
+  .language-flag:nth-child(6) { top: 45%; left: 85%; }
+  .language-flag:nth-child(7) { top: 60%; left: 80%; }
+  .language-flag:nth-child(8) { top: 75%; left: 70%; }
+  .language-flag:nth-child(9) { top: 80%; left: 55%; }
+  .language-flag:nth-child(10) { top: 85%; left: 40%; }
+  .language-flag:nth-child(11) { top: 80%; left: 25%; }
+  .language-flag:nth-child(12) { top: 70%; left: 12%; }
+  .language-flag:nth-child(13) { top: 55%; left: 8%; }
+  .language-flag:nth-child(14) { top: 40%; left: 10%; }
+  .language-flag:nth-child(15) { top: 28%; left: 15%; }
+  
+  @keyframes float {
+    0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+    50% { transform: translate(-50%, -50%) translateY(-5px); }
+  }
+  
+  .language-flag:hover {
+    border-color: var(--accent-primary);
+    transform: translate(-50%, -50%) scale(1.2);
+    box-shadow: 0 5px 20px rgba(245, 166, 35, 0.3);
+    z-index: 10;
+  }
+  
+  .language-flag.active {
+    border-color: var(--accent-primary);
+    background: var(--accent-primary);
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  
+  .flag-emoji {
+    font-size: 1.25rem;
+  }
+  
+  /* Language Panel */
+  .language-panel {
+    position: absolute;
+    top: 50%;
+    right: 2rem;
+    transform: translateY(-50%) translateX(20px);
+    width: 280px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 1.5rem;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 20;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+  
+  .language-panel.visible {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+  
+  .panel-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  
+  .panel-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+  }
+  
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .panel-flag {
+    font-size: 3rem;
+  }
+  
+  .panel-titles {
+    flex: 1;
+  }
+  
+  .panel-name {
+    font-size: 1.5rem;
+    margin: 0;
+    color: var(--text-primary);
+  }
+  
+  .panel-native {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+  
+  .panel-greeting {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+    text-align: center;
+    padding: 1rem 0;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 1rem;
+  }
+  
+  .panel-stats {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  
+  .stat {
+    text-align: center;
+  }
+  
+  .stat-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  
+  .panel-fact {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin: 0 0 1.5rem;
+    font-style: italic;
+  }
+  
+  .panel-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.875rem;
+    background: var(--accent-primary);
+    border-radius: 12px;
+    color: var(--bg-deep);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  
+  .panel-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(245, 166, 35, 0.4);
+  }
+  
+  .panel-cta svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  @media (max-width: 900px) {
+    .language-panel {
+      position: fixed;
+      top: auto;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      transform: translateY(100%);
+      width: 100%;
+      border-radius: 20px 20px 0 0;
+    }
+    
+    .language-panel.visible {
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .language-map-container {
+      padding: 1.5rem 1rem;
+    }
+    
+    .map-title {
+      font-size: 1.25rem;
+    }
+    
+    .language-flag {
+      width: 32px;
+      height: 32px;
+    }
+    
+    .flag-emoji {
+      font-size: 1rem;
+    }
+  }
+</style>

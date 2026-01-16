@@ -408,6 +408,462 @@ const reactions = {
 2. **Wake on click**: Clicking Pixel wakes them up
 3. **Auto-return to happy**: Excited/celebrating states return to happy after 3 seconds
 4. **Message auto-hide**: Speech bubbles hide after 4 seconds
+5. **Idle activities**: When idle for 3+ seconds, robot performs random fun activities
+
+### Idle Activities (18 total)
+
+When the robot is idle (no speech bubble, not celebrating), it will randomly perform one of these fun activities every 3-5 seconds:
+
+| Activity | Description | Animation |
+|----------|-------------|-----------|
+| `jumping` | Bouncing up and down | Body translateY |
+| `learning` | Nodding head like reading | Head rotation |
+| `reading` | Looking down, squinting | Head tilt + eye squint |
+| `swimming` | Swaying with arm movements | Body sway + arms alternate |
+| `sleeping` | Gentle breathing, closed eyes | Scale breathing + closed eyes |
+| `dancing` | Happy bouncing with arm waves | Full body bounce + arms |
+| `spinning` | Full 360° rotation | Body rotate 360deg |
+| `waving` | Friendly wave gesture | Right arm wave |
+| `dizzy` | Wobbly with spiral eyes | Body wobble + eye spin |
+| `yoga` | Stretching pose | Arms extend up |
+| `sneeze` | Cute robot sneeze | Quick jolt + head shake |
+| `looking` | Curious look left/right | Head turn + pupil move |
+| `bored` | Tapping foot | Leg tap + head droop |
+| `excited` | Rapid bouncing | Fast bounce + antenna flash |
+| `stretching` | Arms up stretch | Body elongate + arms up |
+| `headbang` | Head bobbing to music | Head bob down/up |
+| `pushups` | Doing pushups | Body tilt + arm push |
+| `karate` | Karate chop pose | Arm chop + leg kick |
+
+#### Idle Activity CSS Animations
+
+```css
+/* Jumping */
+.activity-jumping {
+  animation: robot-jump 0.5s ease-in-out infinite;
+}
+@keyframes robot-jump {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+/* Learning - head nodding */
+.activity-learning .robot-head {
+  animation: robot-nod 0.8s ease-in-out infinite;
+}
+@keyframes robot-nod {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(5deg); }
+  70% { transform: rotate(-5deg); }
+}
+
+/* Reading */
+.activity-reading .robot-head {
+  animation: robot-read 2s ease-in-out infinite;
+}
+.activity-reading .eye {
+  animation: robot-eye-read 2s ease-in-out infinite;
+}
+@keyframes robot-read {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(2px) rotate(-3deg); }
+}
+@keyframes robot-eye-read {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.7); }
+}
+
+/* Swimming */
+.activity-swimming {
+  animation: robot-swim 1.5s ease-in-out infinite;
+}
+.activity-swimming .arm-left {
+  animation: robot-swim-arm-left 0.75s ease-in-out infinite;
+}
+.activity-swimming .arm-right {
+  animation: robot-swim-arm-right 0.75s ease-in-out infinite;
+}
+@keyframes robot-swim {
+  0%, 100% { transform: translateX(-3px) rotate(-2deg); }
+  50% { transform: translateX(3px) rotate(2deg); }
+}
+@keyframes robot-swim-arm-left {
+  0%, 100% { transform: rotate(-20deg); }
+  50% { transform: rotate(20deg); }
+}
+@keyframes robot-swim-arm-right {
+  0%, 100% { transform: rotate(20deg); }
+  50% { transform: rotate(-20deg); }
+}
+
+/* Sleeping */
+.activity-sleeping {
+  animation: robot-sleep 2s ease-in-out infinite;
+}
+.activity-sleeping .eye {
+  height: 2px !important;
+  border-radius: 1px !important;
+}
+@keyframes robot-sleep {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Dancing */
+.activity-dancing {
+  animation: robot-dance 0.4s ease-in-out infinite;
+}
+.activity-dancing .arm-left {
+  animation: robot-dance-arm 0.4s ease-in-out infinite;
+}
+.activity-dancing .arm-right {
+  animation: robot-dance-arm 0.4s ease-in-out infinite reverse;
+}
+@keyframes robot-dance {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-5px) rotate(3deg); }
+}
+@keyframes robot-dance-arm {
+  0%, 100% { transform: rotate(-30deg); }
+  50% { transform: rotate(30deg); }
+}
+
+/* Spinning */
+.activity-spinning {
+  animation: robot-spin 1s ease-in-out infinite;
+}
+@keyframes robot-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Waving */
+.activity-waving .arm-right {
+  animation: robot-wave 0.5s ease-in-out infinite;
+  transform-origin: top center;
+}
+@keyframes robot-wave {
+  0%, 100% { transform: rotate(-10deg); }
+  25% { transform: rotate(-45deg); }
+  75% { transform: rotate(-45deg); }
+}
+
+/* Dizzy */
+.activity-dizzy {
+  animation: robot-dizzy 0.3s ease-in-out infinite;
+}
+.activity-dizzy .eye {
+  animation: robot-dizzy-eyes 0.5s linear infinite;
+}
+@keyframes robot-dizzy {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+@keyframes robot-dizzy-eyes {
+  0% { transform: scale(1); }
+  25% { transform: scale(0.8) rotate(90deg); }
+  50% { transform: scale(1.1) rotate(180deg); }
+  75% { transform: scale(0.9) rotate(270deg); }
+  100% { transform: scale(1) rotate(360deg); }
+}
+
+/* Yoga */
+.activity-yoga {
+  animation: robot-yoga-body 3s ease-in-out infinite;
+}
+.activity-yoga .arm-left {
+  animation: robot-yoga-arm-left 3s ease-in-out infinite;
+}
+.activity-yoga .arm-right {
+  animation: robot-yoga-arm-right 3s ease-in-out infinite;
+}
+@keyframes robot-yoga-body {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes robot-yoga-arm-left {
+  0%, 100% { transform: rotate(10deg); }
+  50% { transform: rotate(-80deg); }
+}
+@keyframes robot-yoga-arm-right {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(80deg); }
+}
+
+/* Sneeze */
+.activity-sneeze {
+  animation: robot-sneeze 1.5s ease-in-out infinite;
+}
+.activity-sneeze .robot-head {
+  animation: robot-sneeze-head 1.5s ease-in-out infinite;
+}
+@keyframes robot-sneeze {
+  0%, 60% { transform: translateY(0); }
+  65% { transform: translateY(-8px); }
+  70% { transform: translateY(5px); }
+  80%, 100% { transform: translateY(0); }
+}
+@keyframes robot-sneeze-head {
+  0%, 60% { transform: rotate(0deg); }
+  65% { transform: rotate(-10deg); }
+  70% { transform: rotate(15deg); }
+  80%, 100% { transform: rotate(0deg); }
+}
+
+/* Looking */
+.activity-looking .robot-head {
+  animation: robot-look 2s ease-in-out infinite;
+}
+.activity-looking .pupil {
+  animation: robot-look-pupil 2s ease-in-out infinite;
+}
+@keyframes robot-look {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+@keyframes robot-look-pupil {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+/* Bored */
+.activity-bored .leg-right {
+  animation: robot-tap-foot 0.3s ease-in-out infinite;
+}
+.activity-bored .robot-head {
+  animation: robot-bored-head 2s ease-in-out infinite;
+}
+@keyframes robot-tap-foot {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-15deg); }
+}
+@keyframes robot-bored-head {
+  0%, 45%, 55%, 100% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+}
+
+/* Excited */
+.activity-excited {
+  animation: robot-excited 0.2s ease-in-out infinite;
+}
+.activity-excited .antenna-ball {
+  animation: robot-excited-antenna 0.1s ease-in-out infinite;
+}
+@keyframes robot-excited {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.05); }
+}
+@keyframes robot-excited-antenna {
+  0%, 100% { background: #ff4444; box-shadow: 0 0 6px #ff4444; }
+  50% { background: #44ff44; box-shadow: 0 0 10px #44ff44; }
+}
+
+/* Stretching */
+.activity-stretching {
+  animation: robot-stretch-body 2s ease-in-out infinite;
+}
+.activity-stretching .arm-left,
+.activity-stretching .arm-right {
+  animation: robot-stretch-arms 2s ease-in-out infinite;
+}
+@keyframes robot-stretch-body {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.05) translateY(-3px); }
+}
+@keyframes robot-stretch-arms {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-120deg); }
+}
+
+/* Headbang */
+.activity-headbang .robot-head {
+  animation: robot-headbang 0.25s ease-in-out infinite;
+}
+@keyframes robot-headbang {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-15deg) translateY(3px); }
+}
+
+/* Pushups */
+.activity-pushups {
+  animation: robot-pushup 1s ease-in-out infinite;
+}
+.activity-pushups .arm-left,
+.activity-pushups .arm-right {
+  animation: robot-pushup-arms 1s ease-in-out infinite;
+}
+@keyframes robot-pushup {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(10px) rotate(-15deg); }
+}
+@keyframes robot-pushup-arms {
+  0%, 100% { transform: rotate(-30deg); }
+  50% { transform: rotate(-60deg); }
+}
+
+/* Karate */
+.activity-karate {
+  animation: robot-karate 0.8s ease-in-out infinite;
+}
+.activity-karate .arm-right {
+  animation: robot-karate-chop 0.8s ease-in-out infinite;
+}
+.activity-karate .leg-left {
+  animation: robot-karate-kick 0.8s ease-in-out infinite;
+}
+@keyframes robot-karate {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+@keyframes robot-karate-chop {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(-90deg); }
+}
+@keyframes robot-karate-kick {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(30deg); }
+}
+```
+
+#### Idle Activity JavaScript Logic
+
+```javascript
+const IDLE_ACTIVITIES = [
+  'jumping', 'learning', 'reading', 'swimming', 'sleeping', 'dancing',
+  'spinning', 'waving', 'dizzy', 'yoga', 'sneeze', 'looking',
+  'bored', 'excited', 'stretching', 'headbang', 'pushups', 'karate'
+]
+
+let idleTimeout = null
+let activityDuration = null
+let currentActivity = null
+
+function startIdleActivity() {
+  // Pick random activity
+  const activity = IDLE_ACTIVITIES[Math.floor(Math.random() * IDLE_ACTIVITIES.length)]
+  currentActivity = activity
+  
+  // Apply activity class to robot element
+  robotElement.classList.add(`activity-${activity}`)
+  
+  // Clear activity after 3-5 seconds
+  activityDuration = setTimeout(() => {
+    robotElement.classList.remove(`activity-${currentActivity}`)
+    currentActivity = null
+    scheduleIdleActivity()
+  }, 3000 + Math.random() * 2000)
+}
+
+function scheduleIdleActivity() {
+  clearTimeout(idleTimeout)
+  idleTimeout = setTimeout(() => {
+    // Only start activity if not in an active mood
+    if (!showingMessage && currentMood !== 'celebrating') {
+      startIdleActivity()
+    } else {
+      scheduleIdleActivity()
+    }
+  }, 3000)
+}
+```
+
+### Mega Celebration Dance
+
+When confetti appears (achievements, level ups), the robot performs an epic 4-8 second mega dance with all body parts going crazy!
+
+```css
+/* MEGA CELEBRATION DANCE - Triggered with confetti */
+.mega-dance {
+  animation: mega-dance-body 4s ease-in-out infinite;
+}
+.mega-dance .robot-head {
+  animation: mega-dance-head 1s ease-in-out infinite;
+}
+.mega-dance .arm-left {
+  animation: mega-dance-arm-left 0.5s ease-in-out infinite;
+}
+.mega-dance .arm-right {
+  animation: mega-dance-arm-right 0.5s ease-in-out infinite;
+}
+.mega-dance .leg-left {
+  animation: mega-dance-leg-left 0.25s ease-in-out infinite;
+}
+.mega-dance .leg-right {
+  animation: mega-dance-leg-right 0.25s ease-in-out infinite;
+}
+.mega-dance .eye {
+  animation: mega-dance-eyes 0.3s ease-in-out infinite;
+}
+.mega-dance .antenna-ball {
+  animation: mega-dance-antenna 0.15s ease-in-out infinite;
+}
+
+/* Body: jumping, spinning 360°, bouncing, scaling */
+@keyframes mega-dance-body {
+  0% { transform: translateY(0) rotate(0deg) scale(1); }
+  5% { transform: translateY(-15px) rotate(-10deg) scale(1.1); }
+  15% { transform: translateY(-20px) rotate(10deg) scale(1.15); }
+  35% { transform: translateY(-25px) rotate(15deg) scale(1.2); }
+  45% { transform: translateX(-10px) translateY(-5px) rotate(-5deg); }
+  55% { transform: translateX(10px) translateY(-10px) rotate(8deg); }
+  70% { transform: translateY(-30px) rotate(360deg) scale(1.1); }
+  100% { transform: translateY(0) rotate(0deg) scale(1); }
+}
+
+/* Head bobbing crazy */
+@keyframes mega-dance-head {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-20deg) translateY(-3px); }
+  40% { transform: rotate(20deg) translateY(2px); }
+  60% { transform: rotate(-15deg) translateY(-2px); }
+  80% { transform: rotate(15deg) translateY(3px); }
+}
+
+/* Arms going wild */
+@keyframes mega-dance-arm-left {
+  0%, 100% { transform: rotate(10deg); }
+  25% { transform: rotate(-120deg); }
+  50% { transform: rotate(45deg); }
+  75% { transform: rotate(-90deg); }
+}
+@keyframes mega-dance-arm-right {
+  0%, 100% { transform: rotate(-10deg); }
+  25% { transform: rotate(120deg); }
+  50% { transform: rotate(-45deg); }
+  75% { transform: rotate(90deg); }
+}
+
+/* Legs stomping */
+@keyframes mega-dance-leg-left {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(-25deg) translateY(-5px); }
+}
+@keyframes mega-dance-leg-right {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(25deg) translateY(-5px); }
+}
+
+/* Eyes flashing rainbow colors */
+@keyframes mega-dance-eyes {
+  0%, 100% { transform: scale(1); background: #00ff88; box-shadow: 0 0 6px #00ff88; }
+  25% { transform: scale(1.3); background: #ff00ff; box-shadow: 0 0 12px #ff00ff; }
+  50% { transform: scale(0.8); background: #ffff00; box-shadow: 0 0 15px #ffff00; }
+  75% { transform: scale(1.2); background: #00ffff; box-shadow: 0 0 10px #00ffff; }
+}
+
+/* Antenna rainbow disco */
+@keyframes mega-dance-antenna {
+  0% { background: #ff0000; box-shadow: 0 0 15px #ff0000; transform: scale(1); }
+  16% { background: #ff8800; box-shadow: 0 0 15px #ff8800; transform: scale(1.5); }
+  33% { background: #ffff00; box-shadow: 0 0 15px #ffff00; transform: scale(1); }
+  50% { background: #00ff00; box-shadow: 0 0 15px #00ff00; transform: scale(1.5); }
+  66% { background: #0088ff; box-shadow: 0 0 15px #0088ff; transform: scale(1); }
+  83% { background: #ff00ff; box-shadow: 0 0 15px #ff00ff; transform: scale(1.5); }
+  100% { background: #ff0000; box-shadow: 0 0 15px #ff0000; transform: scale(1); }
+}
+```
 
 ### Integration Points
 
@@ -506,5 +962,5 @@ Pixel should react to:
 
 ---
 
-*Last updated: January 15, 2026*
-*Version: 1.0*
+*Last updated: January 16, 2026*
+*Version: 1.1 - Added 18 idle activities and mega celebration dance*
