@@ -4,6 +4,210 @@ This document outlines the design system, visual style, and mascot behavior spec
 
 ---
 
+## 🏷️ Brand Identity - App Name & Logo
+
+### App Name: BitLingo
+
+**Official spelling**: `BitLingo` (capital B, capital L, no space)
+
+❌ **Incorrect**:
+- `bitLingo` (lowercase b)
+- `Bitlingo` (lowercase L)
+- `bitlingo` (all lowercase)
+- `Bit Lingo` (with space)
+- `BIT LINGO` (all caps)
+
+✅ **Correct**: `BitLingo`
+
+### Name Meaning
+The name "BitLingo" combines:
+- **Bit** = Binary digit (computing) + our mascot "Bit the Robot"
+- **Lingo** = Language/vocabulary
+
+### Logo Typography
+
+The app name uses a distinctive two-color split:
+
+```
+[Bit][Lingo]
+ ↓     ↓
+Gold  White
+```
+
+#### HTML Structure
+```html
+<!-- Header/Logo Style -->
+<span class="app-title">
+  <span class="title-bit">Bit</span><span class="title-lingo">Lingo</span>
+</span>
+
+<!-- Alternative with logo image -->
+<div class="logo">
+  <img src="/favicon.svg" alt="BitLingo" class="logo-img">
+  <span class="logo-text">
+    <span class="title-bit">Bit</span><span class="title-lingo">Lingo</span>
+  </span>
+</div>
+```
+
+#### CSS Styling
+```css
+/* App name styling */
+.app-title {
+  font-family: 'Nunito', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+}
+
+/* "Bit" - Gold color (matches mascot and accent) */
+.title-bit {
+  color: #ffd700;  /* var(--color-gold) */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* "Lingo" - White/primary text color */
+.title-lingo {
+  color: #f0f4f8;  /* var(--color-text-primary) */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Loading screen - larger version */
+.loading-logo .title-bit {
+  font-size: 3rem;
+  font-weight: 900;
+}
+.loading-logo .title-lingo {
+  font-size: 3rem;
+  font-weight: 900;
+}
+
+/* Gradient alternative for special occasions */
+.title-lingo-gradient {
+  background: linear-gradient(180deg, #f0f4f8 0%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+```
+
+### Logo Icon (Favicon)
+
+The favicon is an SVG robot icon representing "Bit the Robot":
+
+```
+┌─────────────┐
+│    [●]      │  ← Antenna LED
+│     │       │
+│ ┌───────┐   │
+│ │ ○   ○ │   │  ← Robot face with LED eyes
+│ │   ‿   │   │  ← Smile
+│ └───────┘   │
+│   │ ❤️ │    │  ← Body
+│   └───┘    │
+└─────────────┘
+```
+
+#### Favicon Files
+| File | Size | Usage |
+|------|------|-------|
+| `favicon.svg` | Scalable | Modern browsers, primary |
+| `favicon.ico` | 16x16, 32x32, 48x48 | Legacy browsers |
+| `favicon-16x16.png` | 16x16 | Small icons |
+| `apple-touch-icon.png` | 180x180 | iOS home screen |
+| `pwa-192x192.png` | 192x192 | PWA manifest |
+| `pwa-512x512.png` | 512x512 | PWA splash screens |
+
+### Brand Colors Summary
+
+| Element | Color | Hex | CSS Variable |
+|---------|-------|-----|--------------|
+| "Bit" text | Gold | `#ffd700` | `--color-gold` |
+| "Lingo" text | White | `#f0f4f8` | `--color-text-primary` |
+| Primary accent | Gold | `#ffd700` | `--color-gold` |
+| Secondary accent | Green | `#22c55e` | `--color-accent-green` |
+| Background | Deep navy | `#0a1628` | `--color-bg-primary` |
+
+### Usage Examples
+
+#### In Headers
+```html
+<header class="main-header">
+  <div class="logo">
+    <img src="/favicon.svg" alt="BitLingo" class="logo-img">
+    <span class="logo-text">
+      <span class="title-bit">Bit</span><span class="title-lingo">Lingo</span>
+    </span>
+  </div>
+</header>
+```
+
+#### In Body Text
+When mentioning the app name in body text, use plain text:
+- ✅ "Welcome to **BitLingo**!"
+- ✅ "Download BitLingo today"
+- ❌ "Download <span class="title-bit">Bit</span><span class="title-lingo">Lingo</span> today" (too complex)
+
+#### Social Media & Marketing
+- Twitter/X: `@BitLingoApp` or `#BitLingo`
+- Hashtags: `#BitLingo` `#LearnWithBitLingo`
+- Email: `support@bitlingo.app` (lowercase for email is standard)
+
+### Complete Logo Component Example
+
+```vue
+<template>
+  <div class="bitlingo-logo" :class="[size, variant]">
+    <img v-if="showIcon" :src="iconSrc" alt="" class="logo-icon" />
+    <span class="logo-text">
+      <span class="title-bit">Bit</span><span class="title-lingo">Lingo</span>
+    </span>
+  </div>
+</template>
+
+<style scoped>
+.bitlingo-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+.logo-text {
+  font-family: 'Nunito', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+}
+
+.title-bit {
+  color: var(--color-gold, #ffd700);
+}
+
+.title-lingo {
+  color: var(--color-text-primary, #f0f4f8);
+}
+
+/* Size variants */
+.bitlingo-logo.small .logo-icon { width: 20px; height: 20px; }
+.bitlingo-logo.small .logo-text { font-size: 1rem; }
+
+.bitlingo-logo.large .logo-icon { width: 48px; height: 48px; }
+.bitlingo-logo.large .logo-text { font-size: 2.5rem; }
+
+/* Dark variant (for light backgrounds) */
+.bitlingo-logo.dark .title-bit { color: #b8860b; }
+.bitlingo-logo.dark .title-lingo { color: #1a1a2e; }
+</style>
+```
+
+---
+
 ## 🎨 Design System
 
 ### Color Palette
@@ -1116,4 +1320,4 @@ Bit should react to:
 ---
 
 *Last updated: January 16, 2026*
-*Version: 1.1 - Added 18 idle activities and mega celebration dance*
+*Version: 1.2 - Added Brand Identity section with app name styling and logo guidelines*
