@@ -165,7 +165,7 @@ try {
   </div>
 </div>
 
-<script>
+<script is:inline>
   // ============================================
   // BIT THE ROBOT - SOUND EFFECTS
   // ============================================
@@ -645,12 +645,28 @@ try {
     // EVENT HANDLERS
     // ============================================
     handleClick() {
-      console.log('Bit Robot clicked!', {
+      console.log('Bit Robot handleClick called!', {
         allPhrases: this.allPhrases?.length || 0,
-        lang: this.lang
+        lang: this.lang,
+        robot: !!this.robot,
+        speech: !!this.speech,
+        speechText: !!this.speechText
       });
       
-      this.sounds.playBeep();
+      if (!this.robot || !this.speech || !this.speechText) {
+        console.error('Bit Robot: Required elements not found', {
+          robot: !!this.robot,
+          speech: !!this.speech,
+          speechText: !!this.speechText
+        });
+        return;
+      }
+      
+      try {
+        this.sounds.playBeep();
+      } catch (e) {
+        console.warn('Bit Robot: Sound play failed', e);
+      }
       
       if (!this.state.isAwake) {
         // Wake up!
@@ -663,6 +679,11 @@ try {
       // Get a completely random phrase from all available phrases
       const randomPhrase = this.getRandomPhraseFromAll();
       console.log('Selected phrase:', randomPhrase);
+      
+      if (!randomPhrase) {
+        console.error('Bit Robot: No phrase available');
+        return;
+      }
       
       // Determine mood based on phrase content or random
       const moods = ['happy', 'excited', 'thinking', 'proud', 'wave', 'encouraging'];
@@ -798,19 +819,55 @@ try {
     }
   }
 
-  // Initialize when DOM is ready
-  document.addEventListener('DOMContentLoaded', () => {
+  // Initialize when DOM is ready - handle both cases: before and after DOMContentLoaded
+  function initBitRobot() {
     const container = document.getElementById('bit-robot-container');
     if (container) {
-      window.bitRobot = new BitRobot('bit-robot-container');
-    } else {
+      try {
+        // Check if already initialized
+        if (window.bitRobot) {
+          console.log('Bit Robot already initialized');
+          return true;
+        }
+        window.bitRobot = new BitRobot('bit-robot-container');
+        console.log('Bit Robot initialized successfully', {
+          container: !!container,
+          robot: !!document.getElementById('bit-robot'),
+          phrases: container.dataset.allPhrases ? JSON.parse(container.dataset.allPhrases).length : 0
+        });
+      } catch (e) {
+        console.error('Failed to initialize Bit Robot:', e);
+        console.error('Stack:', e.stack);
+      }
+      return true;
+    }
+    console.warn('Bit Robot container not found');
+    return false;
+  }
+
+  // Try immediate initialization (in case DOMContentLoaded already fired)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOMContentLoaded fired');
+      initBitRobot();
+    });
+  } else {
+    // DOM already loaded
+    console.log('DOM already loaded, initializing immediately');
+    if (!initBitRobot()) {
       // Fallback: try again after a short delay
       setTimeout(() => {
-        const container = document.getElementById('bit-robot-container');
-        if (container) {
-          window.bitRobot = new BitRobot('bit-robot-container');
-        }
+        console.log('Retrying initialization after delay');
+        initBitRobot();
       }, 100);
+    }
+  }
+  
+  // Also try on window load as a final fallback
+  window.addEventListener('load', () => {
+    if (!window.bitRobot) {
+      console.log('Window loaded, retrying initialization');
+      initBitRobot();
     }
   });
 </script>
