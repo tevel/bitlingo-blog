@@ -22,8 +22,18 @@ export interface LanguageWords {
 }
 
 // Word database organized by target language
-// Each language has words that English speakers would learn
+// Each language has words that learners would study
+// For 'en', these are advanced English words for non-native speakers
 export const wordDatabase: LanguageWords = {
+  en: [
+    { word: 'serendipity', pronunciation: 'seh-ren-DIP-ih-tee', partOfSpeech: 'noun', definition: 'the occurrence of events by chance in a happy way', example: 'Finding that book was pure serendipity.', exampleTranslation: 'Encontrar ese libro fue pura casualidad.', level: 'B2', category: 'emotions' },
+    { word: 'eloquent', pronunciation: 'EL-oh-kwent', partOfSpeech: 'adj', definition: 'fluent and persuasive in speaking or writing', example: 'She gave an eloquent speech.', exampleTranslation: 'Ella dio un discurso elocuente.', level: 'B2', category: 'communication' },
+    { word: 'wanderlust', pronunciation: 'WAN-der-lust', partOfSpeech: 'noun', definition: 'a strong desire to travel and explore', example: 'Her wanderlust took her to 50 countries.', exampleTranslation: 'Su pasión por viajar la llevó a 50 países.', level: 'B1', category: 'travel' },
+    { word: 'resilience', pronunciation: 'rih-ZIL-yens', partOfSpeech: 'noun', definition: 'the ability to recover from difficulties', example: 'His resilience helped him overcome challenges.', exampleTranslation: 'Su resiliencia le ayudó a superar desafíos.', level: 'B2', category: 'emotions' },
+    { word: 'ephemeral', pronunciation: 'ih-FEM-er-al', partOfSpeech: 'adj', definition: 'lasting for a very short time', example: 'The beauty of cherry blossoms is ephemeral.', exampleTranslation: 'La belleza de los cerezos es efímera.', level: 'C1', category: 'nature' },
+    { word: 'quintessential', pronunciation: 'kwin-teh-SEN-shal', partOfSpeech: 'adj', definition: 'representing the most perfect example', example: 'Paris is the quintessential romantic city.', exampleTranslation: 'París es la ciudad romántica por excelencia.', level: 'C1', category: 'culture' },
+    { word: 'perseverance', pronunciation: 'per-suh-VEER-ens', partOfSpeech: 'noun', definition: 'persistence in doing something despite difficulty', example: 'Success requires perseverance.', exampleTranslation: 'El éxito requiere perseverancia.', level: 'B1', category: 'verbs' },
+  ],
   es: [
     { word: 'mariposa', pronunciation: 'mah-ree-POH-sah', partOfSpeech: 'noun', definition: 'butterfly', example: 'La mariposa vuela en el jardín.', exampleTranslation: 'The butterfly flies in the garden.', level: 'A1', category: 'nature' },
     { word: 'desayuno', pronunciation: 'deh-sah-YOO-noh', partOfSpeech: 'noun', definition: 'breakfast', example: 'El desayuno es la comida más importante.', exampleTranslation: 'Breakfast is the most important meal.', level: 'A1', category: 'food' },
