@@ -165,10 +165,10 @@ This document outlines the design system, visual style, and mascot behavior spec
 
 ---
 
-## 🤖 Pixel the Robot - Mascot Specification
+## 🤖 Bit the Robot - Mascot Specification
 
 ### Character Overview
-**Name**: Pixel  
+**Name**: Bit (named after BitLingo!)  
 **Type**: Friendly robot companion  
 **Role**: Learning encourager, progress celebrator, user guide
 
@@ -405,7 +405,7 @@ const reactions = {
 
 #### Auto-behaviors
 1. **Sleep after inactivity**: Falls asleep after 5 minutes of no user interaction
-2. **Wake on click**: Clicking Pixel wakes them up
+2. **Wake on click**: Clicking Bit wakes them up
 3. **Auto-return to happy**: Excited/celebrating states return to happy after 3 seconds
 4. **Message auto-hide**: Speech bubbles hide after 4 seconds
 5. **Idle activities**: When idle for 3+ seconds, robot performs random fun activities
@@ -867,7 +867,7 @@ When confetti appears (achievements, level ups), the robot performs an epic 4-8 
 
 ### Integration Points
 
-Pixel should react to:
+Bit should react to:
 1. **Quiz completion** → Score-based reaction (perfect: celebrating, >80%: excited, >50%: happy, <50%: encouraging)
 2. **Achievement unlock** → Celebrating mood + achievement name in bubble
 3. **Level up** → Celebrating mood + level number
