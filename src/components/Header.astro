@@ -29,7 +29,7 @@ import ProgressWidget from './ProgressWidget.astro';
 					</defs>
 				</svg>
 			</div>
-			<span class="logo-text"><span class="bit">bit</span><span class="lingo">Lingo</span></span>
+			<span class="logo-text"><span class="title-bit">Bit</span><span class="title-lingo">Lingo</span></span>
 		</a>
 		
 		<div class="nav-links">
@@ -143,16 +143,20 @@ import ProgressWidget from './ProgressWidget.astro';
 		letter-spacing: -0.02em;
 	}
 	
-	.logo-text .bit {
-		color: white;
+	/* "Bit" - Gold color (matches mascot and accent) */
+	.logo-text .title-bit {
+		color: #ffd700;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 	}
 	
-	.logo-text .lingo {
-		color: #f5a623;
+	/* "Lingo" - White/primary text color */
+	.logo-text .title-lingo {
+		color: #f0f4f8;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 	}
 	
-	.logo:hover .logo-text .lingo {
-		color: #ffb940;
+	.logo:hover .logo-text .title-bit {
+		color: #ffe44d;
 	}
 	
 	/* Navigation links */

@@ -21,7 +21,7 @@ const today = new Date();
 						</linearGradient>
 					</defs>
 				</svg>
-				<span class="brand-text"><span class="bit">bit</span><span class="lingo">Lingo</span></span>
+				<span class="brand-text"><span class="title-bit">Bit</span><span class="title-lingo">Lingo</span></span>
 			</div>
 			<p class="footer-tagline">Audio-first vocabulary learning for busy people.</p>
 		</div>
@@ -53,7 +53,7 @@ const today = new Date();
 			<span class="badge">📴 Offline</span>
 			<span class="badge">🆓 Free</span>
 		</div>
-		<p class="copyright">&copy; {today.getFullYear()} bitLingo. Learn languages while you live your life.</p>
+		<p class="copyright">&copy; {today.getFullYear()} BitLingo. Learn languages while you live your life.</p>
 	</div>
 	
 	<div class="footer-glow"></div>
@@ -103,12 +103,16 @@ const today = new Date();
 		letter-spacing: -0.02em;
 	}
 	
-	.brand-text .bit {
-		color: white;
+	/* "Bit" - Gold color (matches mascot and accent) */
+	.brand-text .title-bit {
+		color: #ffd700;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 	}
 	
-	.brand-text .lingo {
-		color: #f5a623;
+	/* "Lingo" - White/primary text color */
+	.brand-text .title-lingo {
+		color: #f0f4f8;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 	}
 	
 	.footer-tagline {
