@@ -1,8 +1,8 @@
 ---
 /**
- * Pixel the Robot - BitLingo's friendly mascot companion!
+ * Bit the Robot - BitLingo's friendly mascot companion!
  * A CSS-based animated robot that reacts to user actions and provides encouragement.
- * Now with 200+ phrases in 16 languages!
+ * Now with 200+ phrases in 16 languages, 18 idle activities, and sound effects!
  */
 import { phrases, type SupportedLang } from '../data/pixelPhrases';
 
@@ -31,21 +31,21 @@ const currentPhrases = phrases[currentLang];
 ---
 
 <div 
-  class={`pixel-container ${position}`} 
+  class={`bit-container ${position}`} 
   data-initial-mood={initialMood}
   data-show-on-load={showOnLoad}
   data-lang={currentLang}
   data-phrases={JSON.stringify(currentPhrases)}
-  id="pixel-robot-container"
+  id="bit-robot-container"
 >
   <!-- Speech Bubble -->
-  <div class="speech-bubble" id="pixel-speech" hidden>
-    <span class="speech-text" id="pixel-speech-text"></span>
+  <div class="speech-bubble" id="bit-speech" hidden>
+    <span class="speech-text" id="bit-speech-text"></span>
     <div class="speech-tail"></div>
   </div>
 
   <!-- The Robot -->
-  <div class="pixel-robot" id="pixel-robot" data-mood={initialMood}>
+  <div class="bit-robot" id="bit-robot" data-mood={initialMood}>
     <!-- Antenna -->
     <div class="antenna">
       <div class="antenna-stem"></div>
@@ -63,11 +63,15 @@ const currentPhrases = phrases[currentLang];
       <div class="face-screen">
         <!-- Eyes -->
         <div class="eyes">
-          <div class="eye eye-left" id="eye-left"></div>
-          <div class="eye eye-right" id="eye-right"></div>
+          <div class="eye eye-left" id="eye-left">
+            <div class="pupil"></div>
+          </div>
+          <div class="eye eye-right" id="eye-right">
+            <div class="pupil"></div>
+          </div>
         </div>
         <!-- Mouth -->
-        <div class="mouth" id="pixel-mouth"></div>
+        <div class="mouth" id="bit-mouth"></div>
       </div>
 
       <!-- Right Headphone -->
@@ -87,42 +91,221 @@ const currentPhrases = phrases[currentLang];
       </div>
     </div>
 
-    <!-- Legs -->
-    <div class="robot-legs">
-      <div class="leg leg-left"></div>
-      <div class="leg leg-right"></div>
+    <!-- Arms -->
+    <div class="robot-arm arm-left" id="arm-left">
+      <div class="arm-segment"></div>
+      <div class="arm-hand">✋</div>
     </div>
-
-    <!-- Arm (for waving) -->
-    <div class="robot-arm" id="pixel-arm">
+    <div class="robot-arm arm-right" id="arm-right">
       <div class="arm-segment"></div>
       <div class="arm-hand">👋</div>
+    </div>
+
+    <!-- Legs -->
+    <div class="robot-legs">
+      <div class="leg leg-left" id="leg-left"></div>
+      <div class="leg leg-right" id="leg-right"></div>
     </div>
   </div>
 
   <!-- Celebration Particles -->
-  <div class="celebration-particles" id="pixel-particles" hidden>
+  <div class="celebration-particles" id="bit-particles" hidden>
     <span>✨</span><span>🎉</span><span>⭐</span><span>🌟</span><span>💫</span>
   </div>
 </div>
 
 <script>
-  class PixelRobot {
+  // ============================================
+  // BIT THE ROBOT - SOUND EFFECTS
+  // ============================================
+  class BitSounds {
+    constructor() {
+      this.enabled = localStorage.getItem('bitlingo_sounds') !== 'false';
+      this.audioContext = null;
+    }
+
+    getContext() {
+      if (!this.audioContext) {
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return this.audioContext;
+    }
+
+    playTone(frequency, duration, type = 'sine', volume = 0.15) {
+      if (!this.enabled) return;
+      try {
+        const ctx = this.getContext();
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
+        
+        gainNode.gain.setValueAtTime(0, ctx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(volume, ctx.currentTime + 0.01);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        
+        oscillator.start(ctx.currentTime);
+        oscillator.stop(ctx.currentTime + duration);
+      } catch (e) {
+        console.log('Audio not available');
+      }
+    }
+
+    playGreeting() {
+      const notes = [
+        { freq: 523, delay: 0, duration: 0.1 },     // C5
+        { freq: 659, delay: 0.12, duration: 0.1 },  // E5
+        { freq: 784, delay: 0.24, duration: 0.15 }, // G5
+      ];
+      notes.forEach(n => {
+        setTimeout(() => this.playTone(n.freq, n.duration, 'sine', 0.15), n.delay * 1000);
+      });
+    }
+
+    playCelebration() {
+      const notes = [
+        { freq: 523, delay: 0, duration: 0.08 },
+        { freq: 659, delay: 0.08, duration: 0.08 },
+        { freq: 784, delay: 0.16, duration: 0.08 },
+        { freq: 1047, delay: 0.24, duration: 0.2 },
+        { freq: 784, delay: 0.35, duration: 0.08 },
+        { freq: 1047, delay: 0.43, duration: 0.25 },
+      ];
+      notes.forEach(n => {
+        setTimeout(() => this.playTone(n.freq, n.duration, 'square', 0.1), n.delay * 1000);
+      });
+    }
+
+    playEncouragement() {
+      const notes = [
+        { freq: 440, delay: 0, duration: 0.12 },    // A4
+        { freq: 523, delay: 0.12, duration: 0.12 }, // C5
+        { freq: 659, delay: 0.24, duration: 0.15 }, // E5
+      ];
+      notes.forEach(n => {
+        setTimeout(() => this.playTone(n.freq, n.duration, 'sine', 0.12), n.delay * 1000);
+      });
+    }
+
+    playTip() {
+      const notes = [
+        { freq: 392, delay: 0, duration: 0.1 },    // G4
+        { freq: 440, delay: 0.12, duration: 0.1 }, // A4
+        { freq: 494, delay: 0.24, duration: 0.12 }, // B4
+      ];
+      notes.forEach(n => {
+        setTimeout(() => this.playTone(n.freq, n.duration, 'triangle', 0.1), n.delay * 1000);
+      });
+    }
+
+    playJoke() {
+      const notes = [
+        { freq: 600, delay: 0, duration: 0.06 },
+        { freq: 800, delay: 0.08, duration: 0.06 },
+        { freq: 500, delay: 0.16, duration: 0.08 },
+        { freq: 900, delay: 0.26, duration: 0.1 },
+        { freq: 400, delay: 0.38, duration: 0.12 },
+      ];
+      notes.forEach(n => {
+        setTimeout(() => this.playTone(n.freq, n.duration, 'square', 0.1), n.delay * 1000);
+      });
+    }
+
+    playQuiz() {
+      const notes = [
+        { freq: 523, delay: 0, duration: 0.08 },
+        { freq: 659, delay: 0.1, duration: 0.08 },
+        { freq: 523, delay: 0.2, duration: 0.1 },
+      ];
+      notes.forEach(n => {
+        setTimeout(() => this.playTone(n.freq, n.duration, 'triangle', 0.12), n.delay * 1000);
+      });
+    }
+
+    playThinking() {
+      const notes = [
+        { freq: 350, delay: 0, duration: 0.15 },
+        { freq: 380, delay: 0.2, duration: 0.15 },
+        { freq: 350, delay: 0.4, duration: 0.2 },
+      ];
+      notes.forEach(n => {
+        setTimeout(() => this.playTone(n.freq, n.duration, 'sine', 0.08), n.delay * 1000);
+      });
+    }
+
+    playExcited() {
+      const notes = [
+        { freq: 800, delay: 0, duration: 0.05 },
+        { freq: 1000, delay: 0.06, duration: 0.05 },
+        { freq: 1200, delay: 0.12, duration: 0.05 },
+        { freq: 1000, delay: 0.18, duration: 0.05 },
+        { freq: 1200, delay: 0.24, duration: 0.08 },
+      ];
+      notes.forEach(n => {
+        setTimeout(() => this.playTone(n.freq, n.duration, 'square', 0.1), n.delay * 1000);
+      });
+    }
+
+    playBeep() {
+      this.playTone(600, 0.08, 'square', 0.1);
+      setTimeout(() => this.playTone(800, 0.1, 'square', 0.08), 100);
+    }
+
+    playForCategory(category) {
+      const categoryMap = {
+        greeting: () => this.playGreeting(),
+        introduction: () => this.playGreeting(),
+        encourage: () => this.playEncouragement(),
+        motivate: () => this.playEncouragement(),
+        celebrate: () => this.playCelebration(),
+        feature: () => this.playTip(),
+        tip: () => this.playTip(),
+        fact: () => this.playTip(),
+        quiz: () => this.playQuiz(),
+        idle: () => this.playThinking(),
+        prompt: () => this.playBeep(),
+      };
+      const playFn = categoryMap[category];
+      if (playFn) playFn();
+    }
+  }
+
+  // ============================================
+  // BIT THE ROBOT - MAIN CLASS
+  // ============================================
+  class BitRobot {
     constructor(containerId) {
       this.container = document.getElementById(containerId);
-      this.robot = document.getElementById('pixel-robot');
-      this.speech = document.getElementById('pixel-speech');
-      this.speechText = document.getElementById('pixel-speech-text');
-      this.particles = document.getElementById('pixel-particles');
-      this.arm = document.getElementById('pixel-arm');
+      this.robot = document.getElementById('bit-robot');
+      this.speech = document.getElementById('bit-speech');
+      this.speechText = document.getElementById('bit-speech-text');
+      this.particles = document.getElementById('bit-particles');
+      this.armLeft = document.getElementById('arm-left');
+      this.armRight = document.getElementById('arm-right');
       this.eyeLeft = document.getElementById('eye-left');
       this.eyeRight = document.getElementById('eye-right');
-      this.mouth = document.getElementById('pixel-mouth');
+      this.mouth = document.getElementById('bit-mouth');
       this.antennaLed = document.getElementById('antenna-led');
+      this.legLeft = document.getElementById('leg-left');
+      this.legRight = document.getElementById('leg-right');
 
       // Parse phrases from data attribute
       this.phrases = JSON.parse(this.container.dataset.phrases || '{}');
       this.lang = this.container.dataset.lang || 'en';
+
+      // Sound effects
+      this.sounds = new BitSounds();
+
+      // Idle activities list
+      this.IDLE_ACTIVITIES = [
+        'jumping', 'learning', 'reading', 'swimming', 'sleeping', 'dancing',
+        'spinning', 'waving', 'dizzy', 'yoga', 'sneeze', 'looking',
+        'bored', 'excited', 'stretching', 'headbang', 'pushups', 'karate'
+      ];
 
       this.state = {
         mood: this.container.dataset.initialMood || 'idle',
@@ -130,7 +313,12 @@ const currentPhrases = phrases[currentLang];
         sleepTimer: null,
         messageTimer: null,
         moodResetTimer: null,
-        phraseHistory: new Set()
+        idleTimer: null,
+        activityTimer: null,
+        currentActivity: null,
+        showingMessage: false,
+        phraseHistory: new Set(),
+        introShown: false
       };
 
       this.init();
@@ -155,9 +343,18 @@ const currentPhrases = phrases[currentLang];
       // Initial greeting
       if (this.container.dataset.showOnLoad === 'true') {
         setTimeout(() => {
-          this.setMood('wave');
-          this.showMessage(this.getTimeBasedGreeting());
+          // First time, show introduction
+          if (!localStorage.getItem('bit_introduced')) {
+            this.setMood('wave');
+            const introPhrase = this.getUniqueRandomPhrase('introduction');
+            this.showMessage(introPhrase, 'introduction');
+            localStorage.setItem('bit_introduced', 'true');
+          } else {
+            this.setMood('wave');
+            this.showMessage(this.getTimeBasedGreeting(), 'greeting');
+          }
           this.resetSleepTimer();
+          this.scheduleIdleActivity();
         }, 500);
       }
     }
@@ -184,7 +381,7 @@ const currentPhrases = phrases[currentLang];
 
     getUniqueRandomPhrase(category) {
       const phrases = this.phrases[category] || [];
-      if (phrases.length === 0) return "Hi! 👋";
+      if (phrases.length === 0) return "Hi! I'm Bit! 🤖";
       
       // Filter out recently used phrases
       const available = phrases.filter(p => !this.state.phraseHistory.has(p));
@@ -225,23 +422,10 @@ const currentPhrases = phrases[currentLang];
       return this.getUniqueRandomPhrase(category);
     }
 
-    getRandomFunFact() {
-      return this.getUniqueRandomPhrase('fact');
-    }
-
-    getRandomTip() {
-      return this.getUniqueRandomPhrase('tip');
-    }
-
-    getRandomQuiz() {
-      return this.getUniqueRandomPhrase('quiz');
-    }
-
-    getRandomFeature() {
-      return this.getUniqueRandomPhrase('feature');
-    }
-
     setMood(mood) {
+      // Clear any current activity
+      this.clearActivity();
+      
       this.state.mood = mood;
       this.robot.dataset.mood = mood;
       this.state.isAwake = mood !== 'sleeping';
@@ -255,15 +439,23 @@ const currentPhrases = phrases[currentLang];
       if (['excited', 'celebrating'].includes(mood)) {
         this.state.moodResetTimer = setTimeout(() => {
           this.setMood('happy');
+          this.scheduleIdleActivity();
         }, 3000);
       }
     }
 
-    showMessage(message, duration = 4000) {
+    showMessage(message, category = 'prompt', duration = 4000) {
       // Clear any existing message timer
       if (this.state.messageTimer) {
         clearTimeout(this.state.messageTimer);
       }
+
+      // Clear any activity while showing message
+      this.clearActivity();
+      this.state.showingMessage = true;
+
+      // Play sound for category
+      this.sounds.playForCategory(category);
 
       this.speechText.textContent = message;
       this.speech.removeAttribute('hidden');
@@ -271,8 +463,10 @@ const currentPhrases = phrases[currentLang];
 
       this.state.messageTimer = setTimeout(() => {
         this.speech.classList.remove('visible');
+        this.state.showingMessage = false;
         setTimeout(() => {
           this.speech.setAttribute('hidden', '');
+          this.scheduleIdleActivity();
         }, 300);
       }, duration);
     }
@@ -287,11 +481,82 @@ const currentPhrases = phrases[currentLang];
       }, 1500);
     }
 
+    // ============================================
+    // IDLE ACTIVITIES
+    // ============================================
+    scheduleIdleActivity() {
+      if (this.state.idleTimer) {
+        clearTimeout(this.state.idleTimer);
+      }
+
+      this.state.idleTimer = setTimeout(() => {
+        // Only start activity if not busy
+        if (!this.state.showingMessage && 
+            this.state.mood !== 'celebrating' && 
+            this.state.mood !== 'sleeping' &&
+            this.state.isAwake) {
+          this.startIdleActivity();
+        } else {
+          this.scheduleIdleActivity();
+        }
+      }, 3000 + Math.random() * 2000);
+    }
+
+    startIdleActivity() {
+      const activity = this.IDLE_ACTIVITIES[Math.floor(Math.random() * this.IDLE_ACTIVITIES.length)];
+      this.state.currentActivity = activity;
+      
+      // Apply activity class
+      this.robot.classList.add(`activity-${activity}`);
+      
+      // Clear activity after 3-5 seconds
+      this.state.activityTimer = setTimeout(() => {
+        this.clearActivity();
+        this.scheduleIdleActivity();
+      }, 3000 + Math.random() * 2000);
+    }
+
+    clearActivity() {
+      if (this.state.currentActivity) {
+        this.robot.classList.remove(`activity-${this.state.currentActivity}`);
+        this.state.currentActivity = null;
+      }
+      if (this.state.activityTimer) {
+        clearTimeout(this.state.activityTimer);
+      }
+    }
+
+    // ============================================
+    // MEGA CELEBRATION DANCE
+    // ============================================
+    startMegaDance() {
+      this.robot.classList.add('mega-dance');
+      this.sounds.playCelebration();
+      
+      setTimeout(() => {
+        this.robot.classList.remove('mega-dance');
+        this.setMood('happy');
+        this.scheduleIdleActivity();
+      }, 4000);
+    }
+
+    // ============================================
+    // EVENT HANDLERS
+    // ============================================
     handleClick() {
+      this.sounds.playBeep();
+      
       if (!this.state.isAwake) {
         // Wake up!
         this.setMood('happy');
-        this.showMessage(this.getUniqueRandomPhrase('greeting'));
+        this.showMessage(this.getUniqueRandomPhrase('greeting'), 'greeting');
+        return;
+      }
+
+      // Randomly show introduction sometimes
+      if (Math.random() < 0.15) {
+        this.setMood('wave');
+        this.showMessage(this.getUniqueRandomPhrase('introduction'), 'introduction');
         return;
       }
 
@@ -299,35 +564,35 @@ const currentPhrases = phrases[currentLang];
       const interactions = [
         () => {
           this.setMood('happy');
-          this.showMessage(this.getUniqueRandomPhrase('encourage'));
+          this.showMessage(this.getUniqueRandomPhrase('encourage'), 'encourage');
         },
         () => {
           this.setMood('excited');
-          this.showMessage(this.getUniqueRandomPhrase('motivate'));
+          this.showMessage(this.getUniqueRandomPhrase('motivate'), 'motivate');
         },
         () => {
           this.setMood('thinking');
-          this.showMessage(this.getRandomFunFact(), 5000);
+          this.showMessage(this.getUniqueRandomPhrase('fact'), 'fact', 5000);
         },
         () => {
           this.setMood('thinking');
-          this.showMessage(this.getRandomTip(), 5000);
+          this.showMessage(this.getUniqueRandomPhrase('tip'), 'tip', 5000);
         },
         () => {
           this.setMood('proud');
-          this.showMessage(this.getRandomFeature(), 5000);
+          this.showMessage(this.getUniqueRandomPhrase('feature'), 'feature', 5000);
         },
         () => {
           this.setMood('excited');
-          this.showMessage(this.getRandomQuiz(), 5000);
+          this.showMessage(this.getUniqueRandomPhrase('quiz'), 'quiz', 5000);
         },
         () => {
           this.setMood('wave');
-          this.showMessage(this.getUniqueRandomPhrase('prompt'));
+          this.showMessage(this.getUniqueRandomPhrase('prompt'), 'prompt');
         },
         () => {
           this.setMood('happy');
-          this.showMessage(this.getUniqueRandomPhrase('idle'));
+          this.showMessage(this.getUniqueRandomPhrase('idle'), 'idle');
         }
       ];
 
@@ -342,41 +607,46 @@ const currentPhrases = phrases[currentLang];
 
       if (percentage === 100) {
         this.setMood('celebrating');
-        this.showMessage(this.getUniqueRandomPhrase('celebrate'));
+        this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate');
         this.showParticles();
+        this.startMegaDance();
       } else if (percentage >= 80) {
         this.setMood('excited');
-        this.showMessage(this.getUniqueRandomPhrase('celebrate'));
+        this.sounds.playExcited();
+        this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate');
       } else if (percentage >= 50) {
         this.setMood('happy');
-        this.showMessage(this.getUniqueRandomPhrase('encourage'));
+        this.showMessage(this.getUniqueRandomPhrase('encourage'), 'encourage');
       } else {
         this.setMood('encouraging');
-        this.showMessage(this.getUniqueRandomPhrase('motivate'));
+        this.showMessage(this.getUniqueRandomPhrase('motivate'), 'motivate');
       }
     }
 
     handleAchievement(event) {
       this.setMood('celebrating');
-      this.showMessage(this.getUniqueRandomPhrase('celebrate'));
+      this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate');
       this.showParticles();
+      this.startMegaDance();
     }
 
     handleXpGain(event) {
       const { amount } = event.detail;
       if (amount >= 50) {
         this.setMood('excited');
-        this.showMessage(this.getUniqueRandomPhrase('celebrate'));
+        this.sounds.playExcited();
+        this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate');
       } else {
         this.setMood('happy');
-        this.showMessage(this.getUniqueRandomPhrase('encourage'));
+        this.showMessage(this.getUniqueRandomPhrase('encourage'), 'encourage');
       }
     }
 
     handleLevelUp(event) {
       this.setMood('celebrating');
-      this.showMessage(this.getUniqueRandomPhrase('celebrate'));
+      this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate');
       this.showParticles();
+      this.startMegaDance();
     }
 
     resetSleepTimer() {
@@ -392,7 +662,7 @@ const currentPhrases = phrases[currentLang];
       // Fall asleep after 5 minutes of inactivity
       this.state.sleepTimer = setTimeout(() => {
         this.setMood('sleeping');
-        this.showMessage(this.getRandomMessage('sleeping'));
+        this.showMessage(this.getRandomMessage('sleeping'), 'idle');
       }, 5 * 60 * 1000);
     }
 
@@ -400,69 +670,70 @@ const currentPhrases = phrases[currentLang];
     trigger(mood, message) {
       this.setMood(mood);
       if (message) {
-        this.showMessage(message);
+        this.showMessage(message, mood);
       } else {
-        this.showMessage(this.getRandomMessage(mood));
+        this.showMessage(this.getRandomMessage(mood), mood);
       }
       if (mood === 'celebrating') {
         this.showParticles();
+        this.startMegaDance();
       }
     }
   }
 
   // Initialize when DOM is ready
   document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('pixel-robot-container');
+    const container = document.getElementById('bit-robot-container');
     if (container) {
-      window.pixelRobot = new PixelRobot('pixel-robot-container');
+      window.bitRobot = new BitRobot('bit-robot-container');
     }
   });
 </script>
 
 <style>
   /* Container positioning */
-  .pixel-container {
+  .bit-container {
     z-index: 1000;
     pointer-events: auto;
   }
 
-  .pixel-container.bottom-right {
+  .bit-container.bottom-right {
     position: fixed;
     bottom: 20px;
     right: 20px;
   }
 
-  .pixel-container.bottom-left {
+  .bit-container.bottom-left {
     position: fixed;
     bottom: 20px;
     left: 20px;
   }
 
-  .pixel-container.inline {
+  .bit-container.inline {
     position: relative;
     display: inline-block;
   }
 
   @media (max-width: 768px) {
-    .pixel-container.bottom-right,
-    .pixel-container.bottom-left {
+    .bit-container.bottom-right,
+    .bit-container.bottom-left {
       bottom: 80px; /* Above mobile nav */
     }
 
-    .pixel-container.bottom-right {
+    .bit-container.bottom-right {
       right: 10px;
     }
 
-    .pixel-container.bottom-left {
+    .bit-container.bottom-left {
       left: 10px;
     }
 
-    .pixel-robot {
+    .bit-robot {
       transform: scale(0.85);
       transform-origin: bottom right;
     }
 
-    .pixel-container.bottom-left .pixel-robot {
+    .bit-container.bottom-left .bit-robot {
       transform-origin: bottom left;
     }
 
@@ -474,15 +745,15 @@ const currentPhrases = phrases[currentLang];
   }
 
   @media (max-width: 480px) {
-    .pixel-container.bottom-right {
+    .bit-container.bottom-right {
       right: 8px;
     }
 
-    .pixel-container.bottom-left {
+    .bit-container.bottom-left {
       left: 8px;
     }
 
-    .pixel-robot {
+    .bit-robot {
       transform: scale(0.75);
     }
 
@@ -553,7 +824,7 @@ const currentPhrases = phrases[currentLang];
   }
 
   /* Robot Base */
-  .pixel-robot {
+  .bit-robot {
     width: 80px;
     height: 120px;
     cursor: pointer;
@@ -562,11 +833,11 @@ const currentPhrases = phrases[currentLang];
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
   }
 
-  .pixel-robot:hover {
+  .bit-robot:hover {
     transform: scale(1.05);
   }
 
-  .pixel-robot:active {
+  .bit-robot:active {
     transform: scale(0.95);
   }
 
@@ -684,6 +955,18 @@ const currentPhrases = phrases[currentLang];
     border-radius: 50%;
     box-shadow: 0 0 8px #00ff88;
     transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .pupil {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #0f0f1a;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   /* Mouth */
@@ -751,6 +1034,39 @@ const currentPhrases = phrases[currentLang];
     box-shadow: 0 0 4px rgba(255, 215, 0, 0.5);
   }
 
+  /* Robot Arms */
+  .robot-arm {
+    position: absolute;
+    top: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform-origin: top center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .arm-left {
+    left: -20px;
+  }
+
+  .arm-right {
+    right: -20px;
+  }
+
+  .arm-segment {
+    width: 6px;
+    height: 16px;
+    background: linear-gradient(180deg, #5a5a6e 0%, #3d3d4d 100%);
+    border: 1px solid #6b6b80;
+    border-radius: 3px;
+  }
+
+  .arm-hand {
+    font-size: 14px;
+    margin-top: 2px;
+  }
+
   /* Robot Legs */
   .robot-legs {
     position: absolute;
@@ -768,32 +1084,6 @@ const currentPhrases = phrases[currentLang];
     border: 2px solid #6b6b80;
     border-radius: 0 0 4px 4px;
     box-shadow: 0 2px 0 #2d2d3d;
-  }
-
-  /* Robot Arm (for waving) */
-  .robot-arm {
-    position: absolute;
-    top: 70px;
-    right: -20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform-origin: top center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .arm-segment {
-    width: 6px;
-    height: 16px;
-    background: linear-gradient(180deg, #5a5a6e 0%, #3d3d4d 100%);
-    border: 1px solid #6b6b80;
-    border-radius: 3px;
-  }
-
-  .arm-hand {
-    font-size: 16px;
-    margin-top: 2px;
   }
 
   /* Celebration Particles */
@@ -843,7 +1133,7 @@ const currentPhrases = phrases[currentLang];
   /* =========================== */
 
   /* IDLE - Default subtle animation */
-  .pixel-robot[data-mood="idle"] {
+  .bit-robot[data-mood="idle"] {
     animation: idle-bob 3s ease-in-out infinite;
   }
 
@@ -853,26 +1143,26 @@ const currentPhrases = phrases[currentLang];
   }
 
   /* HAPPY - Curved eyes, smile */
-  .pixel-robot[data-mood="happy"] .eye {
+  .bit-robot[data-mood="happy"] .eye {
     height: 6px;
     border-radius: 6px 6px 0 0;
   }
 
-  .pixel-robot[data-mood="happy"] .mouth {
+  .bit-robot[data-mood="happy"] .mouth {
     height: 6px;
     border-radius: 0 0 8px 8px;
   }
 
   /* EXCITED - Sparkle eyes, open mouth, bouncing */
-  .pixel-robot[data-mood="excited"] {
+  .bit-robot[data-mood="excited"] {
     animation: bounce 0.5s ease infinite;
   }
 
-  .pixel-robot[data-mood="excited"] .eye {
+  .bit-robot[data-mood="excited"] .eye {
     animation: sparkle 0.5s ease infinite;
   }
 
-  .pixel-robot[data-mood="excited"] .mouth {
+  .bit-robot[data-mood="excited"] .mouth {
     width: 12px;
     height: 10px;
     border-radius: 50%;
@@ -889,24 +1179,29 @@ const currentPhrases = phrases[currentLang];
   }
 
   /* CELEBRATING - Extra bouncing, particles shown */
-  .pixel-robot[data-mood="celebrating"] {
+  .bit-robot[data-mood="celebrating"] {
     animation: celebrate-bounce 0.4s ease infinite;
   }
 
-  .pixel-robot[data-mood="celebrating"] .eye {
+  .bit-robot[data-mood="celebrating"] .eye {
     animation: sparkle 0.3s ease infinite;
   }
 
-  .pixel-robot[data-mood="celebrating"] .mouth {
+  .bit-robot[data-mood="celebrating"] .mouth {
     width: 18px;
     height: 12px;
     border-radius: 50%;
   }
 
-  .pixel-robot[data-mood="celebrating"] .antenna-ball {
+  .bit-robot[data-mood="celebrating"] .antenna-ball {
     background: #ffd700 !important;
     box-shadow: 0 0 15px #ffd700 !important;
     animation: none;
+  }
+
+  .bit-robot[data-mood="celebrating"] .arm-left,
+  .bit-robot[data-mood="celebrating"] .arm-right {
+    opacity: 1;
   }
 
   @keyframes celebrate-bounce {
@@ -917,15 +1212,19 @@ const currentPhrases = phrases[currentLang];
   }
 
   /* THINKING - Looking up, tilt */
-  .pixel-robot[data-mood="thinking"] {
+  .bit-robot[data-mood="thinking"] {
     animation: think-tilt 2s ease-in-out infinite;
   }
 
-  .pixel-robot[data-mood="thinking"] .eye {
+  .bit-robot[data-mood="thinking"] .eye {
     transform: translateY(-3px);
   }
 
-  .pixel-robot[data-mood="thinking"] .mouth {
+  .bit-robot[data-mood="thinking"] .pupil {
+    transform: translate(-50%, -100%);
+  }
+
+  .bit-robot[data-mood="thinking"] .mouth {
     width: 8px;
     height: 6px;
     border-radius: 50%;
@@ -938,29 +1237,29 @@ const currentPhrases = phrases[currentLang];
   }
 
   /* SLEEPING - Closed eyes, gentle bob */
-  .pixel-robot[data-mood="sleeping"] {
+  .bit-robot[data-mood="sleeping"] {
     animation: sleep-bob 2s ease-in-out infinite;
   }
 
-  .pixel-robot[data-mood="sleeping"] .eye {
+  .bit-robot[data-mood="sleeping"] .eye {
     height: 3px;
     border-radius: 3px;
     animation: none;
     box-shadow: 0 0 4px #00ff88;
   }
 
-  .pixel-robot[data-mood="sleeping"] .mouth {
+  .bit-robot[data-mood="sleeping"] .mouth {
     width: 10px;
     height: 2px;
   }
 
-  .pixel-robot[data-mood="sleeping"] .antenna-ball {
+  .bit-robot[data-mood="sleeping"] .antenna-ball {
     background: #444 !important;
     box-shadow: 0 0 4px #333 !important;
     animation: none;
   }
 
-  .pixel-robot[data-mood="sleeping"] .heart-icon {
+  .bit-robot[data-mood="sleeping"] .heart-icon {
     animation: none;
     opacity: 0.5;
   }
@@ -971,43 +1270,43 @@ const currentPhrases = phrases[currentLang];
   }
 
   /* ENCOURAGING - Determined look */
-  .pixel-robot[data-mood="encouraging"] .eye {
+  .bit-robot[data-mood="encouraging"] .eye {
     height: 8px;
     width: 12px;
     border-radius: 2px 2px 6px 6px;
   }
 
-  .pixel-robot[data-mood="encouraging"] .mouth {
+  .bit-robot[data-mood="encouraging"] .mouth {
     height: 4px;
     width: 14px;
     background: linear-gradient(90deg, transparent 20%, #00ff88 20%, #00ff88 80%, transparent 80%);
   }
 
   /* PROUD - Big happy smile */
-  .pixel-robot[data-mood="proud"] .eye {
+  .bit-robot[data-mood="proud"] .eye {
     height: 5px;
     border-radius: 5px 5px 0 0;
     box-shadow: 0 0 10px #00ff88, 0 0 20px rgba(0, 255, 136, 0.5);
   }
 
-  .pixel-robot[data-mood="proud"] .mouth {
+  .bit-robot[data-mood="proud"] .mouth {
     height: 8px;
     width: 20px;
     border-radius: 0 0 10px 10px;
   }
 
   /* WAVE - Arm visible and waving */
-  .pixel-robot[data-mood="wave"] .robot-arm {
+  .bit-robot[data-mood="wave"] .arm-right {
     opacity: 1;
     animation: wave-arm 0.6s ease-in-out 3;
   }
 
-  .pixel-robot[data-mood="wave"] .eye {
+  .bit-robot[data-mood="wave"] .eye {
     height: 6px;
     border-radius: 6px 6px 0 0;
   }
 
-  .pixel-robot[data-mood="wave"] .mouth {
+  .bit-robot[data-mood="wave"] .mouth {
     height: 6px;
     border-radius: 0 0 8px 8px;
   }
@@ -1017,15 +1316,413 @@ const currentPhrases = phrases[currentLang];
     50% { transform: rotate(-45deg); }
   }
 
+  /* =========================== */
+  /* IDLE ACTIVITIES             */
+  /* =========================== */
+
+  /* Jumping */
+  .bit-robot.activity-jumping {
+    animation: robot-jump 0.5s ease-in-out infinite !important;
+  }
+  @keyframes robot-jump {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  /* Learning - head nodding */
+  .bit-robot.activity-learning .robot-head {
+    animation: robot-nod 0.8s ease-in-out infinite;
+  }
+  @keyframes robot-nod {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    30% { transform: translateX(-50%) rotate(5deg); }
+    70% { transform: translateX(-50%) rotate(-5deg); }
+  }
+
+  /* Reading */
+  .bit-robot.activity-reading .robot-head {
+    animation: robot-read 2s ease-in-out infinite;
+  }
+  .bit-robot.activity-reading .eye {
+    animation: robot-eye-read 2s ease-in-out infinite;
+  }
+  @keyframes robot-read {
+    0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+    50% { transform: translateX(-50%) translateY(2px) rotate(-3deg); }
+  }
+  @keyframes robot-eye-read {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.7); }
+  }
+
+  /* Swimming */
+  .bit-robot.activity-swimming {
+    animation: robot-swim 1.5s ease-in-out infinite !important;
+  }
+  .bit-robot.activity-swimming .arm-left {
+    opacity: 1;
+    animation: robot-swim-arm-left 0.75s ease-in-out infinite;
+  }
+  .bit-robot.activity-swimming .arm-right {
+    opacity: 1;
+    animation: robot-swim-arm-right 0.75s ease-in-out infinite;
+  }
+  @keyframes robot-swim {
+    0%, 100% { transform: translateX(-3px) rotate(-2deg); }
+    50% { transform: translateX(3px) rotate(2deg); }
+  }
+  @keyframes robot-swim-arm-left {
+    0%, 100% { transform: rotate(-20deg); }
+    50% { transform: rotate(20deg); }
+  }
+  @keyframes robot-swim-arm-right {
+    0%, 100% { transform: rotate(20deg); }
+    50% { transform: rotate(-20deg); }
+  }
+
+  /* Sleeping activity */
+  .bit-robot.activity-sleeping {
+    animation: robot-sleep 2s ease-in-out infinite !important;
+  }
+  .bit-robot.activity-sleeping .eye {
+    height: 2px !important;
+    border-radius: 1px !important;
+  }
+  @keyframes robot-sleep {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+
+  /* Dancing */
+  .bit-robot.activity-dancing {
+    animation: robot-dance 0.4s ease-in-out infinite !important;
+  }
+  .bit-robot.activity-dancing .arm-left {
+    opacity: 1;
+    animation: robot-dance-arm 0.4s ease-in-out infinite;
+  }
+  .bit-robot.activity-dancing .arm-right {
+    opacity: 1;
+    animation: robot-dance-arm 0.4s ease-in-out infinite reverse;
+  }
+  @keyframes robot-dance {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-5px) rotate(3deg); }
+  }
+  @keyframes robot-dance-arm {
+    0%, 100% { transform: rotate(-30deg); }
+    50% { transform: rotate(30deg); }
+  }
+
+  /* Spinning */
+  .bit-robot.activity-spinning {
+    animation: robot-spin 1s ease-in-out infinite !important;
+  }
+  @keyframes robot-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Waving activity */
+  .bit-robot.activity-waving .arm-right {
+    opacity: 1;
+    animation: robot-wave 0.5s ease-in-out infinite;
+    transform-origin: top center;
+  }
+  @keyframes robot-wave {
+    0%, 100% { transform: rotate(-10deg); }
+    25% { transform: rotate(-45deg); }
+    75% { transform: rotate(-45deg); }
+  }
+
+  /* Dizzy */
+  .bit-robot.activity-dizzy {
+    animation: robot-dizzy 0.3s ease-in-out infinite !important;
+  }
+  .bit-robot.activity-dizzy .eye {
+    animation: robot-dizzy-eyes 0.5s linear infinite;
+  }
+  @keyframes robot-dizzy {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+  @keyframes robot-dizzy-eyes {
+    0% { transform: scale(1); }
+    25% { transform: scale(0.8) rotate(90deg); }
+    50% { transform: scale(1.1) rotate(180deg); }
+    75% { transform: scale(0.9) rotate(270deg); }
+    100% { transform: scale(1) rotate(360deg); }
+  }
+
+  /* Yoga */
+  .bit-robot.activity-yoga {
+    animation: robot-yoga-body 3s ease-in-out infinite !important;
+  }
+  .bit-robot.activity-yoga .arm-left {
+    opacity: 1;
+    animation: robot-yoga-arm-left 3s ease-in-out infinite;
+  }
+  .bit-robot.activity-yoga .arm-right {
+    opacity: 1;
+    animation: robot-yoga-arm-right 3s ease-in-out infinite;
+  }
+  @keyframes robot-yoga-body {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  @keyframes robot-yoga-arm-left {
+    0%, 100% { transform: rotate(10deg); }
+    50% { transform: rotate(-80deg); }
+  }
+  @keyframes robot-yoga-arm-right {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(80deg); }
+  }
+
+  /* Sneeze */
+  .bit-robot.activity-sneeze {
+    animation: robot-sneeze 1.5s ease-in-out infinite !important;
+  }
+  .bit-robot.activity-sneeze .robot-head {
+    animation: robot-sneeze-head 1.5s ease-in-out infinite;
+  }
+  @keyframes robot-sneeze {
+    0%, 60% { transform: translateY(0); }
+    65% { transform: translateY(-8px); }
+    70% { transform: translateY(5px); }
+    80%, 100% { transform: translateY(0); }
+  }
+  @keyframes robot-sneeze-head {
+    0%, 60% { transform: translateX(-50%) rotate(0deg); }
+    65% { transform: translateX(-50%) rotate(-10deg); }
+    70% { transform: translateX(-50%) rotate(15deg); }
+    80%, 100% { transform: translateX(-50%) rotate(0deg); }
+  }
+
+  /* Looking */
+  .bit-robot.activity-looking .robot-head {
+    animation: robot-look 2s ease-in-out infinite;
+  }
+  .bit-robot.activity-looking .pupil {
+    animation: robot-look-pupil 2s ease-in-out infinite;
+  }
+  @keyframes robot-look {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(-8deg); }
+    75% { transform: translateX(-50%) rotate(8deg); }
+  }
+  @keyframes robot-look-pupil {
+    0%, 100% { transform: translate(-50%, -50%); }
+    25% { transform: translate(-100%, -50%); }
+    75% { transform: translate(0%, -50%); }
+  }
+
+  /* Bored */
+  .bit-robot.activity-bored .leg-right {
+    animation: robot-tap-foot 0.3s ease-in-out infinite;
+  }
+  .bit-robot.activity-bored .robot-head {
+    animation: robot-bored-head 2s ease-in-out infinite;
+  }
+  @keyframes robot-tap-foot {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-15deg); }
+  }
+  @keyframes robot-bored-head {
+    0%, 45%, 55%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(2px); }
+  }
+
+  /* Excited activity */
+  .bit-robot.activity-excited {
+    animation: robot-excited 0.2s ease-in-out infinite !important;
+  }
+  .bit-robot.activity-excited .antenna-ball {
+    animation: robot-excited-antenna 0.1s ease-in-out infinite;
+  }
+  @keyframes robot-excited {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-8px) scale(1.05); }
+  }
+  @keyframes robot-excited-antenna {
+    0%, 100% { background: #ff4444; box-shadow: 0 0 6px #ff4444; }
+    50% { background: #44ff44; box-shadow: 0 0 10px #44ff44; }
+  }
+
+  /* Stretching */
+  .bit-robot.activity-stretching {
+    animation: robot-stretch-body 2s ease-in-out infinite !important;
+  }
+  .bit-robot.activity-stretching .arm-left,
+  .bit-robot.activity-stretching .arm-right {
+    opacity: 1;
+    animation: robot-stretch-arms 2s ease-in-out infinite;
+  }
+  @keyframes robot-stretch-body {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.05) translateY(-3px); }
+  }
+  @keyframes robot-stretch-arms {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-120deg); }
+  }
+
+  /* Headbang */
+  .bit-robot.activity-headbang .robot-head {
+    animation: robot-headbang 0.25s ease-in-out infinite;
+  }
+  @keyframes robot-headbang {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    50% { transform: translateX(-50%) rotate(-15deg) translateY(3px); }
+  }
+
+  /* Pushups */
+  .bit-robot.activity-pushups {
+    animation: robot-pushup 1s ease-in-out infinite !important;
+  }
+  .bit-robot.activity-pushups .arm-left,
+  .bit-robot.activity-pushups .arm-right {
+    opacity: 1;
+    animation: robot-pushup-arms 1s ease-in-out infinite;
+  }
+  @keyframes robot-pushup {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(10px) rotate(-15deg); }
+  }
+  @keyframes robot-pushup-arms {
+    0%, 100% { transform: rotate(-30deg); }
+    50% { transform: rotate(-60deg); }
+  }
+
+  /* Karate */
+  .bit-robot.activity-karate {
+    animation: robot-karate 0.8s ease-in-out infinite !important;
+  }
+  .bit-robot.activity-karate .arm-right {
+    opacity: 1;
+    animation: robot-karate-chop 0.8s ease-in-out infinite;
+  }
+  .bit-robot.activity-karate .leg-left {
+    animation: robot-karate-kick 0.8s ease-in-out infinite;
+  }
+  @keyframes robot-karate {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+  }
+  @keyframes robot-karate-chop {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(-90deg); }
+  }
+  @keyframes robot-karate-kick {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(30deg); }
+  }
+
+  /* =========================== */
+  /* MEGA CELEBRATION DANCE      */
+  /* =========================== */
+
+  .bit-robot.mega-dance {
+    animation: mega-dance-body 4s ease-in-out infinite !important;
+  }
+  .bit-robot.mega-dance .robot-head {
+    animation: mega-dance-head 1s ease-in-out infinite;
+  }
+  .bit-robot.mega-dance .arm-left {
+    opacity: 1;
+    animation: mega-dance-arm-left 0.5s ease-in-out infinite;
+  }
+  .bit-robot.mega-dance .arm-right {
+    opacity: 1;
+    animation: mega-dance-arm-right 0.5s ease-in-out infinite;
+  }
+  .bit-robot.mega-dance .leg-left {
+    animation: mega-dance-leg-left 0.25s ease-in-out infinite;
+  }
+  .bit-robot.mega-dance .leg-right {
+    animation: mega-dance-leg-right 0.25s ease-in-out infinite;
+  }
+  .bit-robot.mega-dance .eye {
+    animation: mega-dance-eyes 0.3s ease-in-out infinite;
+  }
+  .bit-robot.mega-dance .antenna-ball {
+    animation: mega-dance-antenna 0.15s ease-in-out infinite !important;
+  }
+
+  /* Body: jumping, spinning 360°, bouncing, scaling */
+  @keyframes mega-dance-body {
+    0% { transform: translateY(0) rotate(0deg) scale(1); }
+    5% { transform: translateY(-15px) rotate(-10deg) scale(1.1); }
+    15% { transform: translateY(-20px) rotate(10deg) scale(1.15); }
+    35% { transform: translateY(-25px) rotate(15deg) scale(1.2); }
+    45% { transform: translateX(-10px) translateY(-5px) rotate(-5deg); }
+    55% { transform: translateX(10px) translateY(-10px) rotate(8deg); }
+    70% { transform: translateY(-30px) rotate(360deg) scale(1.1); }
+    100% { transform: translateY(0) rotate(0deg) scale(1); }
+  }
+
+  /* Head bobbing crazy */
+  @keyframes mega-dance-head {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    20% { transform: translateX(-50%) rotate(-20deg) translateY(-3px); }
+    40% { transform: translateX(-50%) rotate(20deg) translateY(2px); }
+    60% { transform: translateX(-50%) rotate(-15deg) translateY(-2px); }
+    80% { transform: translateX(-50%) rotate(15deg) translateY(3px); }
+  }
+
+  /* Arms going wild */
+  @keyframes mega-dance-arm-left {
+    0%, 100% { transform: rotate(10deg); }
+    25% { transform: rotate(-120deg); }
+    50% { transform: rotate(45deg); }
+    75% { transform: rotate(-90deg); }
+  }
+  @keyframes mega-dance-arm-right {
+    0%, 100% { transform: rotate(-10deg); }
+    25% { transform: rotate(120deg); }
+    50% { transform: rotate(-45deg); }
+    75% { transform: rotate(90deg); }
+  }
+
+  /* Legs stomping */
+  @keyframes mega-dance-leg-left {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    50% { transform: rotate(-25deg) translateY(-5px); }
+  }
+  @keyframes mega-dance-leg-right {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    50% { transform: rotate(25deg) translateY(-5px); }
+  }
+
+  /* Eyes flashing rainbow colors */
+  @keyframes mega-dance-eyes {
+    0%, 100% { transform: scale(1); background: #00ff88; box-shadow: 0 0 6px #00ff88; }
+    25% { transform: scale(1.3); background: #ff00ff; box-shadow: 0 0 12px #ff00ff; }
+    50% { transform: scale(0.8); background: #ffff00; box-shadow: 0 0 15px #ffff00; }
+    75% { transform: scale(1.2); background: #00ffff; box-shadow: 0 0 10px #00ffff; }
+  }
+
+  /* Antenna rainbow disco */
+  @keyframes mega-dance-antenna {
+    0% { background: #ff0000; box-shadow: 0 0 15px #ff0000; transform: scale(1); }
+    16% { background: #ff8800; box-shadow: 0 0 15px #ff8800; transform: scale(1.5); }
+    33% { background: #ffff00; box-shadow: 0 0 15px #ffff00; transform: scale(1); }
+    50% { background: #00ff00; box-shadow: 0 0 15px #00ff00; transform: scale(1.5); }
+    66% { background: #0088ff; box-shadow: 0 0 15px #0088ff; transform: scale(1); }
+    83% { background: #ff00ff; box-shadow: 0 0 15px #ff00ff; transform: scale(1.5); }
+    100% { background: #ff0000; box-shadow: 0 0 15px #ff0000; transform: scale(1); }
+  }
+
   /* Reduced motion preference */
   @media (prefers-reduced-motion: reduce) {
-    .pixel-robot,
-    .pixel-robot[data-mood="idle"],
-    .pixel-robot[data-mood="excited"],
-    .pixel-robot[data-mood="celebrating"],
-    .pixel-robot[data-mood="thinking"],
-    .pixel-robot[data-mood="sleeping"],
-    .pixel-robot[data-mood="wave"] .robot-arm,
+    .bit-robot,
+    .bit-robot[data-mood="idle"],
+    .bit-robot[data-mood="excited"],
+    .bit-robot[data-mood="celebrating"],
+    .bit-robot[data-mood="thinking"],
+    .bit-robot[data-mood="sleeping"],
+    .bit-robot[data-mood="wave"] .arm-right,
+    .bit-robot.mega-dance,
     .antenna-ball,
     .heart-icon,
     .eye,

@@ -63,20 +63,20 @@ const {
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('newsletter-form') as HTMLFormElement;
+    const form = document.getElementById('newsletter-form');
     if (!form) return;
 
-    const submitBtn = form.querySelector('.submit-btn') as HTMLButtonElement;
-    const btnText = form.querySelector('.btn-text') as HTMLElement;
-    const btnLoading = form.querySelector('.btn-loading') as HTMLElement;
-    const btnIcon = form.querySelector('.btn-icon') as HTMLElement;
-    const messageEl = form.querySelector('.form-message') as HTMLElement;
+    const submitBtn = form.querySelector('.submit-btn');
+    const btnText = form.querySelector('.btn-text');
+    const btnLoading = form.querySelector('.btn-loading');
+    const btnIcon = form.querySelector('.btn-icon');
+    const messageEl = form.querySelector('.form-message');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const formData = new FormData(form);
-      const email = formData.get('email') as string;
+      const email = formData.get('email');
 
       // Show loading state
       submitBtn.disabled = true;

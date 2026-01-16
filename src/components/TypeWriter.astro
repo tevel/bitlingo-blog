@@ -71,10 +71,10 @@ const {
     const typewriters = document.querySelectorAll('.typewriter');
     
     typewriters.forEach((tw) => {
-      const textEl = tw.querySelector('.typewriter-text') as HTMLElement;
+      const textEl = tw.querySelector('.typewriter-text');
       if (!textEl) return;
 
-      const texts: string[] = JSON.parse(tw.getAttribute('data-texts') || '[]');
+      const texts = JSON.parse(tw.getAttribute('data-texts') || '[]');
       const speed = parseInt(tw.getAttribute('data-speed') || '100');
       const deleteSpeed = parseInt(tw.getAttribute('data-delete-speed') || '50');
       const pauseDuration = parseInt(tw.getAttribute('data-pause-duration') || '2000');

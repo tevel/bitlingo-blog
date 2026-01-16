@@ -68,7 +68,7 @@ const languages = pollLanguages.map(code => ({
       const hasVoted = localStorage.getItem(storageKey);
       
       // Initialize with some base votes for visual appeal
-      const baseVotes: Record<string, number> = {
+      const baseVotes = {
         es: 142, fr: 98, de: 67, ja: 89, zh: 76, it: 54, pt: 45, ko: 63
       };
       
@@ -77,13 +77,13 @@ const languages = pollLanguages.map(code => ({
       });
 
       const elements = {
-        options: poll.querySelectorAll('.poll-option') as NodeListOf<HTMLElement>,
+        options: poll.querySelectorAll('.poll-option'),
         voteCount: poll.querySelector('.vote-count'),
-        votedMessage: poll.querySelector('.voted-message') as HTMLElement,
+        votedMessage: poll.querySelector('.voted-message'),
       };
 
-      function getTotalVotes(): number {
-        return Object.values(votes).reduce((sum: number, v) => sum + (v as number), 0);
+      function getTotalVotes() {
+        return Object.values(votes).reduce((sum, v) => sum + v, 0);
       }
 
       function updateDisplay() {
@@ -99,7 +99,7 @@ const languages = pollLanguages.map(code => ({
           const count = votes[lang] || 0;
           const percent = total > 0 ? Math.round((count / total) * 100) : 0;
           
-          const bar = option.querySelector('.bar-fill') as HTMLElement;
+          const bar = option.querySelector('.bar-fill');
           const percentEl = option.querySelector('.option-percent');
           
           if (bar) bar.style.width = `${percent}%`;
@@ -107,7 +107,7 @@ const languages = pollLanguages.map(code => ({
         });
       }
 
-      function vote(langCode: string) {
+      function vote(langCode) {
         if (hasVoted) return;
         
         votes[langCode] = (votes[langCode] || 0) + 1;

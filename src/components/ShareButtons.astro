@@ -102,8 +102,8 @@ const shareText = description ? `${title} - ${description}` : title;
 			const url = btn.getAttribute('data-url');
 			if (url) {
 				await navigator.clipboard.writeText(url);
-				const linkIcon = btn.querySelector('.link-icon') as HTMLElement;
-				const checkIcon = btn.querySelector('.check-icon') as HTMLElement;
+				const linkIcon = btn.querySelector('.link-icon');
+				const checkIcon = btn.querySelector('.check-icon');
 				if (linkIcon && checkIcon) {
 					linkIcon.style.display = 'none';
 					checkIcon.style.display = 'block';

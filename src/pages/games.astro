@@ -493,7 +493,7 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
 <script>
   // Global language selector functionality
   document.addEventListener('DOMContentLoaded', () => {
-    const globalSelect = document.getElementById('global-lang') as HTMLSelectElement;
+    const globalSelect = document.getElementById('global-lang');
     
     if (globalSelect) {
       globalSelect.addEventListener('change', () => {

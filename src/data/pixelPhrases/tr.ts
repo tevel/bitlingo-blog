@@ -18,6 +18,23 @@ export const tr: PhraseSet = {
     "Selam, kelime savaşçısı! ⚔️",
     "Selamlar, kelime hazinesi ustası! 🔨"
   ],
+  introduction: [
+    "Merhaba! Ben Bit! Öğrenme arkadaşın! 🤖❤️",
+    "Adım Bit! Nasıl gidiyor? 😊",
+    "Bit burada! Birlikte öğrenmeye hazır mısın? 🚀",
+    "Ben Bit! BitLingo'nun bir parçası! Anladın mı? 😉",
+    "Bana Bit de! Küçük robot arkadaşın! 🤖💙",
+    "Bit isim, öğrenmek oyun! 🎮",
+    "Hey! Bit burada öğrenmene yardım etmek için! 📚🤖",
+    "Tanıştığımıza memnunum! Ben Bit! 🤝🤖",
+    "Bit hizmetinizde! Öğrenelim! 🎓",
+    "Sadece Bit adında küçük bir robot! 🤖✨",
+    "Bana Bit derler - dil arkadaşın! 🤖🌟",
+    "Bit benim adım! Seninki ne? 👋😄",
+    "Merhaba! Bit Robot, raporuyor! 🤖📡",
+    "Ben Bit! BitLingo'nun 1 numaralı hayranı! 🏆🤖",
+    "Bit burada! Kelime hazinesini fethet! 💪🤖"
+  ],
   encourage: [
     "Harika gidiyorsun! Devam et! 💪",
     "Her kelime önemli! Yapabilirsin! ⭐",

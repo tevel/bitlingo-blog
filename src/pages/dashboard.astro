@@ -264,13 +264,13 @@ const description = 'Track your language learning progress, view your stats, and
         
         // Pixel reaction
         setTimeout(() => {
-          if (window.pixelRobot) {
+          if (window.bitRobot) {
             if (userData.streak >= 7) {
-              window.pixelRobot.trigger('celebrating', `Wow! ${userData.streak}-day streak! You're amazing! 🔥`);
+              window.bitRobot.trigger('celebrating', `Wow! ${userData.streak}-day streak! You're amazing! 🔥`);
             } else if (userData.xp >= 500) {
-              window.pixelRobot.trigger('proud', `${userData.xp} XP! You're doing great! ⭐`);
+              window.bitRobot.trigger('proud', `${userData.xp} XP! You're doing great! ⭐`);
             } else {
-              window.pixelRobot.trigger('encouraging', 'Keep learning! Every day counts! 💪');
+              window.bitRobot.trigger('encouraging', 'Keep learning! Every day counts! 💪');
             }
           }
         }, 1000);

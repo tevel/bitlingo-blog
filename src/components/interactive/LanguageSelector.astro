@@ -53,7 +53,7 @@ const languages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
     const selectors = document.querySelectorAll('.language-selector');
     
     selectors.forEach(selector => {
-      const select = selector.querySelector('.language-select') as HTMLSelectElement;
+      const select = selector.querySelector('.language-select');
       
       select?.addEventListener('change', () => {
         // Dispatch a custom event that other components can listen to

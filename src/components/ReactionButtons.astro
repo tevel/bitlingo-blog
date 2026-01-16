@@ -71,7 +71,7 @@ const label = labels[lang] || labels.en;
       const userKey = `user-reaction-${slug}`;
       
       // Load reactions from localStorage
-      const loadReactions = (): Record<string, number> => {
+      const loadReactions = () => {
         try {
           return JSON.parse(localStorage.getItem(storageKey) || '{}');
         } catch {
@@ -80,17 +80,17 @@ const label = labels[lang] || labels.en;
       };
       
       // Save reactions to localStorage
-      const saveReactions = (reactions: Record<string, number>) => {
+      const saveReactions = (reactions) => {
         localStorage.setItem(storageKey, JSON.stringify(reactions));
       };
       
       // Get user's previous reaction
-      const getUserReaction = (): string | null => {
+      const getUserReaction = () => {
         return localStorage.getItem(userKey);
       };
       
       // Set user's reaction
-      const setUserReaction = (reaction: string | null) => {
+      const setUserReaction = (reaction) => {
         if (reaction) {
           localStorage.setItem(userKey, reaction);
         } else {

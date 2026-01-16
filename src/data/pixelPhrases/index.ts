@@ -1,5 +1,5 @@
 /**
- * Pixel the Robot - Phrases Database
+ * Bit the Robot - Phrases Database
  * 200+ phrases in 16 languages for interactive robot mascot
  */
 
@@ -41,7 +41,7 @@ export function getRandomPhrase(lang: SupportedLang, category: PhraseCategory): 
  */
 export function getRandomAnyPhrase(lang: SupportedLang): { phrase: string; category: PhraseCategory } {
   const langPhrases = phrases[lang] || phrases.en;
-  const categories: PhraseCategory[] = ['greeting', 'encourage', 'feature', 'tip', 'fact', 'quiz', 'celebrate', 'motivate', 'prompt', 'idle'];
+  const categories: PhraseCategory[] = ['greeting', 'introduction', 'encourage', 'feature', 'tip', 'fact', 'quiz', 'celebrate', 'motivate', 'prompt', 'idle'];
   const category = categories[Math.floor(Math.random() * categories.length)];
   const phrase = langPhrases[category][Math.floor(Math.random() * langPhrases[category].length)];
   return { phrase, category };

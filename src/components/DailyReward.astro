@@ -176,12 +176,12 @@
         }));
       }
       
-      // Trigger Pixel reaction
-      if (window.pixelRobot) {
+      // Trigger Bit reaction
+      if (window.bitRobot) {
         if (newStreak >= 7) {
-          window.pixelRobot.trigger('celebrating', `Amazing! ${newStreak}-day streak! 🔥🎉`);
+          window.bitRobot.trigger('celebrating', `Amazing! ${newStreak}-day streak! 🔥🎉`);
         } else {
-          window.pixelRobot.trigger('happy', `Welcome back! Day ${newStreak}! 🔥`);
+          window.bitRobot.trigger('happy', `Welcome back! Day ${newStreak}! 🔥`);
         }
       }
       

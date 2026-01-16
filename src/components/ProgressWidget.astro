@@ -137,7 +137,7 @@ const { compact = false } = Astro.props;
     ];
 
     // Update display
-    const updateDisplay = (progress: any) => {
+    const updateDisplay = (progress) => {
       const streakEl = document.getElementById('streak-value');
       const levelEl = document.getElementById('level-value');
       const levelTitleEl = document.getElementById('level-title');
@@ -197,7 +197,7 @@ const { compact = false } = Astro.props;
     };
 
     // Show XP notification
-    const showXpNotification = (xp: number) => {
+    const showXpNotification = (xp) => {
       const notif = document.getElementById('xp-notification');
       const gainEl = notif?.querySelector('.xp-gain');
       if (notif && gainEl && xp > 0) {

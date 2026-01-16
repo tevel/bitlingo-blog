@@ -1,10 +1,11 @@
 /**
- * Pixel the Robot - Phrase Types
+ * Bit the Robot - Phrase Types
  * Categories and structure for robot phrases
  */
 
 export type PhraseCategory = 
   | 'greeting'      // Time-based greetings
+  | 'introduction'  // Bit introduces itself by name
   | 'encourage'     // Encouragement phrases
   | 'feature'       // Feature explanations
   | 'tip'           // Learning tips
@@ -22,6 +23,7 @@ export type SupportedLang =
 
 export interface PhraseSet {
   greeting: string[];
+  introduction: string[];
   encourage: string[];
   feature: string[];
   tip: string[];

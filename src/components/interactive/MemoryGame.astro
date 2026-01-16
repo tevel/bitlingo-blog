@@ -106,12 +106,12 @@ const cards = words.flatMap(word => [
       const pairCount = parseInt(game.dataset.pairCount) || 6;
       let moves = 0;
       let pairsFound = 0;
-      let flippedCards: HTMLElement[] = [];
+      let flippedCards = [];
       let canFlip = true;
 
       const elements = {
-        grid: game.querySelector('.cards-grid') as HTMLElement,
-        cards: game.querySelectorAll('.memory-card') as NodeListOf<HTMLElement>,
+        grid: game.querySelector('.cards-grid'),
+        cards: game.querySelectorAll('.memory-card'),
         movesCount: game.querySelectorAll('.moves-count'),
         pairsCount: game.querySelector('.pairs-count'),
         movesFinal: game.querySelector('.moves-final'),
@@ -127,7 +127,7 @@ const cards = words.flatMap(word => [
         cards.forEach(card => elements.grid.appendChild(card));
       }
 
-      function flipCard(card: HTMLElement) {
+      function flipCard(card) {
         if (!canFlip || card.classList.contains('flipped') || card.classList.contains('matched')) {
           return;
         }
@@ -190,8 +190,8 @@ const cards = words.flatMap(word => [
         }
         
         // Trigger confetti celebration!
-        if (typeof window !== 'undefined' && (window as any).triggerConfetti) {
-          (window as any).triggerConfetti({ particleCount: 80 });
+        if (typeof window !== 'undefined' && window.triggerConfetti) {
+          window.triggerConfetti({ particleCount: 80 });
         }
         
         // Dispatch event for gamification

@@ -129,9 +129,9 @@ const levelDesc = word ? getLevelDescription(word.level) : '';
           // Award XP
           window.dispatchEvent(new CustomEvent('xp:gained', { detail: { amount: 5, reason: 'Saved word of the day' } }));
           
-          // Trigger Pixel reaction
-          if (window.pixelRobot) {
-            window.pixelRobot.trigger('happy', 'Great! Word saved to your vocabulary bank! 📚');
+          // Trigger Bit reaction
+          if (window.bitRobot) {
+            window.bitRobot.trigger('happy', 'Great! Word saved to your vocabulary bank! 📚');
           }
         } else {
           // Remove from saved

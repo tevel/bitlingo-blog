@@ -69,7 +69,7 @@ const { speed = 0.5, class: className = '' } = Astro.props;
       const scrollY = window.scrollY;
 
       parallaxElements.forEach((el) => {
-        const bg = el.querySelector('.parallax-bg') as HTMLElement;
+        const bg = el.querySelector('.parallax-bg');
         if (!bg) return;
 
         const speed = parseFloat(el.getAttribute('data-speed') || '0.5');

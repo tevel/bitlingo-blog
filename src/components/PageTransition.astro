@@ -121,7 +121,7 @@
 
     // Handle link clicks for exit animation
     document.addEventListener('click', (e) => {
-      const link = (e.target as HTMLElement).closest('a');
+      const link = e.target.closest('a');
       if (!link) return;
       
       const href = link.getAttribute('href');

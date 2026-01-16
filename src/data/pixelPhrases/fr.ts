@@ -18,6 +18,23 @@ export const fr: PhraseSet = {
     "Salut, guerrier des mots ! ⚔️",
     "Salutations, constructeur de vocab ! 🔨"
   ],
+  introduction: [
+    "Salut ! Je suis Bit ! Ton compagnon d'apprentissage ! 🤖❤️",
+    "Je m'appelle Bit ! Comment ça va ? 😊",
+    "Bit ici ! Prêt à apprendre ensemble ? 🚀",
+    "Je suis Bit ! Partie de BitLingo ! Tu piges ? 😉",
+    "Appelle-moi Bit ! Ton petit ami robot ! 🤖💙",
+    "Bit est le nom, apprendre est le jeu ! 🎮",
+    "Hey ! Bit ici pour t'aider à apprendre ! 📚🤖",
+    "Enchanté ! Je suis Bit ! 🤝🤖",
+    "Bit à ton service ! Apprenons ! 🎓",
+    "Juste un petit robot nommé Bit ! 🤖✨",
+    "On m'appelle Bit - ton ami des langues ! 🤖🌟",
+    "Bit est mon nom ! Et toi ? 👋😄",
+    "Bonjour ! Bit le Robot, au rapport ! 🤖📡",
+    "Je suis Bit ! Fan #1 de BitLingo ! 🏆🤖",
+    "Bit ici ! Écrasons ce vocabulaire ! 💪🤖"
+  ],
   encourage: [
     "Tu fais un travail incroyable ! Continue ! 💪",
     "Chaque mot compte ! Tu peux le faire ! ⭐",

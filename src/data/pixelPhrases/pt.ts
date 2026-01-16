@@ -18,6 +18,23 @@ export const pt: PhraseSet = {
     "Olá, guerreiro das palavras! ⚔️",
     "Saudações, construtor de vocabulário! 🔨"
   ],
+  introduction: [
+    "Olá! Sou o Bit! Seu companheiro de aprendizado! 🤖❤️",
+    "Meu nome é Bit! Como vai? 😊",
+    "Bit aqui! Prontos para aprender juntos? 🚀",
+    "Sou Bit! Parte do BitLingo! Entendeu? 😉",
+    "Me chama de Bit! Seu pequeno amigo robô! 🤖💙",
+    "Bit é o nome, aprender é o jogo! 🎮",
+    "Ei! Bit aqui para ajudar você a aprender! 📚🤖",
+    "Prazer! Sou o Bit! 🤝🤖",
+    "Bit a seu serviço! Vamos aprender! 🎓",
+    "Apenas um pequeno robô chamado Bit! 🤖✨",
+    "Me chamam de Bit - seu amigo das línguas! 🤖🌟",
+    "Bit é meu nome! Qual é o seu? 👋😄",
+    "Olá! Bit o Robô, presente! 🤖📡",
+    "Sou Bit! Fã #1 do BitLingo! 🏆🤖",
+    "Bit aqui! Vamos arrasar no vocabulário! 💪🤖"
+  ],
   encourage: [
     "Você está arrasando! Continue assim! 💪",
     "Cada palavra conta! Você consegue! ⭐",

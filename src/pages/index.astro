@@ -315,8 +315,8 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 				const observer = new IntersectionObserver((entries) => {
 					entries.forEach((entry) => {
 						if (entry.isIntersecting) {
-							const counter = entry.target as HTMLElement;
-							const target = parseInt(counter.dataset.target || '0');
+							const counter = entry.target;
+							const target = parseInt(counter.dataset?.target || '0');
 							const duration = 2000;
 							const step = target / (duration / 16);
 							let current = 0;
@@ -347,7 +347,7 @@ import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 						const orbs = parallaxBg.querySelectorAll('.parallax-orb');
 						orbs.forEach((orb, index) => {
 							const speed = 0.1 + (index * 0.05);
-							(orb as HTMLElement).style.transform = `translateY(${scrollY * speed}px)`;
+							orb.style.transform = `translateY(${scrollY * speed}px)`;
 						});
 					}, { passive: true });
 				}

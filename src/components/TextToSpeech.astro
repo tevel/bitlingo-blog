@@ -96,7 +96,7 @@ const speechLang = speechLangMap[lang] || 'en-US';
     const prevBtn = document.getElementById('tts-prev');
     const stopBtn = document.getElementById('tts-stop');
     const nextBtn = document.getElementById('tts-next');
-    const speedSelect = document.getElementById('tts-speed') as HTMLSelectElement;
+    const speedSelect = document.getElementById('tts-speed');
 
     if (!widget || !btn || !('speechSynthesis' in window)) {
       widget?.remove();
@@ -104,13 +104,13 @@ const speechLang = speechLangMap[lang] || 'en-US';
     }
 
     const lang = widget.getAttribute('data-lang') || 'en-US';
-    let paragraphs: string[] = [];
+    let paragraphs = [];
     let currentIndex = 0;
     let isPlaying = false;
-    let utterance: SpeechSynthesisUtterance | null = null;
+    let utterance = null;
 
     // Get article content
-    function getArticleContent(): string[] {
+    function getArticleContent() {
       const article = document.querySelector('.article-content, article, .prose');
       if (!article) return [];
 
@@ -139,7 +139,7 @@ const speechLang = speechLangMap[lang] || 'en-US';
       }
     }
 
-    function speak(text: string) {
+    function speak(text) {
       utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = lang;
       utterance.rate = parseFloat(speedSelect?.value || '1');
