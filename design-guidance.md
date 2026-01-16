@@ -881,6 +881,143 @@ When confetti appears (achievements, level ups), the robot performs an epic 4-8 
 }
 ```
 
+### Bit's Sound Effects
+
+Bit makes synthesized sounds using the Web Audio API. Each phrase category triggers a different sound.
+
+#### Sound Types
+| Sound | Trigger | Description |
+|-------|---------|-------------|
+| `robotGreeting` | Greetings, wake up | Cheerful ascending melody (C5→E5→G5) |
+| `robotEncouragement` | Encouragement, motivation | Warm supportive tone (A4→C5→E5) |
+| `robotCelebration` | Achievement, level up, celebration | Exciting fanfare arpeggio |
+| `robotTip` | Tips, features, hints | Thoughtful ascending tones (G4→A4→B4) |
+| `robotJoke` | Jokes, fun facts | Playful silly beeps |
+| `robotQuiz` | Quiz questions, dictionary quiz | Curious questioning tone |
+| `robotThinking` | Thinking mood, idle | Contemplative low beeps |
+| `robotExcited` | Excited mood, perfect score | High energy rapid beeps |
+| `robotBeep` | Click interaction | Simple beep-boop sequence |
+
+#### Sound Implementation (Web Audio API)
+
+```javascript
+// Base tone generator
+const playTone = (frequency, duration, type = 'sine', volume = 0.3) => {
+  const ctx = new AudioContext()
+  const oscillator = ctx.createOscillator()
+  const gainNode = ctx.createGain()
+  
+  oscillator.connect(gainNode)
+  gainNode.connect(ctx.destination)
+  
+  oscillator.type = type // 'sine', 'square', 'triangle', 'sawtooth'
+  oscillator.frequency.setValueAtTime(frequency, ctx.currentTime)
+  
+  // Envelope (fade in/out)
+  gainNode.gain.setValueAtTime(0, ctx.currentTime)
+  gainNode.gain.linearRampToValueAtTime(volume, ctx.currentTime + 0.01)
+  gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration)
+  
+  oscillator.start(ctx.currentTime)
+  oscillator.stop(ctx.currentTime + duration)
+}
+
+// Example: Robot Greeting Sound
+const playRobotGreetingSound = () => {
+  const notes = [
+    { freq: 523, delay: 0, duration: 0.1 },     // C5
+    { freq: 659, delay: 0.12, duration: 0.1 },  // E5
+    { freq: 784, delay: 0.24, duration: 0.15 }, // G5
+  ]
+  notes.forEach(n => {
+    setTimeout(() => playTone(n.freq, n.duration, 'sine', 0.15), n.delay * 1000)
+  })
+}
+
+// Example: Robot Celebration Sound
+const playRobotCelebrationSound = () => {
+  const notes = [
+    { freq: 523, delay: 0, duration: 0.08 },
+    { freq: 659, delay: 0.08, duration: 0.08 },
+    { freq: 784, delay: 0.16, duration: 0.08 },
+    { freq: 1047, delay: 0.24, duration: 0.2 },
+    { freq: 784, delay: 0.35, duration: 0.08 },
+    { freq: 1047, delay: 0.43, duration: 0.25 },
+  ]
+  notes.forEach(n => {
+    setTimeout(() => playTone(n.freq, n.duration, 'square', 0.1), n.delay * 1000)
+  })
+}
+
+// Example: Robot Joke Sound (playful)
+const playRobotJokeSound = () => {
+  const notes = [
+    { freq: 600, delay: 0, duration: 0.06 },
+    { freq: 800, delay: 0.08, duration: 0.06 },
+    { freq: 500, delay: 0.16, duration: 0.08 },
+    { freq: 900, delay: 0.26, duration: 0.1 },
+    { freq: 400, delay: 0.38, duration: 0.12 },
+  ]
+  notes.forEach(n => {
+    setTimeout(() => playTone(n.freq, n.duration, 'square', 0.1), n.delay * 1000)
+  })
+}
+
+// Example: Robot Thinking Sound (contemplative)
+const playRobotThinkingSound = () => {
+  const notes = [
+    { freq: 350, delay: 0, duration: 0.15 },
+    { freq: 380, delay: 0.2, duration: 0.15 },
+    { freq: 350, delay: 0.4, duration: 0.2 },
+  ]
+  notes.forEach(n => {
+    setTimeout(() => playTone(n.freq, n.duration, 'sine', 0.08), n.delay * 1000)
+  })
+}
+
+// Example: Robot Excited Sound (high energy)
+const playRobotExcitedSound = () => {
+  const notes = [
+    { freq: 800, delay: 0, duration: 0.05 },
+    { freq: 1000, delay: 0.06, duration: 0.05 },
+    { freq: 1200, delay: 0.12, duration: 0.05 },
+    { freq: 1000, delay: 0.18, duration: 0.05 },
+    { freq: 1200, delay: 0.24, duration: 0.08 },
+  ]
+  notes.forEach(n => {
+    setTimeout(() => playTone(n.freq, n.duration, 'square', 0.1), n.delay * 1000)
+  })
+}
+
+// Sound category mapping for phrases
+const PHRASE_CATEGORY_SOUNDS = {
+  greetings: 'robotGreeting',
+  encouragement: 'robotEncouragement',
+  celebration: 'robotCelebration',
+  features: 'robotTip',
+  tips: 'robotTip',
+  quiz: 'robotQuiz',
+  idle: 'robotThinking',
+  motivation: 'robotEncouragement',
+  streak: 'robotCelebration',
+  levelUp: 'robotCelebration',
+  achievement: 'robotCelebration',
+  funFacts: 'robotTip',
+  jokes: 'robotJoke',
+  compliments: 'robotEncouragement',
+  wakeUp: 'robotGreeting',
+  goodNight: 'robotThinking',
+  dictionaryQuiz: 'robotQuiz',
+  clickPrompt: 'robotBeep',
+  introduction: 'robotGreeting',
+}
+```
+
+#### Sound Settings
+- Sounds can be toggled on/off via settings
+- Respect user's preference with `localStorage.getItem('bitlingo_sounds')`
+- Only play sounds when `soundEnabled` is true
+
 ### Integration Points
 
 Bit should react to:
