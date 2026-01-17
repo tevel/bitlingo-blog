@@ -2,6 +2,8 @@
  * Cloudflare Worker to proxy /blog* requests to Pages project
  * This allows bitlingo.app/blog to serve content from the Pages project
  * without affecting the main app at bitlingo.app
+ * 
+ * Updated: Configured to deploy Worker code instead of static assets
  */
 
 export default {
