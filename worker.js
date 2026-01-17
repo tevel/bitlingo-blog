@@ -93,25 +93,33 @@ export default {
         // Create new headers, preserving ALL headers from Pages response
         const newHeaders = new Headers(response.headers);
         
-        // CRITICAL: Ensure Content-Type is preserved for all assets
-        // If Content-Type is missing or empty, infer it from file extension
+        // CRITICAL: Always ensure Content-Type is set correctly
+        // Pages may return empty or incorrect Content-Type, so we infer from file extension
         // Use normalizedPath since that's what we're fetching
-        const contentType = newHeaders.get('Content-Type');
-        if (!contentType || contentType.trim() === '') {
+        const existingContentType = newHeaders.get('Content-Type');
+        let contentTypeToSet = existingContentType;
+        
+        // If Content-Type is missing, empty, or doesn't match file type, infer it
+        if (!existingContentType || existingContentType.trim() === '') {
           if (normalizedPath.endsWith('.css')) {
-            newHeaders.set('Content-Type', 'text/css; charset=utf-8');
+            contentTypeToSet = 'text/css; charset=utf-8';
           } else if (normalizedPath.endsWith('.js')) {
-            newHeaders.set('Content-Type', 'application/javascript; charset=utf-8');
+            contentTypeToSet = 'application/javascript; charset=utf-8';
           } else if (normalizedPath.endsWith('.woff')) {
-            newHeaders.set('Content-Type', 'font/woff');
+            contentTypeToSet = 'font/woff';
           } else if (normalizedPath.endsWith('.woff2')) {
-            newHeaders.set('Content-Type', 'font/woff2');
+            contentTypeToSet = 'font/woff2';
           } else if (normalizedPath.endsWith('.svg')) {
-            newHeaders.set('Content-Type', 'image/svg+xml');
+            contentTypeToSet = 'image/svg+xml';
           } else if (normalizedPath.endsWith('.json')) {
-            newHeaders.set('Content-Type', 'application/json');
+            contentTypeToSet = 'application/json';
           } else if (normalizedPath.endsWith('.html') || normalizedPath.endsWith('/')) {
-            newHeaders.set('Content-Type', 'text/html; charset=utf-8');
+            contentTypeToSet = 'text/html; charset=utf-8';
+          }
+          
+          // Always set Content-Type if we inferred it
+          if (contentTypeToSet) {
+            newHeaders.set('Content-Type', contentTypeToSet);
           }
         }
         
