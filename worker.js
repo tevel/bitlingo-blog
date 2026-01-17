@@ -86,6 +86,28 @@ export default {
           newHeaders.set('Cache-Control', 'public, max-age=0, must-revalidate');
           newHeaders.set('CDN-Cache-Control', 'public, max-age=0, must-revalidate');
           newHeaders.set('Cloudflare-CDN-Cache-Control', 'public, max-age=0, must-revalidate');
+          
+          // Block Mixpanel and other tracking scripts on blog pages
+          // Only apply CSP to HTML pages
+          if (response.headers.get('Content-Type')?.includes('text/html')) {
+            const existingCSP = response.headers.get('Content-Security-Policy') || '';
+            const cspDirectives = [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://giscus.app",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: https:",
+              "font-src 'self' data:",
+              "connect-src 'self' https://giscus.app https://api.github.com",
+              "frame-src 'self' https://giscus.app",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'none'",
+              "upgrade-insecure-requests"
+            ];
+            // Block Mixpanel specifically
+            newHeaders.set('Content-Security-Policy', cspDirectives.join('; '));
+          }
         }
         
         // Ensure CORS headers for cross-origin requests
