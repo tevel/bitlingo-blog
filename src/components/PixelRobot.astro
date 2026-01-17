@@ -546,9 +546,16 @@ try {
     }
 
     showMessage(message, category = 'prompt', duration = 4000) {
+      // Ensure elements exist
+      if (!this.speech || !this.speechText) {
+        console.error('Bit Robot: Speech bubble elements not found');
+        return;
+      }
+
       // Clear any existing message timer
       if (this.state.messageTimer) {
         clearTimeout(this.state.messageTimer);
+        this.state.messageTimer = null;
       }
 
       // Clear any activity while showing message
@@ -556,17 +563,29 @@ try {
       this.state.showingMessage = true;
 
       // Play sound for category
-      this.sounds.playForCategory(category);
+      try {
+        this.sounds.playForCategory(category);
+      } catch (e) {
+        console.warn('Bit Robot: Sound play failed', e);
+      }
 
-      this.speechText.textContent = message;
+      // Set message text
+      this.speechText.textContent = message || "Hi! I'm Bit! 🤖";
+      
+      // Ensure bubble is visible
       this.speech.removeAttribute('hidden');
+      // Force reflow to ensure transition works
+      this.speech.offsetHeight;
       this.speech.classList.add('visible');
 
+      // Auto-hide after duration
       this.state.messageTimer = setTimeout(() => {
         this.speech.classList.remove('visible');
         this.state.showingMessage = false;
         setTimeout(() => {
-          this.speech.setAttribute('hidden', '');
+          if (this.speech) {
+            this.speech.setAttribute('hidden', '');
+          }
           this.scheduleIdleActivity();
         }, 300);
       }, duration);
@@ -645,14 +664,7 @@ try {
     // EVENT HANDLERS
     // ============================================
     handleClick() {
-      console.log('Bit Robot handleClick called!', {
-        allPhrases: this.allPhrases?.length || 0,
-        lang: this.lang,
-        robot: !!this.robot,
-        speech: !!this.speech,
-        speechText: !!this.speechText
-      });
-      
+      // Ensure all elements exist
       if (!this.robot || !this.speech || !this.speechText) {
         console.error('Bit Robot: Required elements not found', {
           robot: !!this.robot,
@@ -662,35 +674,37 @@ try {
         return;
       }
       
+      // Play sound effect
       try {
         this.sounds.playBeep();
       } catch (e) {
         console.warn('Bit Robot: Sound play failed', e);
       }
       
+      // If sleeping, wake up first
       if (!this.state.isAwake) {
-        // Wake up!
         this.setMood('happy');
         const wakePhrase = this.getRandomPhraseFromAll();
-        this.showMessage(wakePhrase, 'greeting');
+        this.showMessage(wakePhrase, 'greeting', 5000);
         return;
       }
 
-      // Get a completely random phrase from all available phrases
+      // Get a random phrase from all available phrases
       const randomPhrase = this.getRandomPhraseFromAll();
-      console.log('Selected phrase:', randomPhrase);
       
       if (!randomPhrase) {
         console.error('Bit Robot: No phrase available');
+        // Fallback message
+        this.showMessage("Hi! I'm Bit! 🤖", 'greeting', 5000);
         return;
       }
       
-      // Determine mood based on phrase content or random
+      // Set a random mood for variety
       const moods = ['happy', 'excited', 'thinking', 'proud', 'wave', 'encouraging'];
       const randomMood = moods[Math.floor(Math.random() * moods.length)];
       this.setMood(randomMood);
       
-      // Show the random phrase
+      // Always show the new phrase (this will clear any existing message)
       this.showMessage(randomPhrase, 'prompt', 5000);
     }
 
@@ -735,8 +749,6 @@ try {
       }
       
       return "Hi! I'm Bit! 🤖"; // Fallback phrase
-    }
-      this.resetSleepTimer();
     }
 
     handleGameComplete(event) {
@@ -875,7 +887,17 @@ try {
 <style>
   /* Container positioning */
   .bit-container {
-    z-index: 1000;
+    z-index: 50; /* Below header (z-index: 100) but above content */
+    pointer-events: none; /* Don't block clicks on other elements */
+  }
+  
+  /* Only the robot itself should capture clicks */
+  .bit-container .bit-robot {
+    pointer-events: auto;
+  }
+  
+  /* Speech bubble should also capture clicks */
+  .bit-container .speech-bubble {
     pointer-events: auto;
   }
 

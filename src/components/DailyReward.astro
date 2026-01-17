@@ -5,7 +5,7 @@
  */
 ---
 
-<div class="daily-reward-trigger" id="daily-reward-trigger" hidden>
+<div class="daily-reward-trigger" id="daily-reward-trigger" hidden style="display: none !important; pointer-events: none !important; z-index: -9999 !important; position: fixed !important; top: -99999px !important; left: -99999px !important; width: 0 !important; height: 0 !important; visibility: hidden !important; opacity: 0 !important;">
   <div class="reward-modal" id="daily-reward-modal">
     <div class="reward-content">
       <div class="reward-icon" id="reward-icon">🎁</div>
@@ -45,6 +45,21 @@
 </div>
 
 <script>
+  // Ensure element starts hidden - set inline style to override Astro's CSS
+  (function ensureHidden() {
+    const trigger = document.getElementById('daily-reward-trigger');
+    if (trigger) {
+      trigger.classList.remove('visible');
+      trigger.hidden = true;
+      // Set inline style to override Astro's scoped CSS - this has highest priority
+      trigger.style.setProperty('display', 'none', 'important');
+      trigger.style.setProperty('pointer-events', 'none', 'important');
+      trigger.style.setProperty('z-index', '-9999', 'important');
+    } else if (document.readyState === 'loading') {
+      requestAnimationFrame(ensureHidden);
+    }
+  })();
+
   document.addEventListener('DOMContentLoaded', () => {
     const trigger = document.getElementById('daily-reward-trigger');
     const modal = document.getElementById('daily-reward-modal');
@@ -58,7 +73,20 @@
     const milestoneBadge = document.getElementById('milestone-badge');
     const badgeText = document.getElementById('badge-text');
     
-    if (!trigger || !modal || !claimBtn) return;
+    if (!trigger || !modal || !claimBtn) {
+      // Ensure trigger is removed from DOM if elements don't exist
+      if (trigger && trigger.parentNode) {
+        trigger.parentNode.removeChild(trigger);
+      }
+      return;
+    }
+    
+    // Ensure trigger starts hidden - set inline style to override Astro's CSS
+    trigger.hidden = true;
+    trigger.classList.remove('visible');
+    trigger.style.setProperty('display', 'none', 'important');
+    trigger.style.setProperty('pointer-events', 'none', 'important');
+    trigger.style.setProperty('z-index', '-9999', 'important');
     
     // Check if user has claimed today's reward
     const today = new Date().toDateString();
@@ -89,8 +117,15 @@
     localStorage.setItem('last_visit_date', today);
     localStorage.setItem('login_streak', newStreak.toString());
     
-    // If already claimed today, don't show
+    // If already claimed today, don't show - ensure display: none with inline style
     if (lastClaim === today) {
+      trigger.hidden = true;
+      trigger.classList.remove('visible');
+      trigger.style.setProperty('display', 'none', 'important');
+      trigger.style.setProperty('pointer-events', 'none', 'important');
+      trigger.style.setProperty('z-index', '-9999', 'important');
+      trigger.setAttribute('aria-hidden', 'true');
+      trigger.setAttribute('tabindex', '-1');
       return;
     }
     
@@ -153,10 +188,27 @@
       badgeText.textContent = milestoneText;
     }
     
-    // Show the reward modal
+    // Show the reward modal - set inline styles to show it
     setTimeout(() => {
+      // Only show if still should be shown (not claimed in the meantime)
+      const currentClaim = localStorage.getItem('last_daily_claim');
+      if (currentClaim === today) {
+        // Was claimed, keep hidden with inline style
+        trigger.hidden = true;
+        trigger.classList.remove('visible');
+        trigger.style.setProperty('display', 'none', 'important');
+        trigger.style.setProperty('pointer-events', 'none', 'important');
+        trigger.style.setProperty('z-index', '-9999', 'important');
+        return;
+      }
+      // Show by setting inline styles - this overrides Astro's CSS
       trigger.hidden = false;
+      trigger.removeAttribute('aria-hidden');
+      trigger.removeAttribute('tabindex');
       trigger.classList.add('visible');
+      trigger.style.setProperty('display', 'flex', 'important');
+      trigger.style.setProperty('pointer-events', 'auto', 'important');
+      trigger.style.setProperty('z-index', '9999', 'important');
     }, 1000);
     
     // Handle claim
@@ -185,11 +237,14 @@
         }
       }
       
-      // Hide modal
+      // Hide modal - set inline styles to hide it (overrides Astro's CSS)
       trigger.classList.remove('visible');
-      setTimeout(() => {
-        trigger.hidden = true;
-      }, 300);
+      trigger.hidden = true;
+      trigger.style.setProperty('display', 'none', 'important');
+      trigger.style.setProperty('pointer-events', 'none', 'important');
+      trigger.style.setProperty('z-index', '-9999', 'important');
+      trigger.setAttribute('aria-hidden', 'true');
+      trigger.setAttribute('tabindex', '-1');
     });
     
     // Close on backdrop click
@@ -202,24 +257,19 @@
 </script>
 
 <style>
-  .daily-reward-trigger {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  /* Use :global() to override Astro's scoped CSS */
+  /* DEFAULT: display: none - hidden by default */
+  :global(.daily-reward-trigger) {
+    display: none !important;
+    pointer-events: none !important;
+    z-index: -9999 !important;
   }
   
-  .daily-reward-trigger.visible {
-    opacity: 1;
+  /* ONLY show when it has .visible class */
+  :global(.daily-reward-trigger.visible) {
+    display: flex !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
   }
   
   .reward-modal {

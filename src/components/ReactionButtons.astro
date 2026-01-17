@@ -116,9 +116,15 @@ const label = labels[lang] || labels.en;
         });
       };
       
-      // Handle click
+      // Handle click - ensure buttons are clickable
       container.querySelectorAll('.reaction-btn').forEach((btn) => {
-        btn.addEventListener('click', () => {
+        // Ensure button is clickable
+        btn.style.pointerEvents = 'auto';
+        btn.style.zIndex = '10';
+        
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           const key = btn.getAttribute('data-reaction');
           if (!key) return;
           
@@ -165,6 +171,9 @@ const label = labels[lang] || labels.en;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
     margin: 2rem 0;
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
   }
 
   .reactions-label {
@@ -192,6 +201,9 @@ const label = labels[lang] || labels.en;
     cursor: pointer;
     transition: all 0.2s ease;
     min-width: 60px;
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
   }
 
   .reaction-btn:hover {
