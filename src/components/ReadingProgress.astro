@@ -46,7 +46,8 @@
     width: 100%;
     height: 3px;
     background: rgba(255, 255, 255, 0.1);
-    z-index: 9999;
+    z-index: 99; /* Below header (z-index: 100) */
+    pointer-events: none; /* Don't block clicks on header */
   }
 
   .reading-progress-bar {
