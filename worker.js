@@ -94,18 +94,24 @@ export default {
         const newHeaders = new Headers(response.headers);
         
         // CRITICAL: Ensure Content-Type is preserved for all assets
-        // If Content-Type is missing, infer it from file extension
-        if (!newHeaders.get('Content-Type')) {
-          if (url.pathname.endsWith('.css')) {
+        // If Content-Type is missing or empty, infer it from file extension
+        // Use normalizedPath since that's what we're fetching
+        const contentType = newHeaders.get('Content-Type');
+        if (!contentType || contentType.trim() === '') {
+          if (normalizedPath.endsWith('.css')) {
             newHeaders.set('Content-Type', 'text/css; charset=utf-8');
-          } else if (url.pathname.endsWith('.js')) {
+          } else if (normalizedPath.endsWith('.js')) {
             newHeaders.set('Content-Type', 'application/javascript; charset=utf-8');
-          } else if (url.pathname.endsWith('.woff') || url.pathname.endsWith('.woff2')) {
+          } else if (normalizedPath.endsWith('.woff')) {
             newHeaders.set('Content-Type', 'font/woff');
-          } else if (url.pathname.endsWith('.svg')) {
+          } else if (normalizedPath.endsWith('.woff2')) {
+            newHeaders.set('Content-Type', 'font/woff2');
+          } else if (normalizedPath.endsWith('.svg')) {
             newHeaders.set('Content-Type', 'image/svg+xml');
-          } else if (url.pathname.endsWith('.json')) {
+          } else if (normalizedPath.endsWith('.json')) {
             newHeaders.set('Content-Type', 'application/json');
+          } else if (normalizedPath.endsWith('.html') || normalizedPath.endsWith('/')) {
+            newHeaders.set('Content-Type', 'text/html; charset=utf-8');
           }
         }
         
