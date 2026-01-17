@@ -12,8 +12,14 @@ export default {
     
     // Only handle /blog* paths - proxy to Pages project
     if (url.pathname.startsWith('/blog')) {
+      // Normalize pathname: /blog -> /blog/, /blog/ -> /blog/
+      let pagesPath = url.pathname;
+      if (pagesPath === '/blog') {
+        pagesPath = '/blog/';
+      }
+      
       // Proxy to Pages project
-      const pagesUrl = `https://bitlingo-blog.pages.dev${url.pathname}${url.search}`;
+      const pagesUrl = `https://bitlingo-blog.pages.dev${pagesPath}${url.search}`;
       
       try {
         // Forward the request to Pages project with cache busting
@@ -39,11 +45,12 @@ export default {
           );
         }
         
-        // Get the response body as text first to ensure we can read it
-        const body = await response.text();
+        // Clone the response to avoid consuming the body
+        const clonedResponse = response.clone();
         
         // Create a new response with the Pages content
-        const newResponse = new Response(body, {
+        // Use the original response body directly instead of reading as text
+        const newResponse = new Response(response.body, {
           status: response.status,
           statusText: response.statusText,
           headers: {
@@ -54,8 +61,6 @@ export default {
             'Cloudflare-CDN-Cache-Control': 'public, max-age=0, must-revalidate',
             // Ensure CORS headers are set if needed
             'Access-Control-Allow-Origin': '*',
-            // Ensure content type is preserved
-            'Content-Type': response.headers.get('Content-Type') || 'text/html',
           },
         });
         
