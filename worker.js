@@ -127,10 +127,13 @@ export default {
         if (url.pathname.startsWith('/_astro/') || url.pathname.startsWith('/fonts/')) {
           newHeaders.set('Cache-Control', 'public, max-age=31536000, immutable');
         } else {
-          // For HTML pages, prevent caching
-          newHeaders.set('Cache-Control', 'public, max-age=0, must-revalidate');
-          newHeaders.set('CDN-Cache-Control', 'public, max-age=0, must-revalidate');
-          newHeaders.set('Cloudflare-CDN-Cache-Control', 'public, max-age=0, must-revalidate');
+          // For HTML pages, aggressively prevent caching to ensure fresh content
+          // This is critical for mobile browsers that can't easily hard refresh
+          newHeaders.set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+          newHeaders.set('Pragma', 'no-cache');
+          newHeaders.set('Expires', '0');
+          newHeaders.set('CDN-Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+          newHeaders.set('Cloudflare-CDN-Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
           
           // Block Mixpanel and other tracking scripts on blog pages
           // Only apply CSP to HTML pages

@@ -55,11 +55,17 @@ self.addEventListener('fetch', (event) => {
 
   // Handle navigation requests (HTML pages)
   if (request.mode === 'navigate') {
+    // Don't cache blog pages - always fetch fresh from network
+    if (url.pathname.startsWith('/blog')) {
+      event.respondWith(fetch(request));
+      return;
+    }
+    
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Cache successful responses
-          if (response.ok) {
+          // Cache successful responses (but not blog pages)
+          if (response.ok && !url.pathname.startsWith('/blog')) {
             const responseClone = response.clone();
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(request, responseClone);
@@ -68,7 +74,10 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() => {
-          // Try to serve from cache
+          // Try to serve from cache (but not for blog pages)
+          if (url.pathname.startsWith('/blog')) {
+            return fetch(request);
+          }
           return caches.match(request).then((cachedResponse) => {
             if (cachedResponse) {
               return cachedResponse;
