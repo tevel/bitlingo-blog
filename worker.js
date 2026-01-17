@@ -28,13 +28,28 @@ export default {
     
     if (shouldProxy) {
       console.log(`[Blog Worker] Proxying: ${url.pathname} -> bitlingo-blog.pages.dev${url.pathname}`);
-      // Handle /blog and /blog/ redirects to /blog/en/
+      
+      // Handle redirects
       if (url.pathname === '/blog' || url.pathname === '/blog/') {
         return Response.redirect(`${url.origin}/blog/en/${url.search}`, 308);
       }
       
+      // Handle /blog/en (no trailing slash) -> redirect to /blog/en/
+      if (url.pathname === '/blog/en') {
+        return Response.redirect(`${url.origin}/blog/en/${url.search}`, 308);
+      }
+      
+      // Normalize blog paths: ensure trailing slash for directory-like paths
+      let normalizedPath = url.pathname;
+      // If it's a blog path that looks like a directory (no file extension), ensure trailing slash
+      if (normalizedPath.startsWith('/blog/') && 
+          !normalizedPath.match(/\.(html|css|js|json|xml|svg|woff|woff2|jpg|jpeg|png|gif|webp|ico)$/i) &&
+          !normalizedPath.endsWith('/')) {
+        normalizedPath = normalizedPath + '/';
+      }
+      
       // Proxy to Pages project
-      const pagesUrl = `https://bitlingo-blog.pages.dev${url.pathname}${url.search}`;
+      const pagesUrl = `https://bitlingo-blog.pages.dev${normalizedPath}${url.search}`;
       
       try {
         // Forward the request to Pages project
