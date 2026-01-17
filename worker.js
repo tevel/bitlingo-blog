@@ -50,6 +50,21 @@ export default {
         // Check if response is ok
         if (!response.ok) {
           console.error(`Pages fetch failed: ${response.status} ${response.statusText} for ${pagesUrl}`);
+          // If Pages returns 404, try without trailing slash or with index.html
+          if (response.status === 404 && url.pathname.endsWith('/')) {
+            const altUrl = pagesUrl.replace(/\/$/, '/index.html');
+            const altResponse = await fetch(altUrl);
+            if (altResponse.ok) {
+              const altHeaders = new Headers(altResponse.headers);
+              altHeaders.set('Cache-Control', 'public, max-age=0, must-revalidate');
+              altHeaders.set('Access-Control-Allow-Origin', '*');
+              return new Response(altResponse.body, {
+                status: altResponse.status,
+                statusText: altResponse.statusText,
+                headers: altHeaders,
+              });
+            }
+          }
           return new Response(
             `Error proxying to Pages: ${response.status} ${response.statusText}`,
             { status: response.status }
