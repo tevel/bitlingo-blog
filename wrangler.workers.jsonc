@@ -6,6 +6,38 @@
     {
       "pattern": "bitlingo.app/blog*",
       "zone_name": "bitlingo.app"
+    },
+    {
+      "pattern": "bitlingo.app/_astro/*",
+      "zone_name": "bitlingo.app"
+    },
+    {
+      "pattern": "bitlingo.app/fonts/*",
+      "zone_name": "bitlingo.app"
+    },
+    {
+      "pattern": "bitlingo.app/favicon.svg",
+      "zone_name": "bitlingo.app"
+    },
+    {
+      "pattern": "bitlingo.app/manifest.json",
+      "zone_name": "bitlingo.app"
+    },
+    {
+      "pattern": "bitlingo.app/sw.js",
+      "zone_name": "bitlingo.app"
+    },
+    {
+      "pattern": "bitlingo.app/offline.html",
+      "zone_name": "bitlingo.app"
+    },
+    {
+      "pattern": "bitlingo.app/sitemap*",
+      "zone_name": "bitlingo.app"
+    },
+    {
+      "pattern": "bitlingo.app/rss.xml",
+      "zone_name": "bitlingo.app"
     }
   ]
 }
