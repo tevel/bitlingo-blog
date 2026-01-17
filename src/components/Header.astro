@@ -97,17 +97,17 @@ import ProgressWidget from './ProgressWidget.astro';
 	header {
 		position: sticky;
 		top: 0;
-		z-index: 100;
+		z-index: 1000; /* Increased to ensure header is above all other elements */
 		background: rgba(26, 54, 93, 0.95);
 		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
 		border-bottom: 1px solid rgba(245, 166, 35, 0.2);
-		pointer-events: auto; /* Ensure header is clickable */
+		pointer-events: auto !important; /* Ensure header is clickable */
 	}
 	
 	/* Ensure all header children are clickable */
 	header * {
-		pointer-events: auto;
+		pointer-events: auto !important;
 	}
 	
 	nav {
@@ -118,7 +118,16 @@ import ProgressWidget from './ProgressWidget.astro';
 		margin: 0 auto;
 		padding: 0.75rem 1.5rem;
 		gap: 2rem;
-		pointer-events: auto; /* Ensure nav is clickable */
+		pointer-events: auto !important; /* Ensure nav is clickable */
+	}
+	
+	/* Ensure all nav links and buttons are clickable */
+	nav a,
+	nav button {
+		pointer-events: auto !important;
+		cursor: pointer;
+		position: relative;
+		z-index: 1001;
 	}
 	
 	/* Logo */
