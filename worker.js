@@ -10,6 +10,9 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     
+    // Log for debugging
+    console.log(`[Blog Worker] Request: ${url.pathname}`);
+    
     // Proxy static assets and blog paths to Pages project
     // Static assets are referenced from blog pages and need to be proxied too
     const shouldProxy = 
@@ -24,6 +27,7 @@ export default {
       url.pathname.startsWith('/rss.xml');
     
     if (shouldProxy) {
+      console.log(`[Blog Worker] Proxying: ${url.pathname} -> bitlingo-blog.pages.dev${url.pathname}`);
       // Handle /blog and /blog/ redirects to /blog/en/
       if (url.pathname === '/blog' || url.pathname === '/blog/') {
         return Response.redirect(`${url.origin}/blog/en/${url.search}`, 308);
