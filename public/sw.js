@@ -3,7 +3,7 @@
  * Enables offline support and caching
  */
 
-const CACHE_NAME = 'bitlingo-blog-v1';
+const CACHE_NAME = 'bitlingo-blog-v2';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache on install
@@ -15,13 +15,14 @@ const PRECACHE_ASSETS = [
   '/fonts/atkinson-bold.woff',
 ];
 
-// Install event - cache essential assets
+// Install event - cache essential assets and force update
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(PRECACHE_ASSETS);
     })
   );
+  // Skip waiting to activate immediately and override any conflicting service workers
   self.skipWaiting();
 });
 

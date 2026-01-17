@@ -112,8 +112,21 @@ const resolvedImageAlt = ogImageAlt || resolvedTitle;
 <!-- Service Worker Registration -->
 <script is:inline>
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    window.addEventListener('load', async () => {
+      try {
+        // Unregister any existing service workers from main app that might interfere
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const registration of registrations) {
+          // If it's not our blog service worker, unregister it
+          if (!registration.scope.includes('/blog') && registration.active?.scriptURL !== new URL('/sw.js', window.location.origin).href) {
+            await registration.unregister();
+          }
+        }
+        // Register our blog service worker
+        await navigator.serviceWorker.register('/sw.js', { scope: '/blog/' });
+      } catch (error) {
+        console.error('Service worker registration failed:', error);
+      }
     });
   }
 </script>
