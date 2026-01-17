@@ -10,8 +10,20 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     
-    // Only handle /blog* paths - proxy to Pages project
-    if (url.pathname.startsWith('/blog')) {
+    // Proxy static assets and blog paths to Pages project
+    // Static assets are referenced from blog pages and need to be proxied too
+    const shouldProxy = 
+      url.pathname.startsWith('/blog') ||
+      url.pathname.startsWith('/_astro/') ||
+      url.pathname.startsWith('/fonts/') ||
+      url.pathname.startsWith('/favicon.svg') ||
+      url.pathname.startsWith('/manifest.json') ||
+      url.pathname.startsWith('/sw.js') ||
+      url.pathname.startsWith('/offline.html') ||
+      url.pathname.startsWith('/sitemap') ||
+      url.pathname.startsWith('/rss.xml');
+    
+    if (shouldProxy) {
       // Handle /blog and /blog/ redirects to /blog/en/
       if (url.pathname === '/blog' || url.pathname === '/blog/') {
         return Response.redirect(`${url.origin}/blog/en/${url.search}`, 308);
@@ -21,16 +33,16 @@ export default {
       const pagesUrl = `https://bitlingo-blog.pages.dev${url.pathname}${url.search}`;
       
       try {
-        // Forward the request to Pages project with cache busting
+        // Forward the request to Pages project
         const response = await fetch(pagesUrl, {
           method: request.method,
           headers: {
-            // Only forward necessary headers
+            // Forward important headers
             'Accept': request.headers.get('Accept') || '*/*',
             'Accept-Language': request.headers.get('Accept-Language') || '',
+            'Accept-Encoding': request.headers.get('Accept-Encoding') || '',
             'User-Agent': request.headers.get('User-Agent') || '',
-            // Add cache control to prevent stale content
-            'Cache-Control': 'no-cache',
+            'Referer': request.headers.get('Referer') || '',
           },
           body: request.method !== 'GET' && request.method !== 'HEAD' ? request.body : null,
         });
@@ -44,15 +56,23 @@ export default {
           );
         }
         
-        // Create new headers with cache-busting
+        // Create new headers, preserving Content-Type and other important headers
         const newHeaders = new Headers(response.headers);
-        newHeaders.set('Cache-Control', 'public, max-age=0, must-revalidate');
-        newHeaders.set('CDN-Cache-Control', 'public, max-age=0, must-revalidate');
-        newHeaders.set('Cloudflare-CDN-Cache-Control', 'public, max-age=0, must-revalidate');
+        
+        // For static assets, allow longer caching
+        if (url.pathname.startsWith('/_astro/') || url.pathname.startsWith('/fonts/')) {
+          newHeaders.set('Cache-Control', 'public, max-age=31536000, immutable');
+        } else {
+          // For HTML pages, prevent caching
+          newHeaders.set('Cache-Control', 'public, max-age=0, must-revalidate');
+          newHeaders.set('CDN-Cache-Control', 'public, max-age=0, must-revalidate');
+          newHeaders.set('Cloudflare-CDN-Cache-Control', 'public, max-age=0, must-revalidate');
+        }
+        
+        // Ensure CORS headers for cross-origin requests
         newHeaders.set('Access-Control-Allow-Origin', '*');
         
         // Return response with modified headers
-        // Use response.clone() to get a fresh response with the same body
         return new Response(response.body, {
           status: response.status,
           statusText: response.statusText,
