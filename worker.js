@@ -12,14 +12,13 @@ export default {
     
     // Only handle /blog* paths - proxy to Pages project
     if (url.pathname.startsWith('/blog')) {
-      // Normalize pathname: /blog -> /blog/, /blog/ -> /blog/
-      let pagesPath = url.pathname;
-      if (pagesPath === '/blog') {
-        pagesPath = '/blog/';
+      // Handle /blog and /blog/ redirects to /blog/en/
+      if (url.pathname === '/blog' || url.pathname === '/blog/') {
+        return Response.redirect(`${url.origin}/blog/en/${url.search}`, 308);
       }
       
       // Proxy to Pages project
-      const pagesUrl = `https://bitlingo-blog.pages.dev${pagesPath}${url.search}`;
+      const pagesUrl = `https://bitlingo-blog.pages.dev${url.pathname}${url.search}`;
       
       try {
         // Forward the request to Pages project with cache busting
