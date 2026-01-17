@@ -39,6 +39,19 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         continue-on-error: true
 
+      - name: Create Pages project if it doesn't exist
+        run: |
+          if ! wrangler pages project list | grep -q "bitlingo-blog"; then
+            echo "Creating Pages project bitlingo-blog..."
+            wrangler pages project create bitlingo-blog --production-branch=main || true
+          else
+            echo "Pages project bitlingo-blog already exists"
+          fi
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        continue-on-error: true
+
       - name: Deploy to Cloudflare Pages
         run: wrangler pages deploy dist --project-name=bitlingo-blog
         env:
