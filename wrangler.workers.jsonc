@@ -1,0 +1,11 @@
+{
+  "name": "bitlingo-blog",
+  "compatibility_date": "2026-01-14",
+  "main": "worker.js",
+  "routes": [
+    {
+      "pattern": "bitlingo.app/blog*",
+      "zone_name": "bitlingo.app"
+    }
+  ]
+}
