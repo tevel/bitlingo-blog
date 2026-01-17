@@ -94,33 +94,34 @@ export default {
         const newHeaders = new Headers(response.headers);
         
         // CRITICAL: Always ensure Content-Type is set correctly
-        // Pages may return empty or incorrect Content-Type, so we infer from file extension
+        // Pages may return empty, incorrect, or HTML Content-Type for static assets
         // Use normalizedPath since that's what we're fetching
-        const existingContentType = newHeaders.get('Content-Type');
-        let contentTypeToSet = existingContentType;
+        const existingContentType = newHeaders.get('Content-Type') || '';
+        const isHtmlResponse = existingContentType.includes('text/html');
         
-        // If Content-Type is missing, empty, or doesn't match file type, infer it
-        if (!existingContentType || existingContentType.trim() === '') {
-          if (normalizedPath.endsWith('.css')) {
-            contentTypeToSet = 'text/css; charset=utf-8';
-          } else if (normalizedPath.endsWith('.js')) {
-            contentTypeToSet = 'application/javascript; charset=utf-8';
-          } else if (normalizedPath.endsWith('.woff')) {
-            contentTypeToSet = 'font/woff';
-          } else if (normalizedPath.endsWith('.woff2')) {
-            contentTypeToSet = 'font/woff2';
-          } else if (normalizedPath.endsWith('.svg')) {
-            contentTypeToSet = 'image/svg+xml';
-          } else if (normalizedPath.endsWith('.json')) {
-            contentTypeToSet = 'application/json';
-          } else if (normalizedPath.endsWith('.html') || normalizedPath.endsWith('/')) {
-            contentTypeToSet = 'text/html; charset=utf-8';
-          }
-          
-          // Always set Content-Type if we inferred it
-          if (contentTypeToSet) {
-            newHeaders.set('Content-Type', contentTypeToSet);
-          }
+        // Determine correct Content-Type from file extension
+        let contentTypeToSet = null;
+        if (normalizedPath.endsWith('.css')) {
+          contentTypeToSet = 'text/css; charset=utf-8';
+        } else if (normalizedPath.endsWith('.js')) {
+          contentTypeToSet = 'application/javascript; charset=utf-8';
+        } else if (normalizedPath.endsWith('.woff')) {
+          contentTypeToSet = 'font/woff';
+        } else if (normalizedPath.endsWith('.woff2')) {
+          contentTypeToSet = 'font/woff2';
+        } else if (normalizedPath.endsWith('.svg')) {
+          contentTypeToSet = 'image/svg+xml';
+        } else if (normalizedPath.endsWith('.json')) {
+          contentTypeToSet = 'application/json';
+        } else if (normalizedPath.endsWith('.html') || normalizedPath.endsWith('/')) {
+          contentTypeToSet = 'text/html; charset=utf-8';
+        }
+        
+        // Override Content-Type if:
+        // 1. It's missing/empty, OR
+        // 2. It's HTML but the file extension indicates it should be CSS/JS/etc (404 page)
+        if (contentTypeToSet && (!existingContentType || existingContentType.trim() === '' || (isHtmlResponse && contentTypeToSet !== 'text/html; charset=utf-8'))) {
+          newHeaders.set('Content-Type', contentTypeToSet);
         }
         
         // For static assets, allow longer caching
