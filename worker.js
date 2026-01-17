@@ -45,26 +45,20 @@ export default {
           );
         }
         
-        // Clone the response to avoid consuming the body
-        const clonedResponse = response.clone();
+        // Create new headers with cache-busting
+        const newHeaders = new Headers(response.headers);
+        newHeaders.set('Cache-Control', 'public, max-age=0, must-revalidate');
+        newHeaders.set('CDN-Cache-Control', 'public, max-age=0, must-revalidate');
+        newHeaders.set('Cloudflare-CDN-Cache-Control', 'public, max-age=0, must-revalidate');
+        newHeaders.set('Access-Control-Allow-Origin', '*');
         
-        // Create a new response with the Pages content
-        // Use the original response body directly instead of reading as text
-        const newResponse = new Response(response.body, {
+        // Return response with modified headers
+        // Use response.clone() to get a fresh response with the same body
+        return new Response(response.body, {
           status: response.status,
           statusText: response.statusText,
-          headers: {
-            ...Object.fromEntries(response.headers),
-            // Override cache headers to prevent stale content
-            'Cache-Control': 'public, max-age=0, must-revalidate',
-            'CDN-Cache-Control': 'public, max-age=0, must-revalidate',
-            'Cloudflare-CDN-Cache-Control': 'public, max-age=0, must-revalidate',
-            // Ensure CORS headers are set if needed
-            'Access-Control-Allow-Origin': '*',
-          },
+          headers: newHeaders,
         });
-        
-        return newResponse;
       } catch (error) {
         console.error(`Error proxying to Pages: ${error.message}`, error);
         return new Response(
