@@ -102,6 +102,12 @@ import ProgressWidget from './ProgressWidget.astro';
 		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
 		border-bottom: 1px solid rgba(245, 166, 35, 0.2);
+		pointer-events: auto; /* Ensure header is clickable */
+	}
+	
+	/* Ensure all header children are clickable */
+	header * {
+		pointer-events: auto;
 	}
 	
 	nav {
