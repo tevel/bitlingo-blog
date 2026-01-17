@@ -75,8 +75,24 @@ export default {
           );
         }
         
-        // Create new headers, preserving Content-Type and other important headers
+        // Create new headers, preserving ALL headers from Pages response
         const newHeaders = new Headers(response.headers);
+        
+        // CRITICAL: Ensure Content-Type is preserved for all assets
+        // If Content-Type is missing, infer it from file extension
+        if (!newHeaders.get('Content-Type')) {
+          if (url.pathname.endsWith('.css')) {
+            newHeaders.set('Content-Type', 'text/css; charset=utf-8');
+          } else if (url.pathname.endsWith('.js')) {
+            newHeaders.set('Content-Type', 'application/javascript; charset=utf-8');
+          } else if (url.pathname.endsWith('.woff') || url.pathname.endsWith('.woff2')) {
+            newHeaders.set('Content-Type', 'font/woff');
+          } else if (url.pathname.endsWith('.svg')) {
+            newHeaders.set('Content-Type', 'image/svg+xml');
+          } else if (url.pathname.endsWith('.json')) {
+            newHeaders.set('Content-Type', 'application/json');
+          }
+        }
         
         // For static assets, allow longer caching
         if (url.pathname.startsWith('/_astro/') || url.pathname.startsWith('/fonts/')) {
@@ -90,7 +106,6 @@ export default {
           // Block Mixpanel and other tracking scripts on blog pages
           // Only apply CSP to HTML pages
           if (response.headers.get('Content-Type')?.includes('text/html')) {
-            const existingCSP = response.headers.get('Content-Security-Policy') || '';
             const cspDirectives = [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://giscus.app",
