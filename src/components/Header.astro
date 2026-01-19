@@ -47,42 +47,57 @@ import ProgressWidget from './ProgressWidget.astro';
 				</svg>
 				<span>Blog</span>
 			</a>
-			<a href="/blog/games" class="nav-link games-link">
-				<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-					<rect x="2" y="6" width="20" height="12" rx="2"/>
-					<circle cx="8" cy="12" r="2"/>
-					<circle cx="16" cy="12" r="2"/>
-					<path d="M9 17v2"/>
-					<path d="M15 17v2"/>
-				</svg>
-				<span>Games</span>
-			</a>
-			<a href="/blog/leaderboard" class="nav-link leaderboard-link">
-				<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-					<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-				</svg>
-				<span>Leaderboard</span>
-			</a>
-			<a href="/blog/about" class="nav-link">
-				<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-					<circle cx="12" cy="12" r="10"/>
-					<path d="M12 16v-4"/>
-					<path d="M12 8h.01"/>
-				</svg>
-				<span>About</span>
-			</a>
 		</div>
 		
-		<a href="https://bitlingo.app" target="_blank" rel="noopener noreferrer" class="cta-button">
-			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-				<polygon points="5 3 19 12 5 21 5 3"/>
-			</svg>
-			<span>Open App</span>
-		</a>
-		
-		<div class="header-widgets">
-			<ProgressWidget compact={true} />
-			<ThemeToggle />
+		<div class="header-right">
+			<a href="https://bitlingo.app" target="_blank" rel="noopener noreferrer" class="cta-button">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+					<polygon points="5 3 19 12 5 21 5 3"/>
+				</svg>
+				<span>Open App</span>
+			</a>
+			
+			<div class="header-widgets">
+				<ProgressWidget compact={true} />
+				<ThemeToggle />
+			</div>
+			
+			<!-- More Menu Dropdown -->
+			<div class="more-menu">
+				<button class="more-menu-btn" aria-label="More menu" aria-expanded="false" aria-haspopup="true">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+						<circle cx="12" cy="5" r="1"/>
+						<circle cx="12" cy="12" r="1"/>
+						<circle cx="12" cy="19" r="1"/>
+					</svg>
+				</button>
+				<div class="more-menu-dropdown">
+					<a href="/blog/games" class="more-menu-item games-link">
+						<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+							<rect x="2" y="6" width="20" height="12" rx="2"/>
+							<circle cx="8" cy="12" r="2"/>
+							<circle cx="16" cy="12" r="2"/>
+							<path d="M9 17v2"/>
+							<path d="M15 17v2"/>
+						</svg>
+						<span>Games</span>
+					</a>
+					<a href="/blog/leaderboard" class="more-menu-item leaderboard-link">
+						<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+							<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+						</svg>
+						<span>Leaderboard</span>
+					</a>
+					<a href="/blog/about" class="more-menu-item">
+						<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+							<circle cx="12" cy="12" r="10"/>
+							<path d="M12 16v-4"/>
+							<path d="M12 8h.01"/>
+						</svg>
+						<span>About</span>
+					</a>
+				</div>
+			</div>
 		</div>
 		
 		<button class="mobile-menu-btn" aria-label="Toggle menu">
@@ -275,6 +290,13 @@ import ProgressWidget from './ProgressWidget.astro';
 		stroke: none;
 	}
 
+	.header-right {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		position: relative;
+	}
+	
 	.header-widgets {
 		display: flex;
 		align-items: center;
@@ -285,6 +307,95 @@ import ProgressWidget from './ProgressWidget.astro';
 		transform: translateY(-2px);
 		box-shadow: 0 6px 25px rgba(245, 166, 35, 0.5);
 		color: #1a365d;
+	}
+	
+	/* More Menu */
+	.more-menu {
+		position: relative;
+	}
+	
+	.more-menu-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		background: transparent;
+		border: 1px solid rgba(245, 166, 35, 0.3);
+		border-radius: 10px;
+		color: var(--text-secondary);
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+	
+	.more-menu-btn:hover,
+	.more-menu-btn[aria-expanded="true"] {
+		background: rgba(245, 166, 35, 0.15);
+		border-color: rgba(245, 166, 35, 0.5);
+		color: var(--text-primary);
+	}
+	
+	.more-menu-btn svg {
+		width: 20px;
+		height: 20px;
+	}
+	
+	.more-menu-dropdown {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		right: 0;
+		min-width: 200px;
+		background: rgba(26, 54, 93, 0.98);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		border: 1px solid rgba(245, 166, 35, 0.2);
+		border-radius: 12px;
+		padding: 0.5rem;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(-10px);
+		transition: all 0.3s ease;
+		z-index: 10003;
+		pointer-events: none;
+	}
+	
+	.more-menu-btn[aria-expanded="true"] + .more-menu-dropdown,
+	.more-menu:hover .more-menu-dropdown {
+		opacity: 1;
+		visibility: visible;
+		transform: translateY(0);
+		pointer-events: auto;
+	}
+	
+	.more-menu-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.75rem 1rem;
+		border-radius: 8px;
+		color: var(--text-secondary);
+		font-weight: 500;
+		font-size: 0.95rem;
+		text-decoration: none;
+		transition: all 0.2s ease;
+	}
+	
+	.more-menu-item:hover {
+		background: rgba(245, 166, 35, 0.15);
+		color: var(--text-primary);
+	}
+	
+	.more-menu-item .nav-icon {
+		width: 18px;
+		height: 18px;
+		flex-shrink: 0;
+	}
+	
+	.more-menu-item.leaderboard-link .nav-icon {
+		fill: var(--accent-primary);
+		stroke: var(--accent-primary);
 	}
 	
 	/* Mobile menu button */
@@ -317,9 +428,21 @@ import ProgressWidget from './ProgressWidget.astro';
 	}
 	
 	/* Responsive */
+	@media (max-width: 1024px) {
+		.cta-button span {
+			display: none;
+		}
+		
+		.cta-button {
+			padding: 0.6rem;
+			border-radius: 12px;
+		}
+	}
+	
 	@media (max-width: 768px) {
 		nav {
 			padding: 0.75rem 1rem;
+			gap: 1rem;
 		}
 		
 		.logo-text {
@@ -348,17 +471,37 @@ import ProgressWidget from './ProgressWidget.astro';
 			padding: 1rem;
 		}
 		
-		.mobile-menu-btn {
-			display: flex;
+		.header-right {
+			gap: 0.5rem;
 		}
 		
-		.cta-button span {
-			display: none;
+		.header-widgets {
+			gap: 0.5rem;
+		}
+		
+		.mobile-menu-btn {
+			display: flex;
 		}
 		
 		.cta-button {
 			padding: 0.6rem;
 			border-radius: 12px;
+		}
+		
+		.more-menu-dropdown {
+			right: 0;
+			left: auto;
+			min-width: 180px;
+		}
+	}
+	
+	@media (max-width: 480px) {
+		.header-widgets {
+			display: none;
+		}
+		
+		.cta-button {
+			padding: 0.5rem;
 		}
 	}
 </style>
@@ -368,4 +511,30 @@ import ProgressWidget from './ProgressWidget.astro';
 	document.querySelector('.mobile-menu-btn')?.addEventListener('click', () => {
 		document.querySelector('.nav-links')?.classList.toggle('active');
 	});
+	
+	// More menu toggle
+	const moreMenuBtn = document.querySelector('.more-menu-btn');
+	const moreMenuDropdown = document.querySelector('.more-menu-dropdown');
+	
+	if (moreMenuBtn && moreMenuDropdown) {
+		moreMenuBtn.addEventListener('click', (e) => {
+			e.stopPropagation();
+			const isExpanded = moreMenuBtn.getAttribute('aria-expanded') === 'true';
+			moreMenuBtn.setAttribute('aria-expanded', !isExpanded);
+		});
+		
+		// Close dropdown when clicking outside
+		document.addEventListener('click', (e) => {
+			if (!moreMenuBtn.contains(e.target) && !moreMenuDropdown.contains(e.target)) {
+				moreMenuBtn.setAttribute('aria-expanded', 'false');
+			}
+		});
+		
+		// Close dropdown when clicking on a menu item
+		moreMenuDropdown.querySelectorAll('.more-menu-item').forEach(item => {
+			item.addEventListener('click', () => {
+				moreMenuBtn.setAttribute('aria-expanded', 'false');
+			});
+		});
+	}
 </script>
