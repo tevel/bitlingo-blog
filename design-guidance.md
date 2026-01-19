@@ -93,25 +93,37 @@ Gold  White
 
 ### Logo Icon (Favicon)
 
-The favicon is an SVG robot icon representing "Bit the Robot":
+The favicon is an SVG icon featuring **blue headphones with a golden letter "B"** in the center, representing BitLingo's audio-first learning approach:
 
 ```
-┌─────────────┐
-│    [●]      │  ← Antenna LED
-│     │       │
-│ ┌───────┐   │
-│ │ ○   ○ │   │  ← Robot face with LED eyes
-│ │   ‿   │   │  ← Smile
-│ └───────┘   │
-│   │ ❤️ │    │  ← Body
-│   └───┘    │
-└─────────────┘
+┌─────────────────┐
+│   ╱╲            │  ← Headphones band (blue gradient)
+│  ╱  ╲           │
+│ │  B  │         │  ← Golden "B" letter (Nunito-style)
+│  ╲  ╱           │
+│   ╲╱            │
+└─────────────────┘
 ```
+
+**Design Details:**
+- **Background**: Transparent (no background color)
+- **Headphones**: Blue gradient (#4fc3f7 to #0288d1) with rounded earcups
+- **Letter "B"**: Golden gradient (#ffd700 to #f9a825) in Nunito-style rounded bold font
+- **Shadow**: Black drop shadow on the "B" letter (dx="4" dy="8", stdDeviation="12", opacity="0.65")
+- **Size**: 512x512 viewBox, scalable vector
+
+**Usage Guidelines:**
+- Use the SVG version (`favicon.svg`) for best quality at any size
+- The logo has a transparent background and works on any background color
+- Minimum size: 40x40px for visibility
+- Recommended size: 64x64px or larger for blog posts
+- Maintain aspect ratio - do not stretch or distort
+- The logo can be used with or without the "BitLingo" text
 
 #### Favicon Files
 | File | Size | Usage |
 |------|------|-------|
-| `favicon.svg` | Scalable | Modern browsers, primary |
+| `favicon.svg` | Scalable | Modern browsers, primary - **Blue headphones with golden B** |
 | `favicon.ico` | 16x16, 32x32, 48x48 | Legacy browsers |
 | `favicon-16x16.png` | 16x16 | Small icons |
 | `apple-touch-icon.png` | 180x180 | iOS home screen |

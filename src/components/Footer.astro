@@ -48,20 +48,7 @@ const today = new Date();
 	<div class="footer-content">
 		<div class="footer-brand">
 			<div class="footer-logo">
-				<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
-					<rect x="4" y="4" width="40" height="40" rx="10" fill="url(#footer-logo-bg)"/>
-					<path d="M10 26C10 19.4 15.4 14 22 14" stroke="#1a365d" stroke-width="3" stroke-linecap="round" fill="none"/>
-					<path d="M38 26C38 19.4 32.6 14 26 14" stroke="#1a365d" stroke-width="3" stroke-linecap="round" fill="none"/>
-					<rect x="8" y="24" width="6" height="12" rx="3" fill="#1a365d"/>
-					<rect x="34" y="24" width="6" height="12" rx="3" fill="#1a365d"/>
-					<text x="24" y="33" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="18" font-weight="900" fill="#1a365d">B</text>
-					<defs>
-						<linearGradient id="footer-logo-bg" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
-							<stop stop-color="#f5a623"/>
-							<stop offset="1" stop-color="#e8930c"/>
-						</linearGradient>
-					</defs>
-				</svg>
+				<img src="/favicon.svg" alt="BitLingo" class="footer-logo-img" width="40" height="40" />
 				<span class="brand-text"><span class="title-bit">Bit</span><span class="title-lingo">Lingo</span></span>
 			</div>
 			<p class="footer-tagline">Audio-first vocabulary learning for busy people.</p>
@@ -150,29 +137,32 @@ const today = new Date();
 		margin-bottom: 1rem;
 	}
 	
-	.footer-logo svg {
+	.footer-logo-img {
 		width: 40px;
 		height: 40px;
+		flex-shrink: 0;
+		display: block;
+		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
 	}
 	
 	.brand-text {
 		font-family: 'Nunito', system-ui, sans-serif;
 		font-size: 1.8rem;
-		font-weight: 900;
-		letter-spacing: 0.5px;
+		font-weight: 800;
+		letter-spacing: 1px;
 		line-height: 1.2;
 	}
 	
 	/* "Bit" - Gold color (matches mascot and accent) */
 	.brand-text .title-bit {
 		color: #ffd700;
-		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 	}
 	
 	/* "Lingo" - White/primary text color */
 	.brand-text .title-lingo {
 		color: #f0f4f8;
-		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 	}
 	
 	.footer-tagline {

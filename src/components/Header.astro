@@ -6,28 +6,7 @@ import ProgressWidget from './ProgressWidget.astro';
 <header>
 	<nav>
 		<a href="https://bitlingo.app" target="_blank" rel="noopener noreferrer" class="logo">
-			<div class="logo-icon">
-				<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
-					<!-- Background rounded square -->
-					<rect x="4" y="4" width="40" height="40" rx="10" fill="url(#logo-bg)"/>
-					<!-- Headphone arc left -->
-					<path d="M10 26C10 19.4 15.4 14 22 14" stroke="#1a365d" stroke-width="3" stroke-linecap="round" fill="none"/>
-					<!-- Headphone arc right -->
-					<path d="M38 26C38 19.4 32.6 14 26 14" stroke="#1a365d" stroke-width="3" stroke-linecap="round" fill="none"/>
-					<!-- Left earpiece -->
-					<rect x="8" y="24" width="6" height="12" rx="3" fill="#1a365d"/>
-					<!-- Right earpiece -->
-					<rect x="34" y="24" width="6" height="12" rx="3" fill="#1a365d"/>
-					<!-- B letter -->
-					<text x="24" y="33" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="18" font-weight="900" fill="#1a365d">B</text>
-					<defs>
-						<linearGradient id="logo-bg" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
-							<stop stop-color="#f5a623"/>
-							<stop offset="1" stop-color="#e8930c"/>
-						</linearGradient>
-					</defs>
-				</svg>
-			</div>
+			<img src="/favicon.svg" alt="BitLingo" class="logo-img" width="40" height="40" />
 			<span class="logo-text"><span class="title-bit">Bit</span><span class="title-lingo">Lingo</span></span>
 		</a>
 		
@@ -91,6 +70,8 @@ import ProgressWidget from './ProgressWidget.astro';
 		padding: 0.75rem 1.5rem;
 		gap: 2rem;
 		pointer-events: auto !important; /* Ensure nav is clickable */
+		position: relative;
+		overflow: visible;
 	}
 	
 	/* Ensure all nav links and buttons are clickable */
@@ -111,38 +92,34 @@ import ProgressWidget from './ProgressWidget.astro';
 		color: var(--text-primary);
 	}
 	
-	.logo-icon {
+	.logo-img {
 		width: 40px;
 		height: 40px;
 		min-width: 40px;
 		max-width: 40px;
 		flex-shrink: 0;
-		display: flex;
-	}
-	
-	.logo-icon svg {
-		width: 40px;
-		height: 40px;
+		display: block;
+		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
 	}
 	
 	.logo-text {
 		font-family: 'Nunito', system-ui, sans-serif;
 		font-size: 1.8rem;
-		font-weight: 900;
-		letter-spacing: 0.5px;
+		font-weight: 800;
+		letter-spacing: 1px;
 		line-height: 1.2;
 	}
 	
 	/* "Bit" - Gold color (matches mascot and accent) */
 	.logo-text .title-bit {
 		color: #ffd700;
-		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 	}
 	
 	/* "Lingo" - White/primary text color */
 	.logo-text .title-lingo {
 		color: #f0f4f8;
-		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 	}
 	
 	.logo:hover .logo-text .title-bit {
@@ -154,6 +131,7 @@ import ProgressWidget from './ProgressWidget.astro';
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
+		flex-shrink: 0;
 	}
 	
 	.nav-link {
@@ -233,6 +211,8 @@ import ProgressWidget from './ProgressWidget.astro';
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
+		flex-shrink: 0;
+		margin-left: auto;
 	}
 	
 	.header-widgets {
@@ -254,6 +234,8 @@ import ProgressWidget from './ProgressWidget.astro';
 		border: 1px solid rgba(245, 166, 35, 0.3);
 		border-radius: 10px;
 		cursor: pointer;
+		flex-shrink: 0;
+		margin-left: 0.5rem;
 	}
 	
 	.mobile-menu-btn span {
@@ -270,7 +252,14 @@ import ProgressWidget from './ProgressWidget.astro';
 		background: rgba(245, 166, 35, 0.1);
 	}
 	
-	/* Responsive */
+	/* Responsive - Show mobile menu button when nav links don't fit */
+	@media (max-width: 900px) {
+		.mobile-menu-btn {
+			display: flex;
+		}
+	}
+	
+	/* Responsive - Hide nav links on smaller screens, show in mobile menu */
 	@media (max-width: 768px) {
 		nav {
 			padding: 0.75rem 1rem;
@@ -291,6 +280,9 @@ import ProgressWidget from './ProgressWidget.astro';
 			padding: 1rem;
 			background: rgba(26, 54, 93, 0.98);
 			border-bottom: 1px solid rgba(245, 166, 35, 0.2);
+			z-index: 10003;
+			backdrop-filter: blur(20px);
+			-webkit-backdrop-filter: blur(20px);
 		}
 		
 		.nav-links.active {
@@ -310,15 +302,24 @@ import ProgressWidget from './ProgressWidget.astro';
 		.header-widgets {
 			gap: 0.5rem;
 		}
-		
+	}
+	
+	/* On larger screens, hide mobile menu button if nav links fit */
+	@media (min-width: 901px) {
 		.mobile-menu-btn {
-			display: flex;
+			display: none !important;
 		}
 	}
 	
 	@media (max-width: 480px) {
+		nav {
+			padding: 0.5rem 0.75rem;
+			gap: 0.5rem;
+		}
+		
 		.header-widgets {
-			display: none;
+			display: flex;
+			gap: 0.25rem;
 		}
 	}
 </style>
