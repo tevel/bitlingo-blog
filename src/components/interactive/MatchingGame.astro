@@ -24,9 +24,23 @@ const words = targetData.words.slice(0, pairCount);
       <span class="game-icon">🔗</span>
       <h3>{uiStrings.matching_title}</h3>
     </div>
-    <div class="language-badge">
-      <span class="flag">{targetData.flag}</span>
-      <span class="lang-name">{targetData.nativeName}</span>
+    <div class="game-header-right">
+      <div class="language-badge">
+        <span class="flag">{targetData.flag}</span>
+        <span class="lang-name">{targetData.nativeName}</span>
+      </div>
+      <div class="game-share">
+        <a class="share-btn-small twitter-share-header" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter" title="Share on Twitter">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a class="share-btn-small facebook-share-header" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook" title="Share on Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <button class="share-btn-small copy-link-header" aria-label="Copy link" title="Copy link">
+          <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -280,8 +294,42 @@ const words = targetData.words.slice(0, pairCount);
           }
         });
       });
+      
+      // Setup header share buttons (always visible)
+      setupHeaderShareButtons(game, `Practice vocabulary with BitLingo matching game! 🔗 Try it yourself:`);
     });
   });
+
+  function setupHeaderShareButtons(game, shareText) {
+    const shareUrl = window.location.href;
+    const twitterShareHeader = game.querySelector('.twitter-share-header');
+    const facebookShareHeader = game.querySelector('.facebook-share-header');
+    const copyBtnHeader = game.querySelector('.copy-link-header');
+    
+    if (twitterShareHeader) twitterShareHeader.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    if (facebookShareHeader) facebookShareHeader.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+    if (copyBtnHeader) {
+      copyBtnHeader.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+          const copyIcon = copyBtnHeader.querySelector('.copy-icon');
+          const checkIcon = copyBtnHeader.querySelector('.check-icon');
+          if (copyIcon && checkIcon) {
+            copyIcon.style.display = 'none';
+            checkIcon.style.display = 'block';
+            copyBtnHeader.classList.add('copied');
+            setTimeout(() => {
+              copyIcon.style.display = 'block';
+              checkIcon.style.display = 'none';
+              copyBtnHeader.classList.remove('copied');
+            }, 2000);
+          }
+        } catch (err) {
+          console.error('Failed to copy:', err);
+        }
+      });
+    }
+  }
 </script>
 
 <style>
@@ -300,6 +348,66 @@ const words = targetData.words.slice(0, pairCount);
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .game-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .game-share {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .share-btn-small {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .share-btn-small:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .share-btn-small svg { 
+    width: 16px; 
+    height: 16px; 
+  }
+
+  .share-btn-small.twitter-share-header:hover { 
+    background: rgba(29, 161, 242, 0.2); 
+    color: #1da1f2; 
+  }
+
+  .share-btn-small.facebook-share-header:hover { 
+    background: rgba(24, 119, 242, 0.2); 
+    color: #1877f2; 
+  }
+
+  .share-btn-small.copy-link-header:hover { 
+    background: rgba(245, 166, 35, 0.2); 
+    color: #f5a623; 
+  }
+
+  .share-btn-small.copied { 
+    background: rgba(34, 197, 94, 0.2); 
+    color: #22c55e; 
   }
 
   .game-title {

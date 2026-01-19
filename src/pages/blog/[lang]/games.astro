@@ -1,18 +1,28 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import VocabQuiz from '../components/interactive/VocabQuiz.astro';
-import Flashcard from '../components/interactive/Flashcard.astro';
-import MatchingGame from '../components/interactive/MatchingGame.astro';
-import MemoryGame from '../components/interactive/MemoryGame.astro';
-import SpeedRound from '../components/interactive/SpeedRound.astro';
-import DailyWord from '../components/interactive/DailyWord.astro';
-import LanguagePoll from '../components/interactive/LanguagePoll.astro';
-import ShareButtons from '../components/ShareButtons.astro';
-import PixelRobot from '../components/PixelRobot.astro';
-import { LANGUAGE_DATA } from '../data/vocabulary';
-import { SITE_TITLE } from '../consts';
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import VocabQuiz from '../../../components/interactive/VocabQuiz.astro';
+import Flashcard from '../../../components/interactive/Flashcard.astro';
+import MatchingGame from '../../../components/interactive/MatchingGame.astro';
+import MemoryGame from '../../../components/interactive/MemoryGame.astro';
+import SpeedRound from '../../../components/interactive/SpeedRound.astro';
+import DailyWord from '../../../components/interactive/DailyWord.astro';
+import LanguagePoll from '../../../components/interactive/LanguagePoll.astro';
+import ShareButtons from '../../../components/ShareButtons.astro';
+import BookmarkButton from '../../../components/BookmarkButton.astro';
+import PixelRobot from '../../../components/PixelRobot.astro';
+import { LANGUAGE_DATA } from '../../../data/vocabulary';
+import { SITE_TITLE, SUPPORTED_LANGS, DEFAULT_LANG } from '../../../consts';
+
+export function getStaticPaths() {
+	return SUPPORTED_LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+if (!SUPPORTED_LANGS.includes(lang)) {
+	return Astro.redirect(`/blog/${DEFAULT_LANG}/games`, 308);
+}
 
 const pageTitle = `Interactive Games | ${SITE_TITLE}`;
 const pageDescription = 'Practice vocabulary with fun interactive games. Quiz yourself, flip flashcards, match words, and challenge your memory in 16+ languages!';
@@ -26,7 +36,7 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <BaseHead 
       title={pageTitle} 
@@ -52,15 +62,16 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
           <div class="language-picker">
             <label for="global-lang">Choose a language to practice:</label>
             <select id="global-lang" class="lang-select">
-              {targetLanguages.map(lang => (
-                <option value={lang.code} selected={lang.code === 'es'}>
-                  {lang.flag} {lang.name}
+              {targetLanguages.map(targetLang => (
+                <option value={targetLang.code} selected={targetLang.code === 'es'}>
+                  {targetLang.flag} {targetLang.name}
                 </option>
               ))}
             </select>
           </div>
           
-          <div class="hero-share">
+          <div class="hero-actions">
+            <BookmarkButton slug={`games`} title="Interactive Language Games" lang={lang} />
             <ShareButtons 
               title="Practice languages with fun interactive games on BitLingo!" 
               description="Quiz yourself, flip flashcards, and challenge your memory in 16+ languages."
@@ -78,9 +89,12 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
               <h2>Vocabulary Quiz</h2>
               <p>Test your knowledge with multiple choice questions</p>
             </div>
+            <div class="section-actions">
+              <BookmarkButton slug="games#quiz-section" title="Vocabulary Quiz" lang={lang} />
+            </div>
           </div>
           <div class="game-container" data-game="quiz">
-            <VocabQuiz targetLang="es" questionCount={5} />
+            <VocabQuiz targetLang="es" questionCount={5} lang={lang} />
           </div>
         </div>
 
@@ -91,9 +105,12 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
               <h2>Flashcards</h2>
               <p>Flip cards to reveal translations and pronunciations</p>
             </div>
+            <div class="section-actions">
+              <BookmarkButton slug="games#flashcard-section" title="Flashcards" lang={lang} />
+            </div>
           </div>
           <div class="game-container" data-game="flashcard">
-            <Flashcard targetLang="fr" cardCount={5} />
+            <Flashcard targetLang="fr" cardCount={5} lang={lang} />
           </div>
         </div>
 
@@ -104,9 +121,12 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
               <h2>Word Matching</h2>
               <p>Connect words with their correct translations</p>
             </div>
+            <div class="section-actions">
+              <BookmarkButton slug="games#matching-section" title="Word Matching Game" lang={lang} />
+            </div>
           </div>
           <div class="game-container" data-game="matching">
-            <MatchingGame targetLang="de" pairCount={6} />
+            <MatchingGame targetLang="de" pairCount={6} lang={lang} />
           </div>
         </div>
 
@@ -117,9 +137,12 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
               <h2>Memory Game</h2>
               <p>Find matching word-translation pairs</p>
             </div>
+            <div class="section-actions">
+              <BookmarkButton slug="games#memory-section" title="Memory Game" lang={lang} />
+            </div>
           </div>
           <div class="game-container" data-game="memory">
-            <MemoryGame targetLang="it" pairCount={6} />
+            <MemoryGame targetLang="it" pairCount={6} lang={lang} />
           </div>
         </div>
 
@@ -130,9 +153,12 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
               <h2>Speed Round</h2>
               <p>How many can you answer in 60 seconds?</p>
             </div>
+            <div class="section-actions">
+              <BookmarkButton slug="games#speed-section" title="Speed Round" lang={lang} />
+            </div>
           </div>
           <div class="game-container" data-game="speed">
-            <SpeedRound targetLang="ja" duration={60} />
+            <SpeedRound targetLang="ja" duration={60} lang={lang} />
           </div>
         </div>
       </section>
@@ -166,7 +192,7 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
       </section>
     </main>
 
-    <Footer />
+    <Footer lang={lang} />
     
     <!-- Pixel the Robot Mascot -->
     <PixelRobot initialMood="excited" position="top-left" />
@@ -310,10 +336,13 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
     color: white;
   }
   
-  .hero-share {
+  .hero-actions {
     margin-top: 2rem;
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
+    gap: 1rem;
   }
 
   /* Games Grid */
@@ -333,6 +362,14 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
     gap: 1rem;
     margin-bottom: 1.5rem;
     padding-left: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .section-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
   }
 
   .section-number {

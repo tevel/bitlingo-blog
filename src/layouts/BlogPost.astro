@@ -177,7 +177,7 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 					<div class="practice-widgets">
 						<VocabQuiz targetLang={lang === 'en' ? 'es' : lang} questionCount={5} lang={lang} />
 					</div>
-					<a href="/blog/games" class="more-games-link">
+					<a href={`/blog/${lang}/games`} class="more-games-link">
 						<span>Explore more games</span>
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 							<path d="M5 12h14"/>
@@ -250,7 +250,7 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 				</footer>
 			</article>
 		</main>
-		<Footer />
+		<Footer lang={lang} />
 		<MobileNav lang={lang} />
 		<PWAInstallPrompt />
 		<PixelRobot initialMood="wave" position="top-left" />
@@ -292,23 +292,41 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 	</body>
 </html>
 
-<script>
+<script is:inline>
 	// Copy link functionality
-	document.querySelectorAll('.copy-link').forEach((btn) => {
-		btn.addEventListener('click', async () => {
-			const url = btn.getAttribute('data-url');
-			if (url) {
-				await navigator.clipboard.writeText(url);
-				const svg = btn.querySelector('svg');
-				if (svg) {
-					svg.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
-					setTimeout(() => {
-						svg.innerHTML = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>';
-					}, 2000);
-				}
-			}
-		});
-	});
+	(function() {
+		function initCopyLinks() {
+			document.querySelectorAll('.copy-link').forEach((btn) => {
+				btn.style.pointerEvents = 'auto';
+				btn.style.zIndex = '10';
+				btn.addEventListener('click', async (e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					const url = btn.getAttribute('data-url');
+					if (url) {
+						try {
+							await navigator.clipboard.writeText(url);
+							const svg = btn.querySelector('svg');
+							if (svg) {
+								svg.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+								setTimeout(() => {
+									svg.innerHTML = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>';
+								}, 2000);
+							}
+						} catch (err) {
+							console.error('Failed to copy link:', err);
+						}
+					}
+				});
+			});
+		}
+		
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initCopyLinks);
+		} else {
+			initCopyLinks();
+		}
+	})();
 </script>
 
 <style>
@@ -344,6 +362,9 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 		text-decoration: none;
 		transition: all 0.3s ease;
 		margin-bottom: 2rem;
+		position: relative;
+		z-index: 10;
+		pointer-events: auto;
 	}
 
 	.back-link:hover {
@@ -581,6 +602,9 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 		color: var(--text-secondary);
 		cursor: pointer;
 		transition: all 0.3s ease;
+		position: relative;
+		z-index: 10;
+		pointer-events: auto;
 	}
 
 	.share-btn:hover {
@@ -610,6 +634,9 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 		text-decoration: none;
 		transition: all 0.3s ease;
 		box-shadow: 0 4px 20px rgba(245, 166, 35, 0.3);
+		position: relative;
+		z-index: 10;
+		pointer-events: auto;
 	}
 
 	.back-to-blog:hover {
@@ -670,6 +697,9 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 		gap: 0.5rem;
 		margin-top: 1.5rem;
 		padding: 0.75rem 1.25rem;
+		position: relative;
+		z-index: 10;
+		pointer-events: auto;
 		background: rgba(255, 255, 255, 0.05);
 		border: 1px solid rgba(255, 255, 255, 0.1);
 		border-radius: 12px;
@@ -720,6 +750,9 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 	}
 
 	.article-actions {
+		position: relative;
+		z-index: 10;
+		pointer-events: auto;
 		display: flex;
 		justify-content: center;
 		gap: 1rem;

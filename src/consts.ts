@@ -23,3 +23,6 @@ export const SUPPORTED_LANGS = [
 	'he',
 ];
 export const DEFAULT_LANG = 'en';
+
+// Blog version - increment with each change
+export const BLOG_VERSION = '1.8.0';

@@ -108,38 +108,62 @@
   }
 </style>
 
-<script>
+<script is:inline>
   // Fallback for browsers without View Transitions API
-  if (!document.startViewTransition) {
-    document.addEventListener('DOMContentLoaded', () => {
-      // Add enter animation to main content
-      const main = document.querySelector('main');
-      if (main) {
-        main.classList.add('page-transition-enter');
-      }
-    });
+  (function() {
+    if (!document.startViewTransition) {
+      function initPageTransition() {
+        // Add enter animation to main content
+        const main = document.querySelector('main');
+        if (main) {
+          main.classList.add('page-transition-enter');
+        }
 
-    // Handle link clicks for exit animation
-    document.addEventListener('click', (e) => {
-      const link = e.target.closest('a');
-      if (!link) return;
-      
-      const href = link.getAttribute('href');
-      if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:')) {
-        return;
-      }
+        // Handle link clicks for exit animation
+        document.addEventListener('click', (e) => {
+          const link = e.target.closest('a');
+          if (!link) return;
+          
+          // Don't intercept buttons or links with special classes
+          if (link.classList.contains('bookmark-btn') || 
+              link.classList.contains('reaction-btn') ||
+              link.classList.contains('copy-link') ||
+              link.tagName === 'BUTTON') {
+            return;
+          }
+          
+          const href = link.getAttribute('href');
+          if (!href || 
+              href.startsWith('#') || 
+              href.startsWith('http') || 
+              href.startsWith('mailto:') ||
+              href.startsWith('javascript:')) {
+            return;
+          }
 
-      e.preventDefault();
+          // Only intercept internal links
+          if (href.startsWith('/')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const main = document.querySelector('main');
+            if (main) {
+              main.classList.add('page-transition-exit');
+              setTimeout(() => {
+                window.location.href = href;
+              }, 200);
+            } else {
+              window.location.href = href;
+            }
+          }
+        });
+      }
       
-      const main = document.querySelector('main');
-      if (main) {
-        main.classList.add('page-transition-exit');
-        setTimeout(() => {
-          window.location.href = href;
-        }, 200);
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPageTransition);
       } else {
-        window.location.href = href;
+        initPageTransition();
       }
-    });
-  }
+    }
+  })();
 </script>

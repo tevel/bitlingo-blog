@@ -26,50 +26,91 @@ const { slug, title, lang = 'en' } = Astro.props;
   <span class="bookmark-text">Save</span>
 </button>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const bookmarkBtns = document.querySelectorAll('.bookmark-btn');
+<script is:inline>
+  (function() {
+    // Check if Bookmarks API is available (browser extension context)
+    const hasBookmarksAPI = typeof chrome !== 'undefined' && chrome.bookmarks;
     
-    bookmarkBtns.forEach((btn) => {
-      const slug = btn.getAttribute('data-slug');
-      const title = btn.getAttribute('data-title');
-      const lang = btn.getAttribute('data-lang') || 'en';
+    function initBookmarks() {
+      const bookmarkBtns = document.querySelectorAll('.bookmark-btn');
       
-      if (!slug) return;
-
-      const storageKey = `bookmarks_${lang}`;
-      
-      // Check if already bookmarked
-      const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
-      const isBookmarked = bookmarks.some((b: any) => b.slug === slug);
-      
-      if (isBookmarked) {
-        btn.classList.add('bookmarked');
-        const textEl = btn.querySelector('.bookmark-text');
-        if (textEl) textEl.textContent = 'Saved';
-      }
-
-      btn.addEventListener('click', () => {
-        const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
-        const existingIndex = bookmarks.findIndex((b: any) => b.slug === slug);
+      bookmarkBtns.forEach((btn) => {
+        const slug = btn.getAttribute('data-slug');
+        const title = btn.getAttribute('data-title');
+        const lang = btn.getAttribute('data-lang') || 'en';
         
-        if (existingIndex !== -1) {
+        if (!slug) return;
+
+        const pageUrl = window.location.href;
+        const bookmarkTitle = title || document.title;
+        
+        // Check if already bookmarked
+        checkBookmarkStatus(btn, pageUrl, bookmarkTitle, slug, lang);
+        
+        btn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          if (hasBookmarksAPI) {
+            // Use browser Bookmarks API
+            await toggleBrowserBookmark(btn, pageUrl, bookmarkTitle, slug, lang);
+          } else {
+            // Fallback: Use browser's native bookmark dialog
+            await toggleNativeBookmark(btn, pageUrl, bookmarkTitle, slug, lang);
+          }
+        });
+      });
+    }
+    
+    async function checkBookmarkStatus(btn, url, title, slug, lang) {
+      if (hasBookmarksAPI) {
+        // Check browser bookmarks
+        try {
+          const results = await chrome.bookmarks.search({ url: url });
+          if (results.length > 0) {
+            btn.classList.add('bookmarked');
+            btn.dataset.bookmarkId = results[0].id;
+            const textEl = btn.querySelector('.bookmark-text');
+            if (textEl) textEl.textContent = 'Saved';
+          }
+        } catch (err) {
+          console.error('Error checking bookmark status:', err);
+        }
+      } else {
+        // Check localStorage fallback
+        const storageKey = `bookmarks_${lang}`;
+        const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        const isBookmarked = bookmarks.some((b) => b.slug === slug);
+        
+        if (isBookmarked) {
+          btn.classList.add('bookmarked');
+          const textEl = btn.querySelector('.bookmark-text');
+          if (textEl) textEl.textContent = 'Saved';
+        }
+      }
+    }
+    
+    async function toggleBrowserBookmark(btn, url, title, slug, lang) {
+      try {
+        const bookmarkId = btn.dataset.bookmarkId;
+        
+        if (bookmarkId) {
           // Remove bookmark
-          bookmarks.splice(existingIndex, 1);
+          await chrome.bookmarks.remove(bookmarkId);
           btn.classList.remove('bookmarked');
+          delete btn.dataset.bookmarkId;
           const textEl = btn.querySelector('.bookmark-text');
           if (textEl) textEl.textContent = 'Save';
           
-          // Dispatch event
-          window.dispatchEvent(new CustomEvent('bookmark:removed', { detail: { slug, title } }));
+          window.dispatchEvent(new CustomEvent('bookmark:removed', { detail: { slug, title, url } }));
         } else {
           // Add bookmark
-          bookmarks.unshift({
-            slug,
-            title,
-            savedAt: Date.now()
+          const bookmark = await chrome.bookmarks.create({
+            title: title,
+            url: url
           });
           btn.classList.add('bookmarked');
+          btn.dataset.bookmarkId = bookmark.id;
           const textEl = btn.querySelector('.bookmark-text');
           if (textEl) textEl.textContent = 'Saved';
           
@@ -77,14 +118,108 @@ const { slug, title, lang = 'en' } = Astro.props;
           btn.classList.add('animate');
           setTimeout(() => btn.classList.remove('animate'), 600);
           
-          // Dispatch event
-          window.dispatchEvent(new CustomEvent('bookmark:added', { detail: { slug, title } }));
+          window.dispatchEvent(new CustomEvent('bookmark:added', { detail: { slug, title, url } }));
         }
+      } catch (err) {
+        console.error('Error toggling browser bookmark:', err);
+        // Fallback to native bookmark
+        await toggleNativeBookmark(btn, url, title, slug, lang);
+      }
+    }
+    
+    async function toggleNativeBookmark(btn, url, title, slug, lang) {
+      // For regular websites, we can't programmatically add bookmarks
+      // So we'll use localStorage as fallback and show instructions
+      const storageKey = `bookmarks_${lang}`;
+      const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      const existingIndex = bookmarks.findIndex((b) => b.slug === slug);
+      
+      if (existingIndex !== -1) {
+        // Remove bookmark
+        bookmarks.splice(existingIndex, 1);
+        btn.classList.remove('bookmarked');
+        const textEl = btn.querySelector('.bookmark-text');
+        if (textEl) textEl.textContent = 'Save';
         
-        localStorage.setItem(storageKey, JSON.stringify(bookmarks));
-      });
-    });
-  });
+        window.dispatchEvent(new CustomEvent('bookmark:removed', { detail: { slug, title, url } }));
+      } else {
+        // Try to trigger browser bookmark dialog
+        // Note: Modern browsers don't allow this, so we'll use localStorage
+        // and optionally show a message
+        
+        // Add to localStorage
+        bookmarks.unshift({
+          slug,
+          title,
+          url,
+          savedAt: Date.now()
+        });
+        btn.classList.add('bookmarked');
+        const textEl = btn.querySelector('.bookmark-text');
+        if (textEl) textEl.textContent = 'Saved';
+        
+        // Animate
+        btn.classList.add('animate');
+        setTimeout(() => btn.classList.remove('animate'), 600);
+        
+        // Show helpful message for browser bookmarking
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        const shortcut = isMac ? 'Cmd+D' : 'Ctrl+D';
+        
+        // Optional: Show a toast notification
+        showBookmarkHint(shortcut);
+        
+        window.dispatchEvent(new CustomEvent('bookmark:added', { detail: { slug, title, url } }));
+      }
+      
+      localStorage.setItem(storageKey, JSON.stringify(bookmarks));
+    }
+    
+    function showBookmarkHint(shortcut) {
+      // Create a temporary hint message
+      const hint = document.createElement('div');
+      hint.className = 'bookmark-hint';
+      hint.textContent = `Press ${shortcut} to bookmark in your browser`;
+      hint.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(26, 54, 93, 0.95);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        font-size: 0.9rem;
+        animation: fadeInOut 3s ease;
+        pointer-events: none;
+      `;
+      
+      // Add animation if not exists
+      if (!document.getElementById('bookmark-hint-styles')) {
+        const style = document.createElement('style');
+        style.id = 'bookmark-hint-styles';
+        style.textContent = `
+          @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(10px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      
+      document.body.appendChild(hint);
+      setTimeout(() => hint.remove(), 3000);
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBookmarks);
+    } else {
+      initBookmarks();
+    }
+  })();
 </script>
 
 <style>
@@ -101,6 +236,9 @@ const { slug, title, lang = 'en' } = Astro.props;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
   }
 
   .bookmark-btn:hover {

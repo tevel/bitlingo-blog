@@ -59,11 +59,12 @@ const label = labels[lang] || labels.en;
   </div>
 </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const containers = document.querySelectorAll('.reactions');
-    
-    containers.forEach((container) => {
+<script is:inline>
+  (function() {
+    function initReactions() {
+      const containers = document.querySelectorAll('.reactions');
+      
+      containers.forEach((container) => {
       const slug = container.getAttribute('data-slug');
       if (!slug) return;
       
@@ -157,7 +158,14 @@ const label = labels[lang] || labels.en;
       // Initial display
       updateDisplay();
     });
-  });
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initReactions);
+    } else {
+      initReactions();
+    }
+  })();
 </script>
 
 <style>
@@ -172,7 +180,7 @@ const label = labels[lang] || labels.en;
     border-radius: var(--radius-lg);
     margin: 2rem 0;
     position: relative;
-    z-index: 1;
+    z-index: 10;
     pointer-events: auto;
   }
 

@@ -1,5 +1,46 @@
 ---
-import { DEFAULT_LANG } from '../consts';
+import { DEFAULT_LANG, SUPPORTED_LANGS, BLOG_VERSION } from '../consts';
+import { LANGUAGE_DATA } from '../data/vocabulary';
+
+interface Props {
+	lang?: string;
+}
+
+const { lang } = Astro.props;
+const currentLang = lang || DEFAULT_LANG;
+
+// Get current path to determine what page we're on
+const currentPath = Astro.url.pathname;
+const pathParts = currentPath.split('/').filter(Boolean);
+
+// Determine the base path for language switching
+// If we're on a blog page, preserve the slug; otherwise just switch to blog home
+let slug = '';
+if (pathParts[0] === 'blog' && pathParts.length > 2) {
+	// Extract slug after language (e.g., /blog/en/games -> games)
+	slug = pathParts.slice(2).join('/');
+}
+
+// Language names mapping
+const langNames: Record<string, string> = {
+	'en': 'English',
+	'es': 'Español',
+	'fr': 'Français',
+	'de': 'Deutsch',
+	'it': 'Italiano',
+	'pt': 'Português',
+	'ru': 'Русский',
+	'zh': '中文',
+	'ja': '日本語',
+	'ko': '한국어',
+	'ar': 'العربية',
+	'hi': 'हिन्दी',
+	'tr': 'Türkçe',
+	'pl': 'Polski',
+	'uk': 'Українська',
+	'he': 'עברית',
+};
+
 const today = new Date();
 ---
 
@@ -40,6 +81,22 @@ const today = new Date();
 				<a href={`/blog/${DEFAULT_LANG}/offline-practice-guide/`}>Offline Guide</a>
 			</div>
 			<div class="footer-section">
+				<h4>Languages</h4>
+				{SUPPORTED_LANGS.map((langCode) => {
+					const href = slug ? `/blog/${langCode}/${slug}` : `/blog/${langCode}`;
+					const isActive = langCode === currentLang;
+					return (
+						<a 
+							href={href} 
+							class={isActive ? 'lang-link active' : 'lang-link'}
+							aria-current={isActive ? 'page' : undefined}
+						>
+							{langNames[langCode] || langCode.toUpperCase()}
+						</a>
+					);
+				})}
+			</div>
+			<div class="footer-section">
 				<h4>Connect</h4>
 				<a href="/rss.xml">RSS Feed</a>
 			</div>
@@ -54,6 +111,7 @@ const today = new Date();
 			<span class="badge">🆓 Free</span>
 		</div>
 		<p class="copyright">&copy; {today.getFullYear()} BitLingo. Learn languages while you live your life.</p>
+		<p class="version">Version {BLOG_VERSION}</p>
 	</div>
 	
 	<div class="footer-glow"></div>
@@ -156,6 +214,22 @@ const today = new Date();
 		padding-left: 0.25rem;
 	}
 	
+	.lang-link {
+		position: relative;
+	}
+	
+	.lang-link.active {
+		color: #f5a623;
+		font-weight: 600;
+	}
+	
+	.lang-link.active::before {
+		content: '✓';
+		display: inline-block;
+		margin-right: 0.25rem;
+		color: #f5a623;
+	}
+	
 	/* Bottom section */
 	.footer-bottom {
 		display: flex;
@@ -194,6 +268,15 @@ const today = new Date();
 		font-size: 0.85rem;
 		margin: 0;
 		text-align: center;
+	}
+
+	.version {
+		color: var(--text-muted);
+		font-size: 0.75rem;
+		margin: 0;
+		text-align: center;
+		opacity: 0.6;
+		font-family: 'Courier New', monospace;
 	}
 	
 	/* Decorative glow */

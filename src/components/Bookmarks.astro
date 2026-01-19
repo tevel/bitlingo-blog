@@ -24,15 +24,41 @@ const { lang = 'en' } = Astro.props;
 </div>
 
 <script define:vars={{ lang }}>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     const container = document.getElementById('bookmarks-widget');
     const list = document.getElementById('bookmarks-list');
     const emptyMsg = document.getElementById('bookmarks-empty');
     if (!container || !list || !emptyMsg) return;
 
-    function renderBookmarks() {
-      const storageKey = `bookmarks_${lang}`;
-      const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    // Check if Bookmarks API is available (browser extension context)
+    const hasBookmarksAPI = typeof chrome !== 'undefined' && chrome.bookmarks;
+
+    async function renderBookmarks() {
+      let bookmarks = [];
+      
+      if (hasBookmarksAPI) {
+        // Get bookmarks from browser Bookmarks API
+        try {
+          const allBookmarks = await chrome.bookmarks.getTree();
+          const flatBookmarks = flattenBookmarks(allBookmarks);
+          // Filter to only BitLingo blog bookmarks
+          bookmarks = flatBookmarks.filter(b => 
+            b.url && (b.url.includes('bitlingo') || b.url.includes('/blog/'))
+          ).map(b => ({
+            id: b.id,
+            title: b.title,
+            url: b.url,
+            dateAdded: b.dateAdded
+          }));
+        } catch (err) {
+          console.error('Error fetching browser bookmarks:', err);
+          // Fallback to localStorage
+          bookmarks = getLocalStorageBookmarks();
+        }
+      } else {
+        // Use localStorage fallback
+        bookmarks = getLocalStorageBookmarks();
+      }
 
       if (bookmarks.length === 0) {
         container.hidden = false;
@@ -45,55 +71,111 @@ const { lang = 'en' } = Astro.props;
       list.hidden = false;
       emptyMsg.hidden = true;
 
-      list.innerHTML = bookmarks.map((bookmark) => `
-        <li class="bookmark-item">
-          <a href="/blog/${lang}/${bookmark.slug}/" class="bookmark-link">
-            <span class="bookmark-title">${bookmark.title}</span>
-            <span class="bookmark-date">${formatDate(bookmark.savedAt)}</span>
-          </a>
-          <button class="remove-btn" data-slug="${bookmark.slug}" aria-label="Remove bookmark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
-        </li>
-      `).join('');
+      list.innerHTML = bookmarks.map((bookmark) => {
+        const bookmarkId = bookmark.id || bookmark.slug;
+        const bookmarkUrl = bookmark.url || `/blog/${lang}/${bookmark.slug}/`;
+        const bookmarkTitle = bookmark.title;
+        const bookmarkDate = bookmark.dateAdded || bookmark.savedAt;
+        
+        return `
+          <li class="bookmark-item">
+            <a href="${bookmarkUrl}" class="bookmark-link" target="_blank" rel="noopener">
+              <span class="bookmark-title">${bookmarkTitle}</span>
+              <span class="bookmark-date">${formatDate(bookmarkDate)}</span>
+            </a>
+            <button class="remove-btn" data-bookmark-id="${bookmarkId}" data-slug="${bookmark.slug || ''}" aria-label="Remove bookmark">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </li>
+        `;
+      }).join('');
 
       // Add remove handlers
       list.querySelectorAll('.remove-btn').forEach((btn) => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', async (e) => {
           e.preventDefault();
+          const bookmarkId = btn.getAttribute('data-bookmark-id');
           const slug = btn.getAttribute('data-slug');
-          if (!slug) return;
-
-          const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
-          const filtered = bookmarks.filter((b) => b.slug !== slug);
-          localStorage.setItem(storageKey, JSON.stringify(filtered));
           
-          renderBookmarks();
-          
-          // Update any bookmark buttons on the page
-          const bookmarkBtn = document.querySelector(`.bookmark-btn[data-slug="${slug}"]`);
-          if (bookmarkBtn) {
-            bookmarkBtn.classList.remove('bookmarked');
-            const textEl = bookmarkBtn.querySelector('.bookmark-text');
-            if (textEl) textEl.textContent = 'Save';
+          if (hasBookmarksAPI && bookmarkId) {
+            // Remove from browser bookmarks
+            try {
+              await chrome.bookmarks.remove(bookmarkId);
+              renderBookmarks();
+              
+              // Update any bookmark buttons on the page
+              const bookmarkBtn = document.querySelector(`.bookmark-btn[data-bookmark-id="${bookmarkId}"]`);
+              if (bookmarkBtn) {
+                bookmarkBtn.classList.remove('bookmarked');
+                delete bookmarkBtn.dataset.bookmarkId;
+                const textEl = bookmarkBtn.querySelector('.bookmark-text');
+                if (textEl) textEl.textContent = 'Save';
+              }
+            } catch (err) {
+              console.error('Error removing browser bookmark:', err);
+            }
+          } else if (slug) {
+            // Remove from localStorage
+            const storageKey = `bookmarks_${lang}`;
+            const bookmarks = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            const filtered = bookmarks.filter((b) => b.slug !== slug);
+            localStorage.setItem(storageKey, JSON.stringify(filtered));
+            
+            renderBookmarks();
+            
+            // Update any bookmark buttons on the page
+            const bookmarkBtn = document.querySelector(`.bookmark-btn[data-slug="${slug}"]`);
+            if (bookmarkBtn) {
+              bookmarkBtn.classList.remove('bookmarked');
+              const textEl = bookmarkBtn.querySelector('.bookmark-text');
+              if (textEl) textEl.textContent = 'Save';
+            }
           }
         });
       });
     }
 
+    function getLocalStorageBookmarks() {
+      const storageKey = `bookmarks_${lang}`;
+      return JSON.parse(localStorage.getItem(storageKey) || '[]');
+    }
+
+    function flattenBookmarks(bookmarkTree) {
+      let result = [];
+      function traverse(nodes) {
+        nodes.forEach(node => {
+          if (node.url) {
+            result.push(node);
+          }
+          if (node.children) {
+            traverse(node.children);
+          }
+        });
+      }
+      traverse(bookmarkTree);
+      return result;
+    }
+
     function formatDate(timestamp) {
+      if (!timestamp) return '';
       const date = new Date(timestamp);
       return date.toLocaleDateString(lang, { month: 'short', day: 'numeric' });
     }
 
-    renderBookmarks();
+    await renderBookmarks();
 
     // Listen for bookmark changes
     window.addEventListener('bookmark:added', renderBookmarks);
     window.addEventListener('bookmark:removed', renderBookmarks);
+    
+    // Listen for browser bookmark changes (if API available)
+    if (hasBookmarksAPI) {
+      chrome.bookmarks.onCreated.addListener(renderBookmarks);
+      chrome.bookmarks.onRemoved.addListener(renderBookmarks);
+    }
   });
 </script>
 
