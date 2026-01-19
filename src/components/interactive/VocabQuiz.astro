@@ -163,7 +163,13 @@ const words = targetData.words;
         elements.progressFill.style.width = `${((currentQuestion) / questionCount) * 100}%`;
         elements.questionWord.textContent = word.word;
         elements.questionPron.textContent = word.pronunciation || '';
+        
+        // Reset feedback state
         elements.feedback.hidden = true;
+        elements.feedback.classList.remove('correct', 'incorrect');
+        elements.feedbackIcon.textContent = '';
+        elements.feedbackText.textContent = '';
+        
         elements.btnNext.hidden = true;
 
         elements.optionsGrid.innerHTML = options.map(opt => `

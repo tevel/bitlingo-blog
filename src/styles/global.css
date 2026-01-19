@@ -112,6 +112,8 @@
 
 html {
 	scroll-behavior: smooth;
+	overflow-x: hidden;
+	max-width: 100%;
 }
 
 body {
@@ -125,6 +127,13 @@ body {
 	line-height: 1.7;
 	min-height: 100vh;
 	overflow-x: hidden;
+	max-width: 100%;
+	position: relative;
+}
+
+* {
+	box-sizing: border-box;
+	max-width: 100%;
 }
 
 /* Animated background pattern */
@@ -148,6 +157,8 @@ main {
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 2rem 1.5rem 4rem;
+	overflow-x: hidden;
+	box-sizing: border-box;
 }
 
 /* Typography */

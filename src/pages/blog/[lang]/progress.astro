@@ -1,0 +1,510 @@
+---
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { LEVELS, XP_REWARDS } from '../../../utils/gamification';
+import { SUPPORTED_LANGS, DEFAULT_LANG, SITE_TITLE } from '../../../consts';
+
+export function getStaticPaths() {
+	return SUPPORTED_LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+if (!SUPPORTED_LANGS.includes(lang)) {
+	return Astro.redirect(`/blog/${DEFAULT_LANG}/progress`, 308);
+}
+
+const pageTitle = `Progress & Levels | ${SITE_TITLE}`;
+const pageDescription = 'Learn how to level up and earn XP in BitLingo. Discover all levels, XP rewards, and tips to maximize your language learning progress.';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <BaseHead 
+      title={pageTitle} 
+      description={pageDescription}
+      keywords={['progress', 'levels', 'XP', 'gamification', 'language learning', 'BitLingo']}
+    />
+  </head>
+  <body>
+    <Header />
+    
+    <main class="progress-page">
+      <article class="progress-article">
+        <header class="article-header">
+          <h1>Progress & Levels</h1>
+          <p class="article-subtitle">Learn how to level up and maximize your language learning progress</p>
+        </header>
+
+        <div class="article-content">
+          <!-- How to Earn XP -->
+          <section class="xp-guide">
+            <h2>How to Earn XP</h2>
+            <p>Earn Experience Points (XP) by engaging with BitLingo content. Here's how you can gain XP:</p>
+            
+            <div class="xp-rewards-list">
+              <a href={`/blog/${lang}`} class="xp-reward-item">
+                <span class="xp-icon">📖</span>
+                <div class="xp-reward-content">
+                  <strong>Read Articles</strong>
+                  <span class="xp-amount">+{XP_REWARDS.ARTICLE_READ} XP per article</span>
+                  <p>Read blog posts and language learning articles to gain knowledge and XP.</p>
+                </div>
+              </a>
+              
+              <a href={`/blog/${lang}/games`} class="xp-reward-item">
+                <span class="xp-icon">🎯</span>
+                <div class="xp-reward-content">
+                  <strong>Complete Quizzes</strong>
+                  <span class="xp-amount">+{XP_REWARDS.QUIZ_COMPLETE} XP per quiz</span>
+                  <p>Test your knowledge with interactive vocabulary quizzes.</p>
+                </div>
+              </a>
+              
+              <a href={`/blog/${lang}/games`} class="xp-reward-item">
+                <span class="xp-icon">🎮</span>
+                <div class="xp-reward-content">
+                  <strong>Play Games</strong>
+                  <span class="xp-amount">+{XP_REWARDS.GAME_COMPLETE} XP per game</span>
+                  <p>Have fun while learning with flashcards, matching games, and memory challenges.</p>
+                </div>
+              </a>
+              
+              <div class="xp-reward-item">
+                <span class="xp-icon">🔥</span>
+                <div class="xp-reward-content">
+                  <strong>Daily Visit</strong>
+                  <span class="xp-amount">+{XP_REWARDS.DAILY_VISIT} XP + streak bonus</span>
+                  <p>Visit BitLingo daily to maintain your streak and earn bonus XP. Each consecutive day adds +{XP_REWARDS.STREAK_BONUS} XP to your daily reward!</p>
+                </div>
+              </div>
+              
+              <div class="xp-reward-item">
+                <span class="xp-icon">🚀</span>
+                <div class="xp-reward-content">
+                  <strong>First Visit</strong>
+                  <span class="xp-amount">+{XP_REWARDS.FIRST_VISIT} XP bonus</span>
+                  <p>Get a head start with a welcome bonus on your first visit!</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- All Levels -->
+          <section class="levels-section">
+            <h2>All Levels</h2>
+            <p>Progress through 10 levels as you earn XP. Each level unlocks new achievements and brings you closer to becoming a language master!</p>
+            
+            <div class="levels-grid">
+              {LEVELS.map((level) => (
+                <div class="level-card">
+                  <div class="level-header">
+                    <span class="level-number">Level {level.level}</span>
+                    <span class="level-title">{level.title}</span>
+                  </div>
+                  <div class="level-xp">
+                    {level.level === 1 ? (
+                      <span>Starting Level</span>
+                    ) : (
+                      <span>{level.xp} XP Required</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <!-- Tips Section -->
+          <section class="tips-section">
+            <h2>Tips to Level Up Faster</h2>
+            <ul class="tips-list">
+              <li><strong>Visit daily:</strong> Maintain your streak to earn bonus XP every day</li>
+              <li><strong>Read articles:</strong> Learn new vocabulary and grammar while earning XP</li>
+              <li><strong>Complete quizzes:</strong> Test your knowledge and earn the highest XP rewards</li>
+              <li><strong>Play games:</strong> Make learning fun while accumulating XP</li>
+              <li><strong>Set goals:</strong> Aim for specific levels to stay motivated</li>
+            </ul>
+          </section>
+        </div>
+      </article>
+    </main>
+
+    <Footer lang={lang} />
+  </body>
+</html>
+
+<style>
+  .progress-page {
+    min-height: 100vh;
+    background: var(--gradient-bg);
+    padding: 3rem 1rem;
+    position: relative;
+  }
+
+  .progress-article {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--gradient-card), var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 3rem;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-subtle);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .article-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 2px solid var(--border-subtle);
+    position: relative;
+  }
+
+  .article-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: var(--gradient-primary);
+  }
+
+  .article-header h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin-bottom: 1rem;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .article-subtitle {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .article-content {
+    line-height: 1.8;
+  }
+
+  .article-content > section {
+    margin-bottom: 4rem;
+  }
+
+  .article-content h2 {
+    font-size: clamp(1.8rem, 3vw, 2.25rem);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    position: relative;
+    padding-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  .article-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: 2px;
+  }
+
+  .article-content p {
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  /* XP Guide */
+  .xp-rewards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+  }
+
+  .xp-reward-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 2rem;
+    background: var(--gradient-card), var(--bg-primary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .xp-reward-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gradient-primary);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+  }
+
+  .xp-reward-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated), var(--glow-orange);
+    border-color: var(--border-accent);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .xp-reward-item:hover::before {
+    transform: scaleY(1);
+  }
+
+  .xp-icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 8px rgba(245, 166, 35, 0.3));
+    transition: transform 0.3s ease;
+  }
+
+  .xp-reward-item:hover .xp-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .xp-reward-content {
+    flex: 1;
+  }
+
+  .xp-reward-content strong {
+    display: block;
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+    font-weight: 700;
+  }
+
+  .xp-amount {
+    display: inline-flex;
+    align-items: center;
+    background: var(--gradient-primary);
+    color: #1a365d;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 2px 8px rgba(245, 166, 35, 0.3);
+  }
+
+  .xp-reward-content p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* Levels Section */
+  .levels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .level-card {
+    background: var(--gradient-card), var(--bg-primary);
+    border: 2px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .level-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .level-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-card), var(--glow-orange);
+  }
+
+  .level-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .level-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .level-number {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .level-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.01em;
+  }
+
+  .level-xp {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    display: inline-block;
+  }
+
+  /* Tips Section */
+  .tips-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 2rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .tips-list li {
+    padding: 1.5rem;
+    background: var(--gradient-card), var(--bg-primary);
+    border-left: 4px solid var(--accent-primary);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tips-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--gradient-primary);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+  }
+
+  .tips-list li:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-card);
+  }
+
+  .tips-list li:hover::before {
+    transform: scaleY(1);
+  }
+
+  .tips-list li strong {
+    color: var(--text-primary);
+    font-weight: 700;
+    display: inline-block;
+    margin-right: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .progress-page {
+      padding: 2rem 0.75rem;
+    }
+
+    .progress-article {
+      padding: 2rem 1.5rem;
+      border-radius: var(--radius-md);
+    }
+
+    .article-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+    }
+
+    .article-content > section {
+      margin-bottom: 3rem;
+    }
+
+    .xp-reward-item {
+      flex-direction: column;
+      text-align: center;
+      padding: 1.5rem;
+      gap: 1rem;
+    }
+
+    .xp-icon {
+      font-size: 2.5rem;
+    }
+
+    .xp-reward-content strong {
+      font-size: 1.2rem;
+    }
+
+    .levels-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+
+    .level-card {
+      padding: 1.5rem 1rem;
+    }
+
+    .level-title {
+      font-size: 1.4rem;
+    }
+
+    .tips-list li {
+      padding: 1.25rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .progress-page {
+      padding: 1.5rem 0.5rem;
+    }
+
+    .progress-article {
+      padding: 1.5rem 1rem;
+    }
+
+    .levels-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

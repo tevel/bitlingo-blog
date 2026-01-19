@@ -5,14 +5,18 @@
  * Appears in header or sidebar
  */
 
+import { DEFAULT_LANG } from '../consts';
+
 interface Props {
   compact?: boolean;
+  lang?: string;
 }
 
-const { compact = false } = Astro.props;
+const { compact = false, lang = DEFAULT_LANG } = Astro.props;
+const progressPageUrl = `/blog/${lang}/progress`;
 ---
 
-<div class={`progress-widget ${compact ? 'compact' : ''}`} id="progress-widget">
+<a href={progressPageUrl} class={`progress-widget ${compact ? 'compact' : ''}`} id="progress-widget">
   <div class="progress-content">
     <!-- Streak -->
     <div class="stat streak-stat">
@@ -60,7 +64,7 @@ const { compact = false } = Astro.props;
   <div class="xp-notification" id="xp-notification" hidden>
     <span class="xp-gain">+0 XP</span>
   </div>
-</div>
+</a>
 
 <!-- Badges Modal -->
 <div class="badges-modal" id="badges-modal" hidden>
@@ -89,13 +93,62 @@ const { compact = false } = Astro.props;
       </div>
     </div>
     <div class="badges-grid" id="badges-grid"></div>
+    
+    <!-- How to Make Progress Section -->
+    <div class="progress-guide">
+      <h4>📈 How to Make Progress</h4>
+      <div class="guide-list">
+        <div class="guide-item">
+          <span class="guide-icon">📖</span>
+          <div class="guide-content">
+            <strong>Read Articles</strong>
+            <span class="guide-xp">+10 XP per article</span>
+          </div>
+        </div>
+        <div class="guide-item">
+          <span class="guide-icon">🎯</span>
+          <div class="guide-content">
+            <strong>Complete Quizzes</strong>
+            <span class="guide-xp">+50 XP per quiz</span>
+          </div>
+        </div>
+        <div class="guide-item">
+          <span class="guide-icon">🎮</span>
+          <div class="guide-content">
+            <strong>Play Games</strong>
+            <span class="guide-xp">+30 XP per game</span>
+          </div>
+        </div>
+        <div class="guide-item">
+          <span class="guide-icon">🔥</span>
+          <div class="guide-content">
+            <strong>Daily Visit</strong>
+            <span class="guide-xp">+10 XP + streak bonus</span>
+          </div>
+        </div>
+        <div class="guide-item">
+          <span class="guide-icon">⭐</span>
+          <div class="guide-content">
+            <strong>Level Up</strong>
+            <span class="guide-xp">Earn XP to unlock new levels</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const widget = document.getElementById('progress-widget');
-    if (!widget) return;
+    if (!widget) {
+      console.warn('ProgressWidget: Widget element not found');
+      return;
+    }
+    
+    // Ensure widget is clickable
+    widget.style.cursor = 'pointer';
+    widget.style.pointerEvents = 'auto';
 
     // Initialize gamification if not loaded
     const initGamification = () => {
@@ -307,7 +360,25 @@ const { compact = false } = Astro.props;
       }
     };
     
-    expandBtn?.addEventListener('click', openModal);
+    // Widget is now a link - let it navigate naturally
+    // Only prevent navigation if clicking on badges-expand button (it opens modal)
+    const handleWidgetClick = (e) => {
+      const clickedExpandBtn = e.target.closest('.badges-expand');
+      if (clickedExpandBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        openModal();
+      }
+      // Otherwise, let the link navigate to the progress page
+    };
+    
+    widget.addEventListener('click', handleWidgetClick);
+    
+    expandBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openModal();
+    });
     closeBtn?.addEventListener('click', closeModal);
     backdrop?.addEventListener('click', closeModal);
     
@@ -353,18 +424,52 @@ const { compact = false } = Astro.props;
     border-radius: var(--radius-lg);
     font-size: 0.85rem;
     position: relative;
+    cursor: pointer !important;
+    transition: all 0.2s ease;
+    pointer-events: auto !important;
+    z-index: 10003 !important;
+    user-select: none;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .progress-widget:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(245, 166, 35, 0.3);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .progress-widget,
+  .progress-widget *,
+  .progress-widget .progress-content,
+  .progress-widget .stat,
+  .progress-widget .stat-icon,
+  .progress-widget .stat-info,
+  .progress-widget .stat-value,
+  .progress-widget .stat-label {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+  }
+
+  .progress-widget .badges-expand {
+    pointer-events: auto !important;
   }
 
   .progress-content {
     display: flex;
     align-items: center;
     gap: 1rem;
+    cursor: pointer !important;
+    pointer-events: auto !important;
   }
 
   .stat {
     display: flex;
     align-items: center;
     gap: 0.4rem;
+    cursor: pointer !important;
+    pointer-events: auto !important;
   }
 
   .stat-icon {
@@ -447,6 +552,9 @@ const { compact = false } = Astro.props;
     color: var(--text-muted);
     cursor: pointer;
     transition: color 0.2s;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 10;
   }
 
   .badges-expand:hover {
@@ -628,6 +736,62 @@ const { compact = false } = Astro.props;
     font-size: 0.7rem;
     color: var(--text-secondary);
     text-align: center;
+  }
+
+  /* Progress Guide Section */
+  .progress-guide {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .progress-guide h4 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+  }
+
+  .guide-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .guide-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+  }
+
+  .guide-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .guide-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .guide-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+  }
+
+  .guide-content strong {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+  }
+
+  .guide-xp {
+    font-size: 0.75rem;
+    color: var(--accent-primary);
+    font-weight: 600;
   }
 
   /* Compact mode */

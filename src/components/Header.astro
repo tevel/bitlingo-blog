@@ -54,6 +54,9 @@ import ProgressWidget from './ProgressWidget.astro';
 		-webkit-backdrop-filter: blur(20px);
 		border-bottom: 1px solid rgba(245, 166, 35, 0.2);
 		pointer-events: auto !important; /* Ensure header is clickable */
+		width: 100%;
+		max-width: 100%;
+		overflow-x: hidden;
 	}
 	
 	/* Ensure all header children are clickable */
@@ -71,7 +74,8 @@ import ProgressWidget from './ProgressWidget.astro';
 		gap: 2rem;
 		pointer-events: auto !important; /* Ensure nav is clickable */
 		position: relative;
-		overflow: visible;
+		overflow-x: hidden;
+		width: 100%;
 	}
 	
 	/* Ensure all nav links and buttons are clickable */
@@ -219,6 +223,12 @@ import ProgressWidget from './ProgressWidget.astro';
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
+		pointer-events: auto !important;
+	}
+	
+	.header-widgets * {
+		pointer-events: auto !important;
+		cursor: pointer !important;
 	}
 	
 	/* Mobile menu button */

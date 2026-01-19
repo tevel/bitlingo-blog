@@ -144,12 +144,10 @@ try {
 
     <!-- Arms -->
     <div class="robot-arm arm-left" id="arm-left">
-      <div class="arm-segment"></div>
-      <div class="arm-hand">✋</div>
+      <div class="arm-hand"></div>
     </div>
     <div class="robot-arm arm-right" id="arm-right">
-      <div class="arm-segment"></div>
-      <div class="arm-hand">👋</div>
+      <div class="arm-hand"></div>
     </div>
 
     <!-- Legs -->
@@ -1314,29 +1312,24 @@ try {
     flex-direction: column;
     align-items: center;
     transform-origin: top center;
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.3s ease;
   }
 
   .arm-left {
-    left: -20px;
+    left: 10px;
   }
 
   .arm-right {
-    right: -20px;
-  }
-
-  .arm-segment {
-    width: 6px;
-    height: 16px;
-    background: linear-gradient(180deg, #5a5a6e 0%, #3d3d4d 100%);
-    border: 1px solid #6b6b80;
-    border-radius: 3px;
+    right: 10px;
   }
 
   .arm-hand {
-    font-size: 14px;
-    margin-top: 2px;
+    width: 6px;
+    height: 20px;
+    background: linear-gradient(180deg, #5a5a6e 0%, #3d3d4d 100%);
+    border: 1px solid #6b6b80;
+    border-radius: 2px;
   }
 
   /* Robot Legs */
@@ -1567,9 +1560,13 @@ try {
     border-radius: 0 0 10px 10px;
   }
 
-  /* WAVE - Arm visible and waving */
+  /* WAVE - Both arms visible, right arm waving */
+  .bit-robot[data-mood="wave"] .arm-left,
   .bit-robot[data-mood="wave"] .arm-right {
     opacity: 1;
+  }
+  
+  .bit-robot[data-mood="wave"] .arm-right {
     animation: wave-arm 0.6s ease-in-out 3;
   }
 
