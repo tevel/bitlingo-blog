@@ -447,12 +447,12 @@ try {
           if (!localStorage.getItem('bit_introduced')) {
             this.setMood('wave');
             const introPhrase = this.getRandomPhraseFromAll();
-            this.showMessage(introPhrase, 'introduction');
+            this.showMessage(introPhrase, 'introduction', 4000, false); // No sound - automatic greeting
             localStorage.setItem('bit_introduced', 'true');
           } else {
             this.setMood('wave');
             const greeting = this.getRandomPhraseFromAll();
-            this.showMessage(greeting, 'greeting');
+            this.showMessage(greeting, 'greeting', 4000, false); // No sound - automatic greeting
           }
           this.resetSleepTimer();
           this.scheduleIdleActivity();
@@ -545,7 +545,7 @@ try {
       }
     }
 
-    showMessage(message, category = 'prompt', duration = 4000) {
+    showMessage(message, category = 'prompt', duration = 4000, playSound = false) {
       // Ensure elements exist
       if (!this.speech || !this.speechText) {
         console.error('Bit Robot: Speech bubble elements not found');
@@ -562,11 +562,14 @@ try {
       this.clearActivity();
       this.state.showingMessage = true;
 
-      // Play sound for category
-      try {
-        this.sounds.playForCategory(category);
-      } catch (e) {
-        console.warn('Bit Robot: Sound play failed', e);
+      // Only play sound if explicitly requested (e.g., on user click)
+      // Idle animations and automatic messages should be silent
+      if (playSound) {
+        try {
+          this.sounds.playForCategory(category);
+        } catch (e) {
+          console.warn('Bit Robot: Sound play failed', e);
+        }
       }
 
       // Set message text
@@ -651,7 +654,7 @@ try {
     // ============================================
     startMegaDance() {
       this.robot.classList.add('mega-dance');
-      this.sounds.playCelebration();
+      // No sound - this is an automatic animation, not user-initiated
       
       setTimeout(() => {
         this.robot.classList.remove('mega-dance');
@@ -674,18 +677,21 @@ try {
         return;
       }
       
-      // Play sound effect
-      try {
-        this.sounds.playBeep();
-      } catch (e) {
-        console.warn('Bit Robot: Sound play failed', e);
+      // Play sound effect only if sound effects are enabled in settings
+      // This is the ONLY place sounds should play - on user click
+      if (this.sounds.enabled) {
+        try {
+          this.sounds.playBeep();
+        } catch (e) {
+          console.warn('Bit Robot: Sound play failed', e);
+        }
       }
       
       // If sleeping, wake up first
       if (!this.state.isAwake) {
         this.setMood('happy');
         const wakePhrase = this.getRandomPhraseFromAll();
-        this.showMessage(wakePhrase, 'greeting', 5000);
+        this.showMessage(wakePhrase, 'greeting', 5000, true); // Play sound on click
         return;
       }
 
@@ -695,7 +701,7 @@ try {
       if (!randomPhrase) {
         console.error('Bit Robot: No phrase available');
         // Fallback message
-        this.showMessage("Hi! I'm Bit! 🤖", 'greeting', 5000);
+        this.showMessage("Hi! I'm Bit! 🤖", 'greeting', 5000, true); // Play sound on click
         return;
       }
       
@@ -705,7 +711,8 @@ try {
       this.setMood(randomMood);
       
       // Always show the new phrase (this will clear any existing message)
-      this.showMessage(randomPhrase, 'prompt', 5000);
+      // Pass playSound=true since this is triggered by user click
+      this.showMessage(randomPhrase, 'prompt', 5000, true);
     }
 
     getRandomPhraseFromAll() {
@@ -757,25 +764,25 @@ try {
 
       if (percentage === 100) {
         this.setMood('celebrating');
-        this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate');
+        this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate', 4000, false); // No sound - automatic
         this.showParticles();
         this.startMegaDance();
       } else if (percentage >= 80) {
         this.setMood('excited');
-        this.sounds.playExcited();
-        this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate');
+        // No sound - automatic event
+        this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate', 4000, false);
       } else if (percentage >= 50) {
         this.setMood('happy');
-        this.showMessage(this.getUniqueRandomPhrase('encourage'), 'encourage');
+        this.showMessage(this.getUniqueRandomPhrase('encourage'), 'encourage', 4000, false); // No sound - automatic
       } else {
         this.setMood('encouraging');
-        this.showMessage(this.getUniqueRandomPhrase('motivate'), 'motivate');
+        this.showMessage(this.getUniqueRandomPhrase('motivate'), 'motivate', 4000, false); // No sound - automatic
       }
     }
 
     handleAchievement(event) {
       this.setMood('celebrating');
-      this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate');
+      this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate', 4000, false); // No sound - automatic
       this.showParticles();
       this.startMegaDance();
     }
@@ -784,17 +791,17 @@ try {
       const { amount } = event.detail;
       if (amount >= 50) {
         this.setMood('excited');
-        this.sounds.playExcited();
-        this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate');
+        // No sound - automatic event
+        this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate', 4000, false);
       } else {
         this.setMood('happy');
-        this.showMessage(this.getUniqueRandomPhrase('encourage'), 'encourage');
+        this.showMessage(this.getUniqueRandomPhrase('encourage'), 'encourage', 4000, false); // No sound - automatic
       }
     }
 
     handleLevelUp(event) {
       this.setMood('celebrating');
-      this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate');
+      this.showMessage(this.getUniqueRandomPhrase('celebrate'), 'celebrate', 4000, false); // No sound - automatic
       this.showParticles();
       this.startMegaDance();
     }
@@ -812,7 +819,7 @@ try {
       // Fall asleep after 5 minutes of inactivity
       this.state.sleepTimer = setTimeout(() => {
         this.setMood('sleeping');
-        this.showMessage(this.getRandomMessage('sleeping'), 'idle');
+        this.showMessage(this.getRandomMessage('sleeping'), 'idle', 4000, false); // No sound - automatic idle
       }, 5 * 60 * 1000);
     }
 
@@ -820,9 +827,9 @@ try {
     trigger(mood, message) {
       this.setMood(mood);
       if (message) {
-        this.showMessage(message, mood);
+        this.showMessage(message, mood, 4000, false); // No sound - external trigger, not user click
       } else {
-        this.showMessage(this.getRandomMessage(mood), mood);
+        this.showMessage(this.getRandomMessage(mood), mood, 4000, false); // No sound - external trigger
       }
       if (mood === 'celebrating') {
         this.showParticles();

@@ -97,7 +97,7 @@ import ProgressWidget from './ProgressWidget.astro';
 	header {
 		position: sticky;
 		top: 0;
-		z-index: 1000; /* Increased to ensure header is above all other elements */
+		z-index: 10001; /* Higher than modal (10000) to ensure header is always clickable */
 		background: rgba(26, 54, 93, 0.95);
 		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
@@ -127,7 +127,7 @@ import ProgressWidget from './ProgressWidget.astro';
 		pointer-events: auto !important;
 		cursor: pointer;
 		position: relative;
-		z-index: 1001;
+		z-index: 10002; /* Higher than header to ensure clickability */
 	}
 	
 	/* Logo */

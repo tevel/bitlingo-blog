@@ -276,6 +276,20 @@ const { compact = false } = Astro.props;
     
     const openModal = () => {
       if (modal) {
+        // Calculate header height dynamically and adjust modal/backdrop to not cover header
+        const header = document.querySelector('header');
+        const backdrop = modal.querySelector('.modal-backdrop');
+        if (header) {
+          const headerHeight = header.offsetHeight;
+          // Adjust modal container to start below header
+          modal.style.top = `${headerHeight}px`;
+          modal.style.height = `calc(100% - ${headerHeight}px)`;
+          // Adjust backdrop to fill remaining space
+          if (backdrop) {
+            backdrop.style.top = '0';
+            backdrop.style.height = '100%';
+          }
+        }
         modal.hidden = false;
         setTimeout(() => modal.classList.add('open'), 10);
       }
@@ -284,7 +298,12 @@ const { compact = false } = Astro.props;
     const closeModal = () => {
       if (modal) {
         modal.classList.remove('open');
-        setTimeout(() => { modal.hidden = true; }, 300);
+        setTimeout(() => { 
+          modal.hidden = true;
+          // Reset modal position when closed
+          modal.style.top = '';
+          modal.style.height = '';
+        }, 300);
       }
     };
     
@@ -460,7 +479,10 @@ const { compact = false } = Astro.props;
   /* Modal */
   .badges-modal {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 10000;
     display: flex;
     align-items: center;
@@ -470,10 +492,15 @@ const { compact = false } = Astro.props;
 
   .modal-backdrop {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: rgba(0, 0, 0, 0.7);
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: auto;
+    /* Top position will be set dynamically via JavaScript to exclude header */
   }
 
   .badges-modal.open .modal-backdrop {
