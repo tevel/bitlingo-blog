@@ -85,38 +85,41 @@ const shareText = description ? `${title} - ${description}` : title;
 			aria-label="Copy link"
 			title="Copy link"
 		>
-			<svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-				<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+			<svg class="link-icon" viewBox="0 0 24 24" fill="currentColor">
+				<path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
 			</svg>
-			<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
-				<polyline points="20 6 9 17 4 12"/>
+			<svg class="check-icon" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+				<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
 			</svg>
 		</button>
 	</div>
 </div>
 
-<script>
-	document.querySelectorAll('.share-buttons-wrapper .copy-link').forEach((btn) => {
-		btn.addEventListener('click', async () => {
-			const url = btn.getAttribute('data-url');
-			if (url) {
-				await navigator.clipboard.writeText(url);
-				const linkIcon = btn.querySelector('.link-icon');
-				const checkIcon = btn.querySelector('.check-icon');
-				if (linkIcon && checkIcon) {
-					linkIcon.style.display = 'none';
-					checkIcon.style.display = 'block';
-					btn.classList.add('copied');
-					setTimeout(() => {
-						linkIcon.style.display = 'block';
-						checkIcon.style.display = 'none';
-						btn.classList.remove('copied');
-					}, 2000);
+<script is:inline>
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initCopyButtons);
+	} else {
+		initCopyButtons();
+	}
+	
+	function initCopyButtons() {
+		document.querySelectorAll('.share-buttons-wrapper .copy-link').forEach((btn) => {
+			btn.addEventListener('click', async () => {
+				const url = btn.getAttribute('data-url');
+				if (url) {
+					try {
+						await navigator.clipboard.writeText(url);
+						btn.classList.add('copied');
+						setTimeout(() => {
+							btn.classList.remove('copied');
+						}, 2000);
+					} catch (err) {
+						console.error('Failed to copy:', err);
+					}
 				}
-			}
+			});
 		});
-	});
+	}
 </script>
 
 <style>
@@ -170,6 +173,24 @@ const shareText = description ? `${title} - ${description}` : title;
 	.share-btn svg {
 		width: 18px;
 		height: 18px;
+		display: block;
+		flex-shrink: 0;
+	}
+	
+	.share-btn.copy-link .link-icon {
+		display: block;
+	}
+	
+	.share-btn.copy-link .check-icon {
+		display: none;
+	}
+	
+	.share-btn.copy-link.copied .link-icon {
+		display: none;
+	}
+	
+	.share-btn.copy-link.copied .check-icon {
+		display: block;
 	}
 	
 	/* Platform-specific hover colors */
