@@ -47,13 +47,16 @@ if (!post) {
 }
 
 if (!post) {
-	return new Response(null, { status: 404 });
+	return new Response(null, { 
+		status: 404,
+		statusText: 'Not Found'
+	});
 }
 
 const { Content, headings } = await render(post);
 const readingTime = calculateReadingTime(post.body || '');
 ---
 
-<BlogPost {...post.data} readingTime={readingTime} headings={headings} currentSlug={post.slug}>
+<BlogPost {...post.data} readingTime={readingTime} headings={headings} currentSlug={post.data.slug || post.id}>
 	<Content />
 </BlogPost>
