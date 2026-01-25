@@ -14,12 +14,14 @@ import VocabQuiz from '../components/interactive/VocabQuiz.astro';
 import DailyWord from '../components/interactive/DailyWord.astro';
 import TextToSpeech from '../components/TextToSpeech.astro';
 import BookmarkButton from '../components/BookmarkButton.astro';
+import ShareButtons from '../components/ShareButtons.astro';
 import Comments from '../components/Comments.astro';
 import Newsletter from '../components/Newsletter.astro';
 import MobileNav from '../components/MobileNav.astro';
 import PWAInstallPrompt from '../components/PWAInstallPrompt.astro';
 import PixelRobot from '../components/PixelRobot.astro';
 import { DEFAULT_LANG } from '../consts';
+import { getUITranslation } from '../data/vocabulary';
 
 type Props = CollectionEntry<'blog'>['data'] & { 
 	readingTime?: number;
@@ -137,6 +139,12 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 					<p class="article-description">{description}</p>
 					<div class="article-actions">
 						<BookmarkButton slug={currentSlug} title={title} lang={lang} />
+						<ShareButtons 
+							title={title}
+							description={description}
+							url={pageUrl.toString()}
+							showLabel={true}
+						/>
 					</div>
 				</header>
 
@@ -171,14 +179,14 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 				<section class="practice-section">
 					<div class="practice-header">
 						<span class="practice-icon">🎮</span>
-						<h3>Practice Your Vocabulary</h3>
-						<p>Test what you've learned with a quick quiz!</p>
+						<h3>{getUITranslation(lang, 'practice_vocabulary_title')}</h3>
+						<p>{getUITranslation(lang, 'practice_vocabulary_description')}</p>
 					</div>
 					<div class="practice-widgets">
 						<VocabQuiz targetLang={lang === 'en' ? 'es' : lang} questionCount={5} lang={lang} />
 					</div>
 					<a href={`/blog/${lang}/games`} class="more-games-link">
-						<span>Explore more games</span>
+						<span>{getUITranslation(lang, 'explore_more_games')}</span>
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 							<path d="M5 12h14"/>
 							<path d="M12 5l7 7-7 7"/>
@@ -203,42 +211,14 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 
 				<!-- Article Footer -->
 				<footer class="article-footer">
-					<div class="share-section">
-						<span class="share-label">Share this article</span>
-						<div class="share-buttons">
-							<a 
-								href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(pageUrl.toString())}`} 
-								target="_blank" 
-								rel="noopener noreferrer" 
-								class="share-btn"
-								aria-label="Share on Twitter"
-							>
-								<svg viewBox="0 0 24 24" fill="currentColor">
-									<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-								</svg>
-							</a>
-							<a 
-								href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(pageUrl.toString())}&title=${encodeURIComponent(title)}`} 
-								target="_blank" 
-								rel="noopener noreferrer" 
-								class="share-btn"
-								aria-label="Share on LinkedIn"
-							>
-								<svg viewBox="0 0 24 24" fill="currentColor">
-									<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-								</svg>
-							</a>
-							<button 
-								class="share-btn copy-link" 
-								data-url={pageUrl.toString()}
-								aria-label="Copy link"
-							>
-								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-									<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-								</svg>
-							</button>
-						</div>
+					<div class="article-footer-actions">
+						<BookmarkButton slug={currentSlug} title={title} lang={lang} />
+						<ShareButtons 
+							title={title}
+							description={description}
+							url={pageUrl.toString()}
+							showLabel={true}
+						/>
 					</div>
 					<a href={`/blog/${lang}`} class="back-to-blog">
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -572,54 +552,19 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 		gap: 2rem;
 	}
 
-	.share-section {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1rem;
-	}
-
-	.share-label {
-		font-size: 0.9rem;
-		color: var(--text-muted);
-		font-weight: 500;
-	}
-
-	.share-buttons {
-		display: flex;
-		gap: 0.75rem;
-	}
-
-	.share-btn {
+	.article-footer-actions {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 44px;
-		height: 44px;
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 12px;
-		color: var(--text-secondary);
-		cursor: pointer;
-		transition: all 0.3s ease;
+		gap: 1rem;
+		flex-wrap: wrap;
 		position: relative;
 		z-index: 10;
 		pointer-events: auto;
-	}
-
-	.share-btn:hover {
-		background: rgba(245, 166, 35, 0.2);
-		border-color: rgba(245, 166, 35, 0.3);
-		color: var(--accent-primary);
-		transform: translateY(-2px);
-	}
-
-	.share-btn svg {
-		width: 20px;
-		height: 20px;
-		min-width: 20px;
-		max-width: 20px;
-		flex-shrink: 0;
+		padding: 1rem;
+		background: rgba(255, 255, 255, 0.03);
+		border-radius: 16px;
+		border: 1px solid rgba(255, 255, 255, 0.06);
 	}
 
 	.back-to-blog {
@@ -754,9 +699,15 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 		z-index: 10;
 		pointer-events: auto;
 		display: flex;
+		align-items: center;
 		justify-content: center;
+		flex-wrap: wrap;
 		gap: 1rem;
 		margin-top: 1.5rem;
+		padding: 1rem;
+		background: rgba(255, 255, 255, 0.03);
+		border-radius: 16px;
+		border: 1px solid rgba(255, 255, 255, 0.06);
 	}
 
 	/* Responsive */
