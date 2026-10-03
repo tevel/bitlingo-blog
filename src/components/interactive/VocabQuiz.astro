@@ -250,10 +250,14 @@ const words = targetData.words;
           whatsappShare.href = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
         }
         if (copyBtn) {
+          // Ensure icons are visible/hidden initially
+          const copyIcon = copyBtn.querySelector('.copy-icon');
+          const checkIcon = copyBtn.querySelector('.check-icon');
+          if (copyIcon) copyIcon.style.display = 'block';
+          if (checkIcon) checkIcon.style.display = 'none';
+          
           copyBtn.onclick = async () => {
             await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-            const copyIcon = copyBtn.querySelector('.copy-icon');
-            const checkIcon = copyBtn.querySelector('.check-icon');
             if (copyIcon && checkIcon) {
               copyIcon.style.display = 'none';
               checkIcon.style.display = 'block';
@@ -665,6 +669,23 @@ const words = targetData.words;
   .share-btn-small svg {
     width: 18px;
     height: 18px;
+    display: block;
+  }
+
+  .share-btn-small .copy-icon {
+    display: block !important;
+  }
+
+  .share-btn-small .check-icon {
+    display: none !important;
+  }
+
+  .share-btn-small.copied .copy-icon {
+    display: none !important;
+  }
+
+  .share-btn-small.copied .check-icon {
+    display: block !important;
   }
 
   .share-btn-small.twitter-share:hover {

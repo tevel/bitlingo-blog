@@ -178,14 +178,17 @@ const words = targetData.words.slice(0, pairCount);
 
       function drawLine(wordItem, translationItem) {
         const container = elements.matchingContainer;
+        const linesContainer = game.querySelector('.match-lines');
         const containerRect = container.getBoundingClientRect();
+        const linesRect = linesContainer.getBoundingClientRect();
         const wordRect = wordItem.getBoundingClientRect();
         const transRect = translationItem.getBoundingClientRect();
         
-        const x1 = wordRect.right - containerRect.left;
-        const y1 = wordRect.top + wordRect.height / 2 - containerRect.top;
-        const x2 = transRect.left - containerRect.left;
-        const y2 = transRect.top + transRect.height / 2 - containerRect.top;
+        // Calculate coordinates relative to the lines container (where SVG is positioned)
+        const x1 = wordRect.right - linesRect.left;
+        const y1 = wordRect.top + wordRect.height / 2 - linesRect.top;
+        const x2 = transRect.left - linesRect.left;
+        const y2 = transRect.top + transRect.height / 2 - linesRect.top;
         
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', x1);
@@ -231,10 +234,14 @@ const words = targetData.words.slice(0, pairCount);
         if (facebookShare) facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
         if (whatsappShare) whatsappShare.href = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
         if (copyBtn) {
+          // Ensure icons are visible/hidden initially
+          const copyIcon = copyBtn.querySelector('.copy-icon');
+          const checkIcon = copyBtn.querySelector('.check-icon');
+          if (copyIcon) copyIcon.style.display = 'block';
+          if (checkIcon) checkIcon.style.display = 'none';
+          
           copyBtn.onclick = async () => {
             await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-            const copyIcon = copyBtn.querySelector('.copy-icon');
-            const checkIcon = copyBtn.querySelector('.check-icon');
             if (copyIcon && checkIcon) {
               copyIcon.style.display = 'none';
               checkIcon.style.display = 'block';
@@ -658,6 +665,23 @@ const words = targetData.words.slice(0, pairCount);
   .share-btn-small svg {
     width: 18px;
     height: 18px;
+    display: block;
+  }
+
+  .share-btn-small .copy-icon {
+    display: block !important;
+  }
+
+  .share-btn-small .check-icon {
+    display: none !important;
+  }
+
+  .share-btn-small.copied .copy-icon {
+    display: none !important;
+  }
+
+  .share-btn-small.copied .check-icon {
+    display: block !important;
   }
 
   .share-btn-small.twitter-share:hover { background: rgba(29, 161, 242, 0.2); color: #1da1f2; }

@@ -1,0 +1,154 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { DEFAULT_LANG, SUPPORTED_LANGS } from '../consts';
+import { UI_TRANSLATIONS } from '../data/vocabulary';
+
+// Detect language from URL
+const currentPath = Astro.url.pathname;
+const pathParts = currentPath.split('/').filter(Boolean);
+let detectedLang = DEFAULT_LANG;
+if (pathParts[0] === 'blog' && pathParts.length > 1 && SUPPORTED_LANGS.includes(pathParts[1])) {
+  detectedLang = pathParts[1];
+}
+const lang = detectedLang;
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <BaseHead 
+      title={`404 - Page Not Found | BitLingo Blog`}
+      description="The page you're looking for doesn't exist."
+      lang={lang}
+    />
+  </head>
+  <body>
+    <Header lang={lang} />
+    
+    <main class="error-page">
+      <div class="error-content">
+        <div class="error-icon">
+          <img src="/favicon.svg" alt="BitLingo" width="80" height="80" />
+        </div>
+        <h1>404</h1>
+        <h2>Page Not Found</h2>
+        <p>The page you're looking for doesn't exist or has been moved.</p>
+        <div class="error-actions">
+          <a href={`/blog/${lang}`} class="btn-primary">Go to Blog Home</a>
+          <a href="https://bitlingo.app" class="btn-secondary">Visit BitLingo App</a>
+        </div>
+      </div>
+    </main>
+
+    <Footer lang={lang} />
+  </body>
+</html>
+
+<style>
+  .error-page {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+  }
+
+  .error-content {
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .error-icon {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .error-icon img {
+    filter: drop-shadow(0 4px 12px rgba(245, 166, 35, 0.3));
+  }
+
+  .error-page h1 {
+    font-size: 6rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f5a623, #e09a00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .error-page h2 {
+    font-size: 2rem;
+    color: white;
+    margin: 1rem 0;
+  }
+
+  .error-page p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    display: inline-block;
+    padding: 0.875rem 1.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #f5a623, #e09a00);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 166, 35, 0.4);
+  }
+
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(245, 166, 35, 0.5);
+  }
+
+  @media (max-width: 768px) {
+    .error-page h1 {
+      font-size: 4rem;
+    }
+
+    .error-page h2 {
+      font-size: 1.5rem;
+    }
+
+    .error-actions {
+      flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      width: 100%;
+    }
+  }
+</style>

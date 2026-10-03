@@ -4,12 +4,14 @@
  * Displays a daily featured vocabulary word with pronunciation, definition, and example.
  */
 import { getTodaysWord, getLevelColor, getLevelDescription, type CEFRLevel } from '../data/wordOfTheDay';
+import { UI_TRANSLATIONS } from '../data/vocabulary';
 
 interface Props {
   lang?: string;
 }
 
 const { lang = 'es' } = Astro.props;
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
 
 const word = getTodaysWord(lang);
 const levelColor = word ? getLevelColor(word.level) : '#888';
@@ -23,7 +25,7 @@ const levelDesc = word ? getLevelDescription(word.level) : '';
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
         </svg>
-        <span>Word of the Day</span>
+        <span>{uiStrings.wotd_word_of_day}</span>
       </div>
       <span class="wotd-level" style={`background-color: ${levelColor}`}>
         {word.level} · {levelDesc}
@@ -62,7 +64,7 @@ const levelDesc = word ? getLevelDescription(word.level) : '';
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
         </svg>
-        <span>Save Word</span>
+        <span>{uiStrings.wotd_save_word}</span>
       </button>
       <button class="wotd-action-btn share-btn" id="wotd-share">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -72,13 +74,13 @@ const levelDesc = word ? getLevelDescription(word.level) : '';
           <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
           <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
         </svg>
-        <span>Share</span>
+        <span>{uiStrings.wotd_share}</span>
       </button>
     </div>
   </div>
 )}
 
-<script define:vars={{ word, lang }}>
+<script define:vars={{ word, lang, saveLabel: uiStrings.wotd_save_word, savedLabel: uiStrings.wotd_saved }}>
   document.addEventListener('DOMContentLoaded', () => {
     const speakBtn = document.getElementById('wotd-speak');
     const saveBtn = document.getElementById('wotd-save');
@@ -112,7 +114,7 @@ const levelDesc = word ? getLevelDescription(word.level) : '';
       if (isSaved) {
         saveBtn.classList.add('saved');
         const span = saveBtn.querySelector('span');
-        if (span) span.textContent = 'Saved!';
+        if (span) span.textContent = savedLabel;
       }
       
       saveBtn.addEventListener('click', () => {
@@ -124,7 +126,7 @@ const levelDesc = word ? getLevelDescription(word.level) : '';
           localStorage.setItem(`vocabulary_bank_${lang}`, JSON.stringify(savedWords));
           saveBtn.classList.add('saved');
           const span = saveBtn.querySelector('span');
-          if (span) span.textContent = 'Saved!';
+          if (span) span.textContent = savedLabel;
           
           // Award XP
           window.dispatchEvent(new CustomEvent('xp:gained', { detail: { amount: 5, reason: 'Saved word of the day' } }));
@@ -139,7 +141,7 @@ const levelDesc = word ? getLevelDescription(word.level) : '';
           localStorage.setItem(`vocabulary_bank_${lang}`, JSON.stringify(savedWords));
           saveBtn.classList.remove('saved');
           const span = saveBtn.querySelector('span');
-          if (span) span.textContent = 'Save Word';
+          if (span) span.textContent = saveLabel;
         }
       });
     }

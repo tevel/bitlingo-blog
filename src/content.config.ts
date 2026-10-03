@@ -23,6 +23,14 @@ const blog = defineCollection({
 			seoDescription: z.string().optional(),
 			keywords: z.array(z.string()).optional(),
 			ogImageAlt: z.string().optional(),
+			faq: z
+				.array(
+					z.object({
+						question: z.string(),
+						answer: z.string(),
+					}),
+				)
+				.optional(),
 		}),
 });
 

@@ -6,6 +6,7 @@
  */
 
 import { DEFAULT_LANG } from '../consts';
+import { UI_TRANSLATIONS } from '../data/vocabulary';
 
 interface Props {
   compact?: boolean;
@@ -14,6 +15,7 @@ interface Props {
 
 const { compact = false, lang = DEFAULT_LANG } = Astro.props;
 const progressPageUrl = `/blog/${lang}/progress`;
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
 ---
 
 <a href={progressPageUrl} class={`progress-widget ${compact ? 'compact' : ''}`} id="progress-widget">
@@ -23,7 +25,7 @@ const progressPageUrl = `/blog/${lang}/progress`;
       <span class="stat-icon">🔥</span>
       <div class="stat-info">
         <span class="stat-value" id="streak-value">0</span>
-        <span class="stat-label">day streak</span>
+        <span class="stat-label">{uiStrings.progress_day_streak}</span>
       </div>
     </div>
 
@@ -32,14 +34,14 @@ const progressPageUrl = `/blog/${lang}/progress`;
       <span class="stat-icon">⭐</span>
       <div class="stat-info">
         <span class="stat-value" id="level-value">1</span>
-        <span class="stat-label" id="level-title">Beginner</span>
+        <span class="stat-label" id="level-title">{uiStrings.progress_level_beginner}</span>
       </div>
     </div>
 
     <!-- XP Progress Bar -->
     <div class="xp-bar-container">
       <div class="xp-info">
-        <span id="xp-current">0</span> XP
+        <span id="xp-current">0</span> {uiStrings.progress_xp}
         <span class="xp-next">/ <span id="xp-next">100</span></span>
       </div>
       <div class="xp-bar">
@@ -50,7 +52,7 @@ const progressPageUrl = `/blog/${lang}/progress`;
     <!-- Badges Preview -->
     <div class="badges-preview" id="badges-preview">
       <div class="badges-list"></div>
-      <button class="badges-expand" id="badges-expand" aria-label="View all badges">
+      <button class="badges-expand" id="badges-expand" aria-label={uiStrings.progress_view_all_badges}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
           <path d="M12 16v-4"/>
@@ -62,7 +64,7 @@ const progressPageUrl = `/blog/${lang}/progress`;
   
   <!-- XP Gain Notification -->
   <div class="xp-notification" id="xp-notification" hidden>
-    <span class="xp-gain">+0 XP</span>
+    <span class="xp-gain">+0 {uiStrings.progress_xp}</span>
   </div>
 </a>
 
@@ -71,8 +73,8 @@ const progressPageUrl = `/blog/${lang}/progress`;
   <div class="modal-backdrop"></div>
   <div class="modal-content">
     <div class="modal-header">
-      <h3>🏆 Your Achievements</h3>
-      <button class="modal-close" id="modal-close" aria-label="Close">
+      <h3>{uiStrings.progress_your_achievements}</h3>
+      <button class="modal-close" id="modal-close" aria-label={uiStrings.progress_close}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 6L6 18M6 6l12 12"/>
         </svg>
@@ -81,56 +83,56 @@ const progressPageUrl = `/blog/${lang}/progress`;
     <div class="modal-stats">
       <div class="modal-stat">
         <span class="modal-stat-value" id="modal-xp">0</span>
-        <span class="modal-stat-label">Total XP</span>
+        <span class="modal-stat-label">{uiStrings.progress_total_xp}</span>
       </div>
       <div class="modal-stat">
         <span class="modal-stat-value" id="modal-articles">0</span>
-        <span class="modal-stat-label">Articles Read</span>
+        <span class="modal-stat-label">{uiStrings.progress_articles_read}</span>
       </div>
       <div class="modal-stat">
         <span class="modal-stat-value" id="modal-games">0</span>
-        <span class="modal-stat-label">Games Played</span>
+        <span class="modal-stat-label">{uiStrings.progress_games_played}</span>
       </div>
     </div>
     <div class="badges-grid" id="badges-grid"></div>
     
     <!-- How to Make Progress Section -->
     <div class="progress-guide">
-      <h4>📈 How to Make Progress</h4>
+      <h4>{uiStrings.progress_how_to_make_progress}</h4>
       <div class="guide-list">
         <div class="guide-item">
           <span class="guide-icon">📖</span>
           <div class="guide-content">
-            <strong>Read Articles</strong>
-            <span class="guide-xp">+10 XP per article</span>
+            <strong>{uiStrings.progress_read_articles}</strong>
+            <span class="guide-xp">{uiStrings.progress_xp_per_article}</span>
           </div>
         </div>
         <div class="guide-item">
           <span class="guide-icon">🎯</span>
           <div class="guide-content">
-            <strong>Complete Quizzes</strong>
-            <span class="guide-xp">+50 XP per quiz</span>
+            <strong>{uiStrings.progress_complete_quizzes}</strong>
+            <span class="guide-xp">{uiStrings.progress_xp_per_quiz}</span>
           </div>
         </div>
         <div class="guide-item">
           <span class="guide-icon">🎮</span>
           <div class="guide-content">
-            <strong>Play Games</strong>
-            <span class="guide-xp">+30 XP per game</span>
+            <strong>{uiStrings.progress_play_games}</strong>
+            <span class="guide-xp">{uiStrings.progress_xp_per_game}</span>
           </div>
         </div>
         <div class="guide-item">
           <span class="guide-icon">🔥</span>
           <div class="guide-content">
-            <strong>Daily Visit</strong>
-            <span class="guide-xp">+10 XP + streak bonus</span>
+            <strong>{uiStrings.progress_daily_visit}</strong>
+            <span class="guide-xp">{uiStrings.progress_xp_daily_bonus}</span>
           </div>
         </div>
         <div class="guide-item">
           <span class="guide-icon">⭐</span>
           <div class="guide-content">
-            <strong>Level Up</strong>
-            <span class="guide-xp">Earn XP to unlock new levels</span>
+            <strong>{uiStrings.progress_level_up}</strong>
+            <span class="guide-xp">{uiStrings.progress_earn_xp_unlock}</span>
           </div>
         </div>
       </div>
@@ -138,7 +140,7 @@ const progressPageUrl = `/blog/${lang}/progress`;
   </div>
 </div>
 
-<script>
+<script define:vars={{ uiStrings }}>
   document.addEventListener('DOMContentLoaded', () => {
     const widget = document.getElementById('progress-widget');
     if (!widget) {
@@ -164,29 +166,29 @@ const progressPageUrl = `/blog/${lang}/progress`;
     };
 
     const LEVELS = [
-      { level: 1, xp: 0, title: 'Beginner' },
-      { level: 2, xp: 100, title: 'Learner' },
-      { level: 3, xp: 300, title: 'Explorer' },
-      { level: 4, xp: 600, title: 'Enthusiast' },
-      { level: 5, xp: 1000, title: 'Scholar' },
-      { level: 6, xp: 1500, title: 'Expert' },
-      { level: 7, xp: 2200, title: 'Master' },
-      { level: 8, xp: 3000, title: 'Champion' },
-      { level: 9, xp: 4000, title: 'Legend' },
-      { level: 10, xp: 5500, title: 'Polyglot' },
+      { level: 1, xp: 0, title: uiStrings.progress_level_beginner },
+      { level: 2, xp: 100, title: uiStrings.progress_level_learner },
+      { level: 3, xp: 300, title: uiStrings.progress_level_explorer },
+      { level: 4, xp: 600, title: uiStrings.progress_level_enthusiast },
+      { level: 5, xp: 1000, title: uiStrings.progress_level_scholar },
+      { level: 6, xp: 1500, title: uiStrings.progress_level_expert },
+      { level: 7, xp: 2200, title: uiStrings.progress_level_master },
+      { level: 8, xp: 3000, title: uiStrings.progress_level_champion },
+      { level: 9, xp: 4000, title: uiStrings.progress_level_legend },
+      { level: 10, xp: 5500, title: uiStrings.progress_level_polyglot },
     ];
 
     const BADGES = [
-      { id: 'first_steps', name: 'First Steps', icon: '🚀' },
-      { id: 'bookworm', name: 'Bookworm', icon: '📚' },
-      { id: 'quiz_master', name: 'Quiz Master', icon: '🎯' },
-      { id: 'game_lover', name: 'Game Lover', icon: '🎮' },
-      { id: 'streak_starter', name: 'Streak Starter', icon: '🔥' },
-      { id: 'week_warrior', name: 'Week Warrior', icon: '⚡' },
-      { id: 'dedicated_learner', name: 'Dedicated Learner', icon: '👑' },
-      { id: 'level_5', name: 'Rising Star', icon: '⭐' },
-      { id: 'level_10', name: 'Polyglot', icon: '🏆' },
-      { id: 'xp_1000', name: 'XP Hunter', icon: '💎' },
+      { id: 'first_steps', name: uiStrings.progress_badge_first_steps, icon: '🚀' },
+      { id: 'bookworm', name: uiStrings.progress_badge_bookworm, icon: '📚' },
+      { id: 'quiz_master', name: uiStrings.progress_badge_quiz_master, icon: '🎯' },
+      { id: 'game_lover', name: uiStrings.progress_badge_game_lover, icon: '🎮' },
+      { id: 'streak_starter', name: uiStrings.progress_badge_streak_starter, icon: '🔥' },
+      { id: 'week_warrior', name: uiStrings.progress_badge_week_warrior, icon: '⚡' },
+      { id: 'dedicated_learner', name: uiStrings.progress_badge_dedicated_learner, icon: '👑' },
+      { id: 'level_5', name: uiStrings.progress_badge_rising_star, icon: '⭐' },
+      { id: 'level_10', name: uiStrings.progress_badge_polyglot, icon: '🏆' },
+      { id: 'xp_1000', name: uiStrings.progress_badge_xp_hunter, icon: '💎' },
     ];
 
     // Update display
@@ -213,7 +215,7 @@ const progressPageUrl = `/blog/${lang}/progress`;
         const progressPercent = ((progress.xp - levelInfo.xp) / (nextLevel.xp - levelInfo.xp)) * 100;
         if (xpFillEl) xpFillEl.style.width = `${Math.min(100, progressPercent)}%`;
       } else {
-        if (xpNextEl) xpNextEl.textContent = 'MAX';
+        if (xpNextEl) xpNextEl.textContent = uiStrings.progress_max;
         if (xpFillEl) xpFillEl.style.width = '100%';
       }
       
@@ -254,7 +256,7 @@ const progressPageUrl = `/blog/${lang}/progress`;
       const notif = document.getElementById('xp-notification');
       const gainEl = notif?.querySelector('.xp-gain');
       if (notif && gainEl && xp > 0) {
-        gainEl.textContent = `+${xp} XP`;
+        gainEl.textContent = `+${xp} ${uiStrings.progress_xp}`;
         notif.hidden = false;
         notif.classList.add('show');
         setTimeout(() => {

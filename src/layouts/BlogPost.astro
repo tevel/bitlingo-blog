@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -40,12 +40,17 @@ const {
 	seoTitle,
 	seoDescription,
 	ogImageAlt,
+	path: articlePath,
+	faq = [],
 	readingTime,
 	headings = [],
 	currentSlug = '',
 } = Astro.props;
 const heroAlt = ogImageAlt || `${title} hero image`;
 const pageUrl = new URL(Astro.url, Astro.site);
+const siblingPosts = articlePath
+	? (await getCollection('blog')).filter((post) => post.data.path === articlePath)
+	: [];
 const imageUrl = heroImage ? new URL(heroImage.src, Astro.url) : null;
 const datePublished = pubDate.toISOString();
 const dateModified = (updatedDate ?? pubDate).toISOString();
@@ -64,6 +69,34 @@ const resolvedKeywords = [...keywords, title, 'BitLingo'].filter(Boolean);
 			keywords={resolvedKeywords}
 			ogImageAlt={heroAlt}
 		/>
+		{siblingPosts.map((alt) => (
+			<link
+				rel="alternate"
+				hreflang={alt.data.lang}
+				href={new URL(`/blog/${alt.data.lang}/${articlePath}/`, Astro.site)}
+			/>
+		))}
+		{siblingPosts.some((alt) => alt.data.lang === 'en') && articlePath && (
+			<link
+				rel="alternate"
+				hreflang="x-default"
+				href={new URL(`/blog/en/${articlePath}/`, Astro.site)}
+			/>
+		)}
+		{faq.length > 0 && (
+			<script type="application/ld+json" is:inline set:html={JSON.stringify({
+				'@context': 'https://schema.org',
+				'@type': 'FAQPage',
+				mainEntity: faq.map((item) => ({
+					'@type': 'Question',
+					name: item.question,
+					acceptedAnswer: {
+						'@type': 'Answer',
+						text: item.answer,
+					},
+				})),
+			})} />
+		)}
 		{imageUrl && (
 			<script type="application/ld+json">
 				{JSON.stringify({

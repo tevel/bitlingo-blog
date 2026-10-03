@@ -18,6 +18,7 @@ const languages: Record<string, LanguageInfo> = {
   fr: { code: 'fr', name: 'French', nativeName: 'Français', speakers: '300M+', greeting: 'Bonjour!', funFact: 'French is spoken on all 5 continents', flag: '🇫🇷' },
   de: { code: 'de', name: 'German', nativeName: 'Deutsch', speakers: '130M+', greeting: 'Hallo!', funFact: 'German has the longest published word at 63 letters', flag: '🇩🇪' },
   it: { code: 'it', name: 'Italian', nativeName: 'Italiano', speakers: '85M+', greeting: 'Ciao!', funFact: 'Italian is the language of music', flag: '🇮🇹' },
+  nl: { code: 'nl', name: 'Dutch', nativeName: 'Nederlands', speakers: '25M+', greeting: 'Hallo!', funFact: 'Dutch is spoken in the Netherlands and in Flanders', flag: '🇳🇱' },
   pt: { code: 'pt', name: 'Portuguese', nativeName: 'Português', speakers: '260M+', greeting: 'Olá!', funFact: 'Portuguese is the fastest growing European language', flag: '🇧🇷' },
   ru: { code: 'ru', name: 'Russian', nativeName: 'Русский', speakers: '255M+', greeting: 'Привет!', funFact: 'Russian has 6 grammatical cases', flag: '🇷🇺' },
   zh: { code: 'zh', name: 'Chinese', nativeName: '中文', speakers: '1.3B+', greeting: '你好!', funFact: 'Chinese has over 50,000 characters', flag: '🇨🇳' },
@@ -33,7 +34,7 @@ const languages: Record<string, LanguageInfo> = {
 
 // Group languages by region for the map
 const regions = {
-  europe: ['es', 'fr', 'de', 'it', 'pt', 'pl', 'uk'],
+  europe: ['es', 'fr', 'de', 'it', 'nl', 'pt', 'pl', 'uk'],
   eastAsia: ['zh', 'ja', 'ko'],
   middleEast: ['ar', 'he', 'tr'],
   southAsia: ['hi'],

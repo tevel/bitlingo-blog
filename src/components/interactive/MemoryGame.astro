@@ -224,10 +224,14 @@ const cards = words.flatMap(word => [
         if (facebookShare) facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
         if (whatsappShare) whatsappShare.href = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
         if (copyBtn) {
+          // Ensure icons are visible/hidden initially
+          const copyIcon = copyBtn.querySelector('.copy-icon');
+          const checkIcon = copyBtn.querySelector('.check-icon');
+          if (copyIcon) copyIcon.style.display = 'block';
+          if (checkIcon) checkIcon.style.display = 'none';
+          
           copyBtn.onclick = async () => {
             await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-            const copyIcon = copyBtn.querySelector('.copy-icon');
-            const checkIcon = copyBtn.querySelector('.check-icon');
             if (copyIcon && checkIcon) {
               copyIcon.style.display = 'none';
               checkIcon.style.display = 'block';
@@ -650,7 +654,28 @@ const cards = words.flatMap(word => [
     transform: translateY(-2px);
   }
 
-  .share-btn-small svg { width: 18px; height: 18px; }
+  .share-btn-small svg { 
+    width: 18px; 
+    height: 18px; 
+    display: block;
+  }
+
+  .share-btn-small .copy-icon {
+    display: block !important;
+  }
+
+  .share-btn-small .check-icon {
+    display: none !important;
+  }
+
+  .share-btn-small.copied .copy-icon {
+    display: none !important;
+  }
+
+  .share-btn-small.copied .check-icon {
+    display: block !important;
+  }
+
   .share-btn-small.twitter-share:hover { background: rgba(29, 161, 242, 0.2); color: #1da1f2; }
   .share-btn-small.facebook-share:hover { background: rgba(24, 119, 242, 0.2); color: #1877f2; }
   .share-btn-small.whatsapp-share:hover { background: rgba(37, 211, 102, 0.2); color: #25d366; }

@@ -5,6 +5,7 @@
  */
 import { getCollection } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
+import { UI_TRANSLATIONS } from '../data/vocabulary';
 
 interface Props {
   lang?: string;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const { lang = 'en', limit = 5 } = Astro.props;
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
 
 const allPosts = await getCollection('blog');
 const posts = allPosts
@@ -33,7 +35,7 @@ const getPathSlug = (post: (typeof posts)[number]) => {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
     </svg>
-    Popular Articles
+    {uiStrings.popular_articles}
   </h3>
   <ul class="posts-list">
     {posts.map((post, index) => (

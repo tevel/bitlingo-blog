@@ -10,6 +10,7 @@ export const SUPPORTED_LANGS = [
 	'fr',
 	'de',
 	'it',
+	'nl',
 	'pt',
 	'ru',
 	'zh',
@@ -25,4 +26,4 @@ export const SUPPORTED_LANGS = [
 export const DEFAULT_LANG = 'en';
 
 // Blog version - increment with each change
-export const BLOG_VERSION = '1.8.12';
+export const BLOG_VERSION = '1.8.34';

@@ -1,6 +1,7 @@
 ---
+import { getCollection } from 'astro:content';
 import { DEFAULT_LANG, SUPPORTED_LANGS, BLOG_VERSION } from '../consts';
-import { LANGUAGE_DATA } from '../data/vocabulary';
+import { LANGUAGE_DATA, UI_TRANSLATIONS } from '../data/vocabulary';
 
 interface Props {
 	lang?: string;
@@ -8,6 +9,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const currentLang = lang || DEFAULT_LANG;
+const uiStrings = UI_TRANSLATIONS[currentLang] || UI_TRANSLATIONS.en;
 
 // Get current path to determine what page we're on
 const currentPath = Astro.url.pathname;
@@ -21,6 +23,23 @@ if (pathParts[0] === 'blog' && pathParts.length > 2) {
 	slug = pathParts.slice(2).join('/');
 }
 
+const blogPosts = await getCollection('blog');
+const translatedLangsForSlug = new Set(
+	blogPosts
+		.filter((post) => post.data.path === slug)
+		.map((post) => post.data.lang),
+);
+const slugIsArticle = translatedLangsForSlug.size > 0;
+const pathsForCurrentLang = new Set(
+	blogPosts
+		.filter((post) => post.data.lang === currentLang && post.data.path)
+		.map((post) => post.data.path as string),
+);
+const guideHref = (articlePath: string) =>
+	pathsForCurrentLang.has(articlePath)
+		? `/blog/${currentLang}/${articlePath}/`
+		: `/blog/${DEFAULT_LANG}/${articlePath}/`;
+
 // Language names mapping
 const langNames: Record<string, string> = {
 	'en': 'English',
@@ -28,6 +47,7 @@ const langNames: Record<string, string> = {
 	'fr': 'Français',
 	'de': 'Deutsch',
 	'it': 'Italiano',
+	'nl': 'Nederlands',
 	'pt': 'Português',
 	'ru': 'Русский',
 	'zh': '中文',
@@ -51,26 +71,30 @@ const today = new Date();
 				<img src="/favicon.svg" alt="BitLingo" class="footer-logo-img" width="40" height="40" />
 				<span class="brand-text"><span class="title-bit">Bit</span><span class="title-lingo">Lingo</span></span>
 			</div>
-			<p class="footer-tagline">Audio-first vocabulary learning for busy people.</p>
+			<p class="footer-tagline">{uiStrings.footer_tagline}</p>
 		</div>
 		
 		<div class="footer-links">
 			<div class="footer-section">
-				<h4>Product</h4>
-				<a href="https://bitlingo.app" target="_blank" rel="noopener noreferrer">Open the App</a>
-				<a href={`/blog/${DEFAULT_LANG}`}>Blog</a>
-				<a href="/blog/about">About</a>
+				<h4>{uiStrings.footer_product}</h4>
+				<a href="https://bitlingo.app" target="_blank" rel="noopener noreferrer">{uiStrings.footer_open_app}</a>
+				<a href={`/blog/${currentLang}`}>{uiStrings.nav_blog}</a>
+				<a href="/blog/about">{uiStrings.footer_about}</a>
 			</div>
 			<div class="footer-section">
-				<h4>Resources</h4>
-				<a href={`/blog/${DEFAULT_LANG}/commute-hands-free/`}>Commute Guide</a>
-				<a href={`/blog/${DEFAULT_LANG}/habit-playbook-bitlingo/`}>Habit Playbook</a>
-				<a href={`/blog/${DEFAULT_LANG}/offline-practice-guide/`}>Offline Guide</a>
+				<h4>{uiStrings.footer_resources}</h4>
+				<a href={guideHref('commute-hands-free')}>{uiStrings.footer_commute_guide}</a>
+				<a href={guideHref('habit-playbook-bitlingo')}>{uiStrings.footer_habit_playbook}</a>
+				<a href={guideHref('offline-practice-guide')}>{uiStrings.footer_offline_guide}</a>
 			</div>
 			<div class="footer-section">
-				<h4>Languages</h4>
+				<h4>{uiStrings.footer_languages}</h4>
 				{SUPPORTED_LANGS.map((langCode) => {
-					const href = slug ? `/blog/${langCode}/${slug}` : `/blog/${langCode}`;
+					const href = !slug
+						? `/blog/${langCode}`
+						: slugIsArticle && !translatedLangsForSlug.has(langCode)
+							? `/blog/${langCode}`
+							: `/blog/${langCode}/${slug}`;
 					const isActive = langCode === currentLang;
 					return (
 						<a 
@@ -84,21 +108,21 @@ const today = new Date();
 				})}
 			</div>
 			<div class="footer-section">
-				<h4>Connect</h4>
-				<a href="/rss.xml">RSS Feed</a>
+				<h4>{uiStrings.footer_connect}</h4>
+				<a href="/rss.xml">{uiStrings.footer_rss_feed}</a>
 			</div>
 		</div>
 	</div>
 	
 	<div class="footer-bottom">
 		<div class="footer-badges">
-			<span class="badge">🎧 Audio-First</span>
-			<span class="badge">✋ Hands-Free</span>
-			<span class="badge">📴 Offline</span>
-			<span class="badge">🆓 Free</span>
+			<span class="badge">🎧 {uiStrings.footer_audio_first}</span>
+			<span class="badge">✋ {uiStrings.footer_hands_free}</span>
+			<span class="badge">📴 {uiStrings.footer_offline}</span>
+			<span class="badge">🆓 {uiStrings.footer_free}</span>
 		</div>
-		<p class="copyright">&copy; {today.getFullYear()} BitLingo. Learn languages while you live your life.</p>
-		<p class="version">Version {BLOG_VERSION}</p>
+		<p class="copyright">&copy; {today.getFullYear()} BitLingo. {uiStrings.footer_copyright}</p>
+		<p class="version">{uiStrings.footer_version} {BLOG_VERSION}</p>
 	</div>
 	
 	<div class="footer-glow"></div>

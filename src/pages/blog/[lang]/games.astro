@@ -12,7 +12,7 @@ import LanguagePoll from '../../../components/interactive/LanguagePoll.astro';
 import ShareButtons from '../../../components/ShareButtons.astro';
 import BookmarkButton from '../../../components/BookmarkButton.astro';
 import PixelRobot from '../../../components/PixelRobot.astro';
-import { LANGUAGE_DATA } from '../../../data/vocabulary';
+import { LANGUAGE_DATA, UI_TRANSLATIONS } from '../../../data/vocabulary';
 import { SITE_TITLE, SUPPORTED_LANGS, DEFAULT_LANG } from '../../../consts';
 
 export function getStaticPaths() {
@@ -24,8 +24,9 @@ if (!SUPPORTED_LANGS.includes(lang)) {
 	return Astro.redirect(`/blog/${DEFAULT_LANG}/games`, 308);
 }
 
-const pageTitle = `Interactive Games | ${SITE_TITLE}`;
-const pageDescription = 'Practice vocabulary with fun interactive games. Quiz yourself, flip flashcards, match words, and challenge your memory in 16+ languages!';
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
+const pageTitle = `${uiStrings.games_page_title} | ${SITE_TITLE}`;
+const pageDescription = uiStrings.games_page_description;
 
 // Available target languages
 const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
@@ -45,22 +46,21 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
     />
   </head>
   <body>
-    <Header />
+    <Header lang={lang} />
     
     <main class="games-page">
       <section class="hero">
         <div class="hero-content">
           <h1>
             <span class="hero-icon">🎮</span>
-            Interactive <span class="gradient-text">Language Games</span>
+            {uiStrings.games_hero_title} <span class="gradient-text">{uiStrings.games_hero_title_highlight}</span>
           </h1>
           <p class="hero-subtitle">
-            Practice vocabulary the fun way! Challenge yourself with quizzes, flashcards, 
-            memory games, and more in <strong>16+ languages</strong>.
+            {uiStrings.games_hero_subtitle} <strong>16+ languages</strong>.
           </p>
           
           <div class="language-picker">
-            <label for="global-lang">Choose a language to practice:</label>
+            <label for="global-lang">{uiStrings.games_choose_language}</label>
             <select id="global-lang" class="lang-select">
               {targetLanguages.map(targetLang => (
                 <option value={targetLang.code} selected={targetLang.code === 'es'}>
@@ -71,10 +71,10 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
           </div>
           
           <div class="hero-actions">
-            <BookmarkButton slug={`games`} title="Interactive Language Games" lang={lang} />
+            <BookmarkButton slug={`games`} title={uiStrings.games_page_title} lang={lang} />
             <ShareButtons 
-              title="Practice languages with fun interactive games on BitLingo!" 
-              description="Quiz yourself, flip flashcards, and challenge your memory in 16+ languages."
+              title={uiStrings.games_page_description}
+              description={uiStrings.games_page_description}
               showLabel={true}
             />
           </div>
@@ -86,11 +86,11 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
           <div class="section-header">
             <span class="section-number">01</span>
             <div>
-              <h2>Vocabulary Quiz</h2>
-              <p>Test your knowledge with multiple choice questions</p>
+              <h2>{uiStrings.games_vocab_quiz_title}</h2>
+              <p>{uiStrings.games_vocab_quiz_desc}</p>
             </div>
             <div class="section-actions">
-              <BookmarkButton slug="games#quiz-section" title="Vocabulary Quiz" lang={lang} />
+              <BookmarkButton slug="games#quiz-section" title={uiStrings.games_vocab_quiz_title} lang={lang} />
             </div>
           </div>
           <div class="game-container" data-game="quiz">
@@ -102,11 +102,11 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
           <div class="section-header">
             <span class="section-number">02</span>
             <div>
-              <h2>Flashcards</h2>
-              <p>Flip cards to reveal translations and pronunciations</p>
+              <h2>{uiStrings.games_flashcards_title}</h2>
+              <p>{uiStrings.games_flashcards_desc}</p>
             </div>
             <div class="section-actions">
-              <BookmarkButton slug="games#flashcard-section" title="Flashcards" lang={lang} />
+              <BookmarkButton slug="games#flashcard-section" title={uiStrings.games_flashcards_title} lang={lang} />
             </div>
           </div>
           <div class="game-container" data-game="flashcard">
@@ -118,11 +118,11 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
           <div class="section-header">
             <span class="section-number">03</span>
             <div>
-              <h2>Word Matching</h2>
-              <p>Connect words with their correct translations</p>
+              <h2>{uiStrings.games_matching_title}</h2>
+              <p>{uiStrings.games_matching_desc}</p>
             </div>
             <div class="section-actions">
-              <BookmarkButton slug="games#matching-section" title="Word Matching Game" lang={lang} />
+              <BookmarkButton slug="games#matching-section" title={uiStrings.games_matching_title} lang={lang} />
             </div>
           </div>
           <div class="game-container" data-game="matching">
@@ -134,11 +134,11 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
           <div class="section-header">
             <span class="section-number">04</span>
             <div>
-              <h2>Memory Game</h2>
-              <p>Find matching word-translation pairs</p>
+              <h2>{uiStrings.games_memory_title}</h2>
+              <p>{uiStrings.games_memory_desc}</p>
             </div>
             <div class="section-actions">
-              <BookmarkButton slug="games#memory-section" title="Memory Game" lang={lang} />
+              <BookmarkButton slug="games#memory-section" title={uiStrings.games_memory_title} lang={lang} />
             </div>
           </div>
           <div class="game-container" data-game="memory">
@@ -150,11 +150,11 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
           <div class="section-header">
             <span class="section-number">05</span>
             <div>
-              <h2>Speed Round</h2>
-              <p>How many can you answer in 60 seconds?</p>
+              <h2>{uiStrings.games_speed_title}</h2>
+              <p>{uiStrings.games_speed_desc}</p>
             </div>
             <div class="section-actions">
-              <BookmarkButton slug="games#speed-section" title="Speed Round" lang={lang} />
+              <BookmarkButton slug="games#speed-section" title={uiStrings.games_speed_title} lang={lang} />
             </div>
           </div>
           <div class="game-container" data-game="speed">
@@ -164,8 +164,8 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
       </section>
 
       <section class="sidebar-widgets">
-        <h2 class="widgets-title">Quick Widgets</h2>
-        <p class="widgets-subtitle">Perfect for embedding in your daily routine</p>
+        <h2 class="widgets-title">{uiStrings.games_widgets_title}</h2>
+        <p class="widgets-subtitle">{uiStrings.games_widgets_subtitle}</p>
         
         <div class="widgets-grid">
           <div class="widget-card">
@@ -179,10 +179,10 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
 
       <section class="cta-section">
         <div class="cta-content">
-          <h2>Want More Practice?</h2>
-          <p>Get the full BitLingo experience with thousands of words, custom decks, and audio-first learning.</p>
+          <h2>{uiStrings.games_cta_title}</h2>
+          <p>{uiStrings.games_cta_description}</p>
           <a href="https://bitlingo.app" target="_blank" rel="noopener" class="cta-button">
-            <span>Try BitLingo Free</span>
+            <span>{uiStrings.games_cta_button}</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M5 12h14"/>
               <path d="M12 5l7 7-7 7"/>
@@ -527,7 +527,7 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
   }
 </style>
 
-<script>
+<script define:vars={{ uiStrings }}>
   // Global language selector functionality
   document.addEventListener('DOMContentLoaded', () => {
     const globalSelect = document.getElementById('global-lang');
@@ -538,7 +538,7 @@ const targetLanguages = Object.entries(LANGUAGE_DATA).map(([code, data]) => ({
         
         // Show a message that page reload is needed for language change
         // In a more advanced implementation, we could dynamically reload components
-        const confirmed = confirm(`Switch all games to practice ${newLang.toUpperCase()}?\n\nThe page will reload to apply changes.`);
+        const confirmed = confirm(`${uiStrings.games_switch_lang_confirm} ${newLang.toUpperCase()}?\n\n${uiStrings.games_switch_lang_reload}`);
         
         if (confirmed) {
           // Store the preference

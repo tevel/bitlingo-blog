@@ -22,7 +22,7 @@ const words = targetData.words;
   <div class="game-header">
     <div class="game-title">
       <span class="game-icon">⚡</span>
-      <h3>Speed Round</h3>
+      <h3>{uiStrings.games_speed_title}</h3>
     </div>
     <div class="game-header-right">
       <div class="language-badge">
@@ -47,9 +47,9 @@ const words = targetData.words;
   <div class="game-start">
     <div class="start-content">
       <div class="start-icon">🏃‍♂️</div>
-      <h4>Ready to test your speed?</h4>
-      <p>Answer as many vocabulary questions as you can in {duration} seconds!</p>
-      <button class="btn-start">Start Challenge</button>
+      <h4>{uiStrings.speed_ready_title}</h4>
+      <p>{uiStrings.speed_ready_description} {duration} {uiStrings.quiz_seconds || 'seconds'}!</p>
+      <button class="btn-start">{uiStrings.speed_start_button}</button>
     </div>
   </div>
 
@@ -87,25 +87,25 @@ const words = targetData.words;
   <div class="game-over" hidden>
     <div class="results-card">
       <div class="trophy">🏆</div>
-      <h3>Time's Up!</h3>
+      <h3>{uiStrings.speed_times_up}</h3>
       
       <div class="final-stats">
         <div class="stat-row">
-          <span class="stat-label">Correct Answers</span>
+          <span class="stat-label">{uiStrings.speed_correct_answers}</span>
           <span class="stat-value final-correct">0</span>
         </div>
         <div class="stat-row">
-          <span class="stat-label">Best Streak</span>
+          <span class="stat-label">{uiStrings.speed_best_streak}</span>
           <span class="stat-value final-streak">0</span>
         </div>
         <div class="stat-row highlight">
-          <span class="stat-label">Words Per Minute</span>
+          <span class="stat-label">{uiStrings.speed_words_per_minute}</span>
           <span class="stat-value final-wpm">0</span>
         </div>
       </div>
 
       <div class="share-result">
-        <span class="share-label">Share your score!</span>
+        <span class="share-label">{uiStrings.share_your_score}</span>
         <div class="share-buttons-inline">
           <a class="share-btn-small twitter-share" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -124,9 +124,9 @@ const words = targetData.words;
       </div>
 
       <div class="action-buttons">
-        <button class="btn-restart">Try Again</button>
+        <button class="btn-restart">{uiStrings.speed_play_again}</button>
         <a href="https://bitlingo.app" target="_blank" rel="noopener" class="btn-cta">
-          Practice More →
+          {uiStrings.games_cta_button} →
         </a>
       </div>
     </div>
@@ -317,10 +317,14 @@ const words = targetData.words;
         if (facebookShare) facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
         if (whatsappShare) whatsappShare.href = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
         if (copyBtn) {
+          // Ensure icons are visible/hidden initially
+          const copyIcon = copyBtn.querySelector('.copy-icon');
+          const checkIcon = copyBtn.querySelector('.check-icon');
+          if (copyIcon) copyIcon.style.display = 'block';
+          if (checkIcon) checkIcon.style.display = 'none';
+          
           copyBtn.onclick = async () => {
             await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-            const copyIcon = copyBtn.querySelector('.copy-icon');
-            const checkIcon = copyBtn.querySelector('.check-icon');
             if (copyIcon && checkIcon) {
               copyIcon.style.display = 'none';
               checkIcon.style.display = 'block';
@@ -785,7 +789,28 @@ const words = targetData.words;
     transform: translateY(-2px);
   }
 
-  .share-btn-small svg { width: 18px; height: 18px; }
+  .share-btn-small svg { 
+    width: 18px; 
+    height: 18px; 
+    display: block;
+  }
+
+  .share-btn-small .copy-icon {
+    display: block !important;
+  }
+
+  .share-btn-small .check-icon {
+    display: none !important;
+  }
+
+  .share-btn-small.copied .copy-icon {
+    display: none !important;
+  }
+
+  .share-btn-small.copied .check-icon {
+    display: block !important;
+  }
+
   .share-btn-small.twitter-share:hover { background: rgba(29, 161, 242, 0.2); color: #1da1f2; }
   .share-btn-small.facebook-share:hover { background: rgba(24, 119, 242, 0.2); color: #1877f2; }
   .share-btn-small.whatsapp-share:hover { background: rgba(37, 211, 102, 0.2); color: #25d366; }

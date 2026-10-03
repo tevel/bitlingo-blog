@@ -4,6 +4,7 @@
  * Displays all tags/keywords with counts
  */
 import { getCollection } from 'astro:content';
+import { UI_TRANSLATIONS } from '../data/vocabulary';
 
 interface Props {
   lang?: string;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const { lang = 'en', limit = 20, showCount = true } = Astro.props;
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
 
 const allPosts = await getCollection('blog');
 const posts = allPosts.filter(post => post.data.lang === lang);
@@ -50,7 +52,7 @@ function getSize(count: number): 'sm' | 'md' | 'lg' | 'xl' {
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
       <line x1="7" y1="7" x2="7.01" y2="7"/>
     </svg>
-    Popular Topics
+    {uiStrings.popular_topics}
   </h3>
   <div class="tags">
     {sortedKeywords.map(([keyword, count]) => (

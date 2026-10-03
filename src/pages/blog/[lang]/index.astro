@@ -15,6 +15,7 @@ import WordOfTheDay from '../../../components/WordOfTheDay.astro';
 import DailyReward from '../../../components/DailyReward.astro';
 import { DEFAULT_LANG, SITE_DESCRIPTION, SITE_TITLE, SUPPORTED_LANGS } from '../../../consts';
 import { calculateReadingTime } from '../../../utils/readingTime';
+import { UI_TRANSLATIONS } from '../../../data/vocabulary';
 
 export function getStaticPaths() {
 	return SUPPORTED_LANGS.map((lang) => ({ params: { lang } }));
@@ -24,6 +25,8 @@ const { lang } = Astro.params;
 if (!SUPPORTED_LANGS.includes(lang)) {
 	return Astro.redirect(`/blog/${DEFAULT_LANG}/`, 308);
 }
+
+const uiStrings = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
 
 const getPathSlug = (post: (typeof posts)[number]) => {
 	if (post.data.path) return post.data.path;
@@ -47,6 +50,7 @@ const searchPlaceholders: Record<string, string> = {
 	fr: 'Rechercher des articles...',
 	de: 'Artikel suchen...',
 	it: 'Cerca articoli...',
+	nl: 'Artikelen zoeken...',
 	pt: 'Pesquisar artigos...',
 	ja: '記事を検索...',
 	ko: '기사 검색...',
@@ -65,8 +69,8 @@ const searchPlaceholders: Record<string, string> = {
 <html lang={lang}>
 	<head>
 		<BaseHead
-			title={`${SITE_TITLE} | ${lang.toUpperCase()}`}
-			description={SITE_DESCRIPTION}
+			title={`${uiStrings.blog_page_title} | ${lang.toUpperCase()}`}
+			description={uiStrings.blog_page_description}
 			lang={lang}
 			keywords={[
 				'bitlingo blog',
@@ -80,8 +84,8 @@ const searchPlaceholders: Record<string, string> = {
 			{JSON.stringify({
 				'@context': 'https://schema.org',
 				'@type': 'Blog',
-				name: 'BitLingo Blog',
-				description: SITE_DESCRIPTION,
+				name: uiStrings.blog_page_title,
+				description: uiStrings.blog_page_description,
 				url: new URL(`/blog/${lang}`, Astro.site),
 				blogPost: posts.map((post) => ({
 					'@type': 'BlogPosting',
@@ -96,22 +100,22 @@ const searchPlaceholders: Record<string, string> = {
 		</script>
 	</head>
 	<body>
-		<Header />
+		<Header lang={lang} />
 		<main>
 			<!-- Page Header -->
 			<section class="page-header">
 				<ScrollReveal animation="fade-up">
-					<div class="header-badge">📚 BitLingo Blog</div>
-					<h1>Learn Smarter,<br/><span class="gradient-text">Not Harder</span></h1>
+					<div class="header-badge">{uiStrings.blog_header_badge}</div>
+					<h1>{uiStrings.blog_hero_title}<br/><span class="gradient-text">{uiStrings.blog_hero_title_highlight}</span></h1>
 					<p class="header-description">
-						Tips, strategies, and insights to maximize your audio-first language learning journey.
+						{uiStrings.blog_hero_description}
 					</p>
 				</ScrollReveal>
 				
 				<!-- Search Bar -->
 				<ScrollReveal animation="fade-up" delay={100}>
 					<div class="search-wrapper">
-						<Search lang={lang} placeholder={searchPlaceholders[lang] || searchPlaceholders.en} />
+						<Search lang={lang} placeholder={uiStrings.blog_search_placeholder || searchPlaceholders[lang] || searchPlaceholders.en} />
 					</div>
 				</ScrollReveal>
 			</section>
@@ -132,7 +136,7 @@ const searchPlaceholders: Record<string, string> = {
 												alt={featuredPost.data.ogImageAlt || featuredPost.data.title}
 											/>
 										)}
-										<div class="featured-badge">Featured</div>
+										<div class="featured-badge">{uiStrings.blog_featured}</div>
 									</div>
 									<div class="featured-content">
 										<div class="post-meta">
@@ -143,7 +147,7 @@ const searchPlaceholders: Record<string, string> = {
 										<h2>{featuredPost.data.title}</h2>
 										<p>{featuredPost.data.description}</p>
 										<span class="read-more">
-											Read article
+											{uiStrings.blog_read_article}
 											<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 												<line x1="5" y1="12" x2="19" y2="12"/>
 												<polyline points="12 5 19 12 12 19"/>
@@ -158,9 +162,9 @@ const searchPlaceholders: Record<string, string> = {
 					<!-- Posts Grid -->
 					<section class="posts-section">
 						<div class="section-header">
-							<h2 class="section-title">Latest Articles</h2>
+							<h2 class="section-title">{uiStrings.blog_latest_articles}</h2>
 							<a href={`/blog/${lang}/archive/`} class="archive-link">
-								View Archive
+								{uiStrings.blog_view_archive}
 								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 									<line x1="5" y1="12" x2="19" y2="12"/>
 									<polyline points="12 5 19 12 12 19"/>

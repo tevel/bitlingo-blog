@@ -155,7 +155,7 @@ const description = 'Track your language learning progress, view your stats, and
         const allVocab = [];
         
         // Count words across all languages
-        const supportedLangs = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr', 'pl', 'uk', 'he'];
+        const supportedLangs = ['en', 'es', 'fr', 'de', 'it', 'nl', 'pt', 'ru', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr', 'pl', 'uk', 'he'];
         supportedLangs.forEach(lang => {
           const vocab = JSON.parse(localStorage.getItem(`vocabulary_bank_${lang}`) || '[]');
           allVocab.push(...vocab);
